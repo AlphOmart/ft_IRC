@@ -13,19 +13,21 @@
 #ifndef IRC_HPP
 # define IRC_HPP
 
+# define MAX_EVENTS 10
 # include <unistd.h>		// pour close
 # include <sys/epoll.h>		// pour epoll
 # include <iostream>		// pour std::cout
-#include <cstring>
+# include <cstring>
 # include <cstdlib>			// pour EXIT_FAILURE et strtol
 # include <arpa/inet.h>		// pour print laddr ip
-#include <sstream>
-
+# include <sstream>
 # include <map>
 # include <vector>
 # include <queue>
+# include "Client.hpp"
+# include "Server.hpp"
 
-// # include <cstdio>			// pour perror()
+
 // # include <string.h>		// pour memset
 // # include <sys/socket.h>
 // # include <netinet/in.h>

@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "incs/Irc.hpp"
-#include "incs/Server.hpp"
-#include "incs/Client.hpp"
 
 int main(int argc, char **argv)
 {
@@ -28,11 +26,12 @@ int main(int argc, char **argv)
 	
 		while (1)
 			Serv.epollWait();
-		Serv.closeFd();
-		return (0);
+//		Serv.closeFd();
+//		return (0);
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << e.what() << std::endl;
 	}
+	return (0);
 }

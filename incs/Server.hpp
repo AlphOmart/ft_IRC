@@ -14,9 +14,10 @@
 # define SERVER_HPP
 
 # include "Irc.hpp"
-# include "Client.hpp"
 
-# define MAX_EVENTS 10
+
+
+class Client;
 
 class Server
 {
