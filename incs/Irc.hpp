@@ -14,6 +14,7 @@
 # define IRC_HPP
 
 # define MAX_EVENTS 10
+# include "Color.hpp"
 # include <unistd.h>		// pour close
 # include <sys/epoll.h>		// pour epoll
 # include <iostream>		// pour std::cout

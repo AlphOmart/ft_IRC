@@ -22,12 +22,14 @@ class Client;
 class Server
 {
 	private:
-		uint64_t _port;
-		int _epoll_fd, _server_fd;
-		struct sockaddr_in _server_addr;
-		socklen_t _addrLen;
-		struct epoll_event _event, _events[MAX_EVENTS];
-		int _nfds;
+		uint64_t 				_port;
+		int 					_epoll_fd;
+		int						_server_fd;
+		struct sockaddr_in		_server_addr;
+		socklen_t				_addrLen;
+		struct epoll_event		_event;
+		struct epoll_event		_events[MAX_EVENTS];
+		int						_nfds;
 		std::map<int, Client*>	_mapClient;
 
 		void	epollCreation();

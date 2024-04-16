@@ -18,10 +18,13 @@
 class Client
 {
 	private:
-		int	_fd;
-		bool	_isInEpoll;
+		std::string				_username;
+		std::string				_password;
+		std::string				_nickname;
+		int						_fd;
+		bool					_isInEpoll;
 		std::queue<std::string>	_mailbox;
-		struct epoll_event	_clientEvent;
+		struct epoll_event		_clientEvent;
 		
 
 	public:
@@ -32,6 +35,7 @@ class Client
 		void		setMailbox(std::string str, int epoll_fd);
 		void		updateStatus(int epoll_fd);
 		void		receiveAll(int epoll_fd);
+		void		setClientInfo();
 	
 	class err : public std::exception
 	{

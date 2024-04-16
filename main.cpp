@@ -14,24 +14,19 @@
 
 int main(int argc, char **argv)
 {
+	if (argc != 2)
+		return (std::cerr << RED "Error\n" YELLOW "Usage: ./ircserv <port> <password>" RESET << std::endl, 1);
 	try
 	{
-		if (argc != 2)
-		{
-			std::cout << "bad numbers of arguments." << std::endl;
-			return (1);
-		}
-	
 		Server	Serv(argv[1]);
-	
+
 		while (1)
 			Serv.epollWait();
 //		Serv.closeFd();
-//		return (0);
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	return (0);
+		return (0);
 }

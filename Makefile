@@ -23,7 +23,8 @@ OBJS_DIR	=	.OBJS/
 OBJS		=	$(addprefix $(OBJS_DIR), $(SRC:.cpp=.o))
 HEADER		=	incs/Irc.hpp \
 				incs/Server.hpp \
-				incs/Client.hpp
+				incs/Client.hpp \
+				incs/Color.hpp
 DEP			=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.d))
 #---RULES----------------------------------------
 

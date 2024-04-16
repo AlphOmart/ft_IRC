@@ -114,24 +114,24 @@ void	Server::eventLoop(int	n)
 	}
 }
 
+
 void	Server::epollinEvent(int n)
 {
-	if (_events[n].data.fd == _server_fd) 
+	if (_events[n].data.fd == _server_fd)
 	{
 		// Nouvelle connexion entrée
-		
 		int connFd = accept(_server_fd, (struct sockaddr *)&_server_addr, &_addrLen);
 		if (connFd == -1)
 		{
 			throw std::runtime_error("Error while calling accept().");
 		}
 		Client *acceptedClient = new Client(connFd);
-		
+
 		_mapClient[acceptedClient->getFd()] = acceptedClient;
 		// Ajout du nouveau descripteur Client de fichier à l'instance epoll
 		_mapClient[acceptedClient->getFd()]->updateStatus(_epoll_fd);
-		
 		// std::cout << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << std::endl;
+		//TODO PARSE CLIENT
 		std::stringstream buff;
 		buff << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << "\r\n";
 		std::map<int, Client *>::iterator curClient = _mapClient.find(connFd);
@@ -151,6 +151,9 @@ void	Server::epollinEvent(int n)
 			buffer[bytes_read] = '\0'; // Terminer la chaîne
 			switch (cmdCheck(buffer))
 			{
+			case 0:
+				std::cout << "PASS	[#channel_name]	[user]	[reason]." << std::endl;
+				break;
 			case 1:
 				std::cout << "KICK	[#channel_name]	[user]	[reason]." << std::endl;
 				break;
@@ -217,6 +220,8 @@ void	Server::closeFd()
 int	Server::cmdCheck(char *buffer)
 {
 	std::string str(buffer);
+	if (str.find("PASS", 0) == 0)
+		return (0);
 	if (str.find("/KICK ",0) == 0)
 		return (1);
 	if (str.find("/INVITE ",0) == 0)
@@ -296,7 +301,6 @@ std::vector<std::string>	Server::splitStr(std::string str, char sep)
 	}
 	return result;
 }
-
 
 //	-i -t -k -o -l
 
