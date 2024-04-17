@@ -53,7 +53,7 @@ class Server
 		int		cmdCheck(char *buffer);
 		void	cmdMode(char *buffer);
 		std::vector<std::string>	splitStr(std::string str, char sep);
-		void	initCommand(std::map<std::string, void(*)(void)> cmdLst);
+		void	initCommand();
 };
 
 #endif

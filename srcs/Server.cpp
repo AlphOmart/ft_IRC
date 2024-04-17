@@ -25,16 +25,16 @@ Server::Server(char *port) : _addrLen(sizeof(_server_addr))
 	linkSocket();
 	listenConnectIn();
 	addSocketToEpoll();
-	//initCommand(_commandList);
+	initCommand();
 }
 
 Server::~Server()
 {
 }
 
-void	Server::initCommand(std::map<std::string, void(*)(void)> cmdLst)
+void	Server::initCommand()
 {
-	cmdLst["PASS"] = &fctPASS;
+	_commandList["PASS"] = &fctPASS;
 	// cmdLst["NICK"] = &fctNICK();
 	// cmdLst["USER"] = &fctUSER();
 	// cmdLst["KICK"] = &fctKICK();
@@ -154,7 +154,8 @@ void	Server::epollinEvent(int n)
 	}
 	else
 	{
-		if (_commandList.find("PASS") != _commandList.end())
+		std::string		intput = splitStr(); //TODO
+		if (_commandList.find(input) != _commandList.end())
 			(*_commandList["PASS"])();
 		// Traitement des données entrantes sur une connexion existante
 //		char buffer[1024] = {0};
