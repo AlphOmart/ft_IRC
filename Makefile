@@ -17,7 +17,8 @@ FLAGS		=	-std=c++98 -Wall -Werror -Wextra -g3
 #---PROJECT+VAR----------------------------------
 SRC			=	main.cpp \
 				srcs/Server.cpp \
-				srcs/Client.cpp
+				srcs/Client.cpp \
+				srcs/Command.cpp
 
 OBJS_DIR	=	.OBJS/
 OBJS		=	$(addprefix $(OBJS_DIR), $(SRC:.cpp=.o))

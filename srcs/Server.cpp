@@ -14,10 +14,10 @@
 
 Server::Server(char *port) : _addrLen(sizeof(_server_addr))
 {
-	initCommand(_commandList);
 	std::string str(port);
-	if (std::string::npos != str.find_first_not_of("0123456789"))
+	if (std::string::npos != str.find_first_not_of("0123456789")) {
 		throw	std::invalid_argument("Error : port is not valid.");
+	}
 	_port = std::strtol(port, NULL, 10);
 	epollCreation();
 	socketCreation();
@@ -25,15 +25,16 @@ Server::Server(char *port) : _addrLen(sizeof(_server_addr))
 	linkSocket();
 	listenConnectIn();
 	addSocketToEpoll();
+	//initCommand(_commandList);
 }
 
 Server::~Server()
 {
 }
 
-void	initCommand(std::map<std::string, void(*)(void)> cmdLst)
+void	Server::initCommand(std::map<std::string, void(*)(void)> cmdLst)
 {
-	cmdLst["PASS"] = &fctPASS();
+	cmdLst["PASS"] = &fctPASS;
 	// cmdLst["NICK"] = &fctNICK();
 	// cmdLst["USER"] = &fctUSER();
 	// cmdLst["KICK"] = &fctKICK();
@@ -153,43 +154,45 @@ void	Server::epollinEvent(int n)
 	}
 	else
 	{
+		if (_commandList.find("PASS") != _commandList.end())
+			(*_commandList["PASS"])();
 		// Traitement des données entrantes sur une connexion existante
-		char buffer[1024] = {0};
-		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
-		if (bytes_read > 0)
-		{
-			buffer[bytes_read] = '\0'; // Terminer la chaîne
-			switch (cmdCheck(buffer))
-			{
-			case 0:
-				std::cout << "PASS	[#channel_name]	[user]	[reason]." << std::endl;
-				break;
-			case 1:
-				std::cout << "KICK	[#channel_name]	[user]	[reason]." << std::endl;
-				break;
-			
-			case 2:
-				std::cout << "INVITE	[user]	[#channel_name]." << std::endl;
-				break;
-			
-			case 3:
-				std::cout << "TOPIC	[#channel_name]	[NewTopic]." << std::endl;
-				break;
-			
-			case 4:
-				cmdMode(buffer);
-				break;
-			
-			default:
-				std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
-				for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-				{
-					if (it != curClient)
-						it->second->setMailbox(buffer, _epoll_fd);	//ajout de l'input dans la mailbox
-				}
-			}
-			// std::cout << "Client "<< _events[n].data.fd <<" : " << buffer <<std::endl ;
-		}
+//		char buffer[1024] = {0};
+//		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
+//		if (bytes_read > 0)
+//		{
+//			buffer[bytes_read] = '\0'; // Terminer la chaîne
+//			switch (cmdCheck(buffer))
+//			{
+//			case 0:
+//				std::cout << "PASS	[#channel_name]	[user]	[reason]." << std::endl;
+//				break;
+//			case 1:
+//				std::cout << "KICK	[#channel_name]	[user]	[reason]." << std::endl;
+//				break;
+//
+//			case 2:
+//				std::cout << "INVITE	[user]	[#channel_name]." << std::endl;
+//				break;
+//
+//			case 3:
+//				std::cout << "TOPIC	[#channel_name]	[NewTopic]." << std::endl;
+//				break;
+//
+//			case 4:
+//				cmdMode(buffer);
+//				break;
+//
+//			default:
+//				std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
+//				for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
+//				{
+//					if (it != curClient)
+//						it->second->setMailbox(buffer, _epoll_fd);	//ajout de l'input dans la mailbox
+//				}
+//			}
+//			// std::cout << "Client "<< _events[n].data.fd <<" : " << buffer <<std::endl ;
+//		}
 
 	}
 }
