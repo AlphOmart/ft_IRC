@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/05 15:22:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/17 16:42:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Server::Server(char *port) : _addrLen(sizeof(_server_addr))
 {
+	initCommand(_commandList);
 	std::string str(port);
 	if (std::string::npos != str.find_first_not_of("0123456789"))
 		throw	std::invalid_argument("Error : port is not valid.");
@@ -30,6 +31,15 @@ Server::~Server()
 {
 }
 
+void	initCommand(std::map<std::string, void(*)(void)> cmdLst)
+{
+	cmdLst["PASS"] = &fctPASS();
+	// cmdLst["NICK"] = &fctNICK();
+	// cmdLst["USER"] = &fctUSER();
+	// cmdLst["KICK"] = &fctKICK();
+	// cmdLst["INVITE"] = &fctINVITE();
+	// cmdLst["TOPIC"] = &fctTOPIC();
+}
 		// Création de l'instance epoll
 void	Server::epollCreation()
 {
