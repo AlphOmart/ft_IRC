@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 13:06:40 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:19:54 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 
 class Client;
 
+		void										fctPASS(std::string str);
+		void										fctNICK(std::string str);
+		void										fctUSER(std::string str);
 class Server
 {
 
@@ -37,8 +40,8 @@ class Server
 		int											_nfds;
 
 	//----	MAP	----//
-		std::map<int, Client*>						_mapClient;
-		std::map<std::string, void(*) (void)>		_commandList;
+		std::map<int, Client*>							_mapClient;
+		std::map<std::string, void(*) (std::string)>	_commandList;
 
 
 //----------------------------- FUNCTIONS ----------------------------------------------------------//
@@ -60,7 +63,7 @@ class Server
 	//----	UTILS	----//
 		std::string									getPass();
 		void										initCommand();
-		std::vector<std::string>					splitStr(std::string str, char sep);
+		std::vector<std::string>					splitStr(char *str, char sep);
 
 
 //############################# PUBLIC ##########################################################//
@@ -71,7 +74,6 @@ class Server
 		void										epollWait();
 
 		//		FCT_COMMANDLIST		//
-		void										fctPASS();
 		// int							cmdCheck(char *buffer);
 		// void						cmdMode(char *buffer);
 		

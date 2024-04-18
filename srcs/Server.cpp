@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 13:08:24 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:25:27 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,11 +152,12 @@ void	Server::epollinEvent(int n)
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
 		buff[br] = '\0';
-		std::cout << "buff is " << buff << std::endl;
-		std::vector<std::string>		input;
+		std::vector<std::string>	input;
 		input = splitStr(buff, ' ');
+		if (input.size() != 2)
+			return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 		if (_commandList.find(input[0]) != _commandList.end())
-			(*_commandList[input[0]])();
+			(*_commandList[input[0]])(input[1]);
 		else
 			std::cout << "unknown command : " << input[0] << std::endl;
 		// Traitement des données entrantes sur une connexion existante
@@ -233,11 +234,6 @@ void	Server::closeFd()
 }
 
 
-void	Server::fctPASS()
-{
-	std::cout << "PASS" << std::endl;
-}
-
 // void	Server::fctPASS()
 // {
 // 	// if (_pass)
@@ -307,25 +303,25 @@ std::string	Server::getPass()
 
 void	Server::initCommand()
 {
-	_commandList["PASS"] = &Server::fctPASS();
-	// cmdLst["NICK"] = &fctNICK();
+	_commandList["PASS"] = &fctPASS;
+	_commandList["NICK"] = &fctNICK;
+	_commandList["USER"] = &fctUSER;
 	// cmdLst["USER"] = &fctUSER();
 	// cmdLst["KICK"] = &fctKICK();
 	// cmdLst["INVITE"] = &fctINVITE();
 	// cmdLst["TOPIC"] = &fctTOPIC();
 }
 
-std::vector<std::string>	Server::splitStr(std::string str, char sep)
+std::vector<std::string>	Server::splitStr(char *str, char sep)
 {
 	std::vector<std::string> result;
 	std::string word = "";
-	std::string::iterator it;
 	int	 nb = 0;
 
 	// std::cout << "\"" << str << "\"" << std::endl;
-	for (it = str.begin(); *it != '\r'; ++it)
+	for (size_t it = 0; str[it] != '\r'; ++it)
 	{	
-		if (*it == sep)
+		if (str[it] == sep)
 		{
 			// std::cout << "nb : " << nb << std::endl;
 			if (!word.empty())
@@ -335,7 +331,7 @@ std::vector<std::string>	Server::splitStr(std::string str, char sep)
 			}
 		}
 		else
-			word += *it;
+			word += str[it];
 		nb++;
 	}
 
@@ -348,6 +344,8 @@ std::vector<std::string>	Server::splitStr(std::string str, char sep)
 
 //	-i -t -k -o -l
 
+		// for (size_t i = 0; i < input.size(); i++)
+		// 	std::cout << "input[" << i << "]: " << input[i] << std::endl;
 
 
 

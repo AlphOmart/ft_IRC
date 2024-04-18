@@ -6,21 +6,28 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 13:06:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:30:57 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
 
-
-void	fctNICK()
+void	fctPASS(std::string str)
 {
-	std::cout << "NICK" << std::endl;
+	if (str == "_pass")
+		std::cout << "PASS" << std::endl;
+	else
+		std::cout << "wrong pass" << std::endl;
 }
 
-void	fctUSER()
+void	fctNICK(std::string str)
 {
-	std::cout << "USER" << std::endl;
+		std::cout << "nickname : "<< str << std::endl;
+}
+
+void	fctUSER(std::string str)
+{
+	std::cout << "user : "<< str << std::endl;
 }
 
 void	fctKICK()
