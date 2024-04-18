@@ -14,15 +14,19 @@
 
 int main(int argc, char **argv)
 {
-	if (argc != 2)
+	if (argc != 2 && argc != 3)
 		return (std::cerr << RED "Error\n" YELLOW "Usage: ./ircserv <port> <password>" RESET << std::endl, 1);
 	try
 	{
-		Server	Serv(argv[1]);
-
+		Server *Serv = NULL;
+		if (argc == 2)
+			Serv = new Server(argv[1]);
+		else
+			Serv = new Server(argv[1], argv[2]);
 		while (1)
-			Serv.epollWait();
+			Serv->epollWait();
 //		Serv.closeFd();
+		delete Serv;
 	}
 	catch(const std::exception& e)
 	{

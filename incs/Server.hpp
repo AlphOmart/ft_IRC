@@ -16,10 +16,11 @@
 # include "Irc.hpp"
 
 class Client;
+class Server;
+		void	fctPASS(std::string str, Server& server);
+		void	fctUSER(std::string str, Server& server);
+		void	fctNICK(std::string str, Server& server);
 
-		void										fctPASS(std::string str);
-		void										fctNICK(std::string str);
-		void										fctUSER(std::string str);
 class Server
 {
 
@@ -41,7 +42,7 @@ class Server
 
 	//----	MAP	----//
 		std::map<int, Client*>							_mapClient;
-		std::map<std::string, void(*) (std::string)>	_commandList;
+		std::map<std::string, void(*) (std::string, Server&)>	_commandList;
 
 
 //----------------------------- FUNCTIONS ----------------------------------------------------------//
@@ -61,7 +62,6 @@ class Server
 		void										closeFd();
 
 	//----	UTILS	----//
-		std::string									getPass();
 		void										initCommand();
 		std::vector<std::string>					splitStr(char *str, char sep);
 
@@ -70,13 +70,14 @@ class Server
 
 	public:
 		Server(char *port);
+		Server(char *port, const std::string& pass);
 		~Server();
 		void										epollWait();
 
 		//		FCT_COMMANDLIST		//
 		// int							cmdCheck(char *buffer);
 		// void						cmdMode(char *buffer);
-		
+		std::string									getPass();
 };
 
 #endif

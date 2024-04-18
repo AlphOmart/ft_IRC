@@ -12,21 +12,23 @@
 
 #include "../incs/Server.hpp"
 
-void	fctPASS(std::string str)
+void	fctPASS(std::string str, Server& server)
 {
-	if (str == "_pass")
+	if (str == server.getPass())
 		std::cout << "PASS" << std::endl;
 	else
 		std::cout << "wrong pass" << std::endl;
 }
 
-void	fctNICK(std::string str)
+void	fctNICK(std::string str, Server& server)
 {
+	(void)server;
 		std::cout << "nickname : "<< str << std::endl;
 }
 
-void	fctUSER(std::string str)
+void	fctUSER(std::string str, Server& server)
 {
+	(void)server;
 	std::cout << "user : "<< str << std::endl;
 }
 

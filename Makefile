@@ -13,7 +13,7 @@
 #---COMMON_VAR-----------------------------------
 NAME		=	ircserv
 CXX			=	c++
-FLAGS		=	-std=c++98 -Wall -Werror -Wextra -glldb
+FLAGS		=	-std=c++98 -Wall -Werror -Wextra -g3
 #---PROJECT+VAR----------------------------------
 SRC			=	main.cpp \
 				srcs/Server.cpp \

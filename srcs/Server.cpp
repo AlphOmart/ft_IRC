@@ -12,7 +12,23 @@
 
 #include "../incs/Server.hpp"
 
-Server::Server(char *port) : _addrLen(sizeof(_server_addr))
+Server::Server(char *port) :_pass(NULL), _addrLen(sizeof(_server_addr))
+{
+	std::string str(port);
+	if (std::string::npos != str.find_first_not_of("0123456789")) {
+		throw	std::invalid_argument("Error : port is not valid.");
+	}
+	_port = std::strtol(port, NULL, 10);
+	epollCreation();
+	socketCreation();
+	addrConfig();
+	linkSocket();
+	listenConnectIn();
+	addSocketToEpoll();
+	initCommand();
+}
+
+Server::Server(char *port, const std::string& pass) :_pass(pass), _addrLen(sizeof(_server_addr))
 {
 	std::string str(port);
 	if (std::string::npos != str.find_first_not_of("0123456789")) {
@@ -157,7 +173,7 @@ void	Server::epollinEvent(int n)
 		if (input.size() != 2)
 			return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 		if (_commandList.find(input[0]) != _commandList.end())
-			(*_commandList[input[0]])(input[1]);
+			(*_commandList[input[0]])(input[1], *this);
 		else
 			std::cout << "unknown command : " << input[0] << std::endl;
 		// Traitement des données entrantes sur une connexion existante
