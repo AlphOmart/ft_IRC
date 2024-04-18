@@ -12,7 +12,7 @@
 
 #include "../incs/Server.hpp"
 
-Server::Server(char *port) :_pass(NULL), _addrLen(sizeof(_server_addr))
+Server::Server(char *port) :_servName("IRCServ"), _pass(NULL), _addrLen(sizeof(_server_addr))
 {
 	std::string str(port);
 	if (std::string::npos != str.find_first_not_of("0123456789")) {
@@ -28,7 +28,7 @@ Server::Server(char *port) :_pass(NULL), _addrLen(sizeof(_server_addr))
 	initCommand();
 }
 
-Server::Server(char *port, const std::string& pass) :_pass(pass), _addrLen(sizeof(_server_addr))
+Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass(pass), _addrLen(sizeof(_server_addr))
 {
 	std::string str(port);
 	if (std::string::npos != str.find_first_not_of("0123456789")) {
@@ -170,10 +170,11 @@ void	Server::epollinEvent(int n)
 		buff[br] = '\0';
 		std::vector<std::string>	input;
 		input = splitStr(buff, ' ');
+		std::map<int, Client *>::iterator curClient = _mapClient.find(n);
 		if (input.size() != 2)
 			return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 		if (_commandList.find(input[0]) != _commandList.end())
-			(*_commandList[input[0]])(input[1], *this);
+			(*_commandList[input[0]])(input[1], *this, *curClient->second);
 		else
 			std::cout << "unknown command : " << input[0] << std::endl;
 		// Traitement des données entrantes sur une connexion existante

@@ -17,9 +17,9 @@
 
 class Client;
 class Server;
-		void	fctPASS(std::string str, Server& server);
-		void	fctUSER(std::string str, Server& server);
-		void	fctNICK(std::string str, Server& server);
+		void	fctPASS(std::string str, Server& server, Client& client);
+		void	fctUSER(std::string str, Server& server, Client& client);
+		void	fctNICK(std::string str, Server& server, Client& client);
 
 class Server
 {
@@ -29,6 +29,7 @@ class Server
 //----------------------------- ATTRIBUTS ----------------------------------------------------------//
 
 		uint64_t 									_port;
+		const std::string 							_servName;
 		const std::string							_pass;
 
 	//----	EPOLL ATTRIBUTS	----//
@@ -42,7 +43,7 @@ class Server
 
 	//----	MAP	----//
 		std::map<int, Client*>							_mapClient;
-		std::map<std::string, void(*) (std::string, Server&)>	_commandList;
+		std::map<std::string, void(*) (std::string, Server&, Client&)>	_commandList;
 
 
 //----------------------------- FUNCTIONS ----------------------------------------------------------//
