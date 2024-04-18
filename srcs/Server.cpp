@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 11:59:03 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 12:58:38 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,10 @@ Server::~Server()
 {
 }
 
-void	Server::initCommand()
-{
-	_commandList["PASS"] = &fctPASS;
-	// cmdLst["NICK"] = &fctNICK();
-	// cmdLst["USER"] = &fctUSER();
-	// cmdLst["KICK"] = &fctKICK();
-	// cmdLst["INVITE"] = &fctINVITE();
-	// cmdLst["TOPIC"] = &fctTOPIC();
-}
+
+//############################# EPOLL FCT ##########################################################//
+
+
 		// Création de l'instance epoll
 void	Server::epollCreation()
 {
@@ -238,6 +233,12 @@ void	Server::closeFd()
 }
 
 
+// void	Server::fctPASS()
+// {
+// 	// if (_pass)
+// 	std::cout << "PASS" << std::endl;
+// }
+
 // int	Server::cmdCheck(char *buffer)					// ANCIENNE FONCTION POUR LE SWITCH CASE
 // {
 // 	std::string str(buffer);
@@ -291,6 +292,24 @@ void	Server::closeFd()
 
 
 
+//############################# UTILS ##########################################################//
+
+
+std::string	Server::getPass()
+{
+	return (_pass);
+}
+
+void	Server::initCommand()
+{
+	_commandList["PASS"] = &fctPASS;
+	// cmdLst["NICK"] = &fctNICK();
+	// cmdLst["USER"] = &fctUSER();
+	// cmdLst["KICK"] = &fctKICK();
+	// cmdLst["INVITE"] = &fctINVITE();
+	// cmdLst["TOPIC"] = &fctTOPIC();
+}
+
 std::vector<std::string>	Server::splitStr(std::string str, char sep)
 {
 	std::vector<std::string> result;
@@ -323,6 +342,21 @@ std::vector<std::string>	Server::splitStr(std::string str, char sep)
 }
 
 //	-i -t -k -o -l
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
