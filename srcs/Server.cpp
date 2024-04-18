@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/17 16:42:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 11:59:03 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,16 @@ void	Server::epollinEvent(int n)
 	}
 	else
 	{
-		std::string		intput = splitStr(); //TODO
-		if (_commandList.find(input) != _commandList.end())
-			(*_commandList["PASS"])();
+		char buff[1024] = {0};
+		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
+		buff[br] = '\0';
+		std::cout << "buff is " << buff << std::endl;
+		std::vector<std::string>		input;
+		input = splitStr(buff, ' ');
+		if (_commandList.find(input[0]) != _commandList.end())
+			(*_commandList[input[0]])();
+		else
+			std::cout << "unknown command : " << input[0] << std::endl;
 		// Traitement des données entrantes sur une connexion existante
 //		char buffer[1024] = {0};
 //		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
@@ -231,56 +238,56 @@ void	Server::closeFd()
 }
 
 
-int	Server::cmdCheck(char *buffer)
-{
-	std::string str(buffer);
-	if (str.find("PASS", 0) == 0)
-		return (0);
-	if (str.find("/KICK ",0) == 0)
-		return (1);
-	if (str.find("/INVITE ",0) == 0)
-		return (2);
-	if (str.find("/TOPIC ",0) == 0)
-		return (3);
-	if (str.find("/MODE ",0) == 0)
-		return (4);
-	return (-1);
-	// KICK		INVITE		TOPIC		MODE
-}
+// int	Server::cmdCheck(char *buffer)					// ANCIENNE FONCTION POUR LE SWITCH CASE
+// {
+// 	std::string str(buffer);
+// 	if (str.find("PASS", 0) == 0)
+// 		return (0);
+// 	if (str.find("/KICK ",0) == 0)
+// 		return (1);
+// 	if (str.find("/INVITE ",0) == 0)
+// 		return (2);
+// 	if (str.find("/TOPIC ",0) == 0)
+// 		return (3);
+// 	if (str.find("/MODE ",0) == 0)
+// 		return (4);
+// 	return (-1);
+// 	// KICK		INVITE		TOPIC		MODE
+// }
 
 
-void	Server::cmdMode(char *buffer)
-{
-	std::string	str(buffer);
-	std::vector<std::string> command = splitStr(str, ' ');
-	std::cout << "cmd.size() = " << command.size() << std::endl;
-	if (command.size() < 3)
-		throw std::invalid_argument("Missing argument");
-	if (command.size() == 3)
-	{
-		if (command.at(2) == "-k" || command.at(2) == "-o" || command.at(2) == "-l")
-			throw std::invalid_argument("Missing argument after the flag.");
-		else if (command.at(2) != "-i" && command.at(2) != "-t")
-			throw std::invalid_argument("Unknown MODE flag");
-		else
-		{
-			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << "." << std::endl;
-			//TODO function for MODE -i -t
-		}
-	}
-	else if (command.size() == 4)
-	{
-		if (command.at(2) == "-i" || command.at(2) == "-t")
-			throw std::invalid_argument("To much arguments.");
-		else if (command.at(2) != "-k" && command.at(2) != "-o" && command.at(2) != "-l")
-			throw std::invalid_argument("Unknown MODE flag");
-		else
-		{
-			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << ".\tcommand[3]:" << command.at(3) << "." << std::endl;
-			//TODO function for MODE -k -o -l
-		}
-	}
-}
+// void	Server::cmdMode(char *buffer)					// FONCTION POUR PARSER LES COMMANDES D'APRÈS (MODE, KICK, etc...)
+// {
+// 	std::string	str(buffer);
+// 	std::vector<std::string> command = splitStr(str, ' ');
+// 	std::cout << "cmd.size() = " << command.size() << std::endl;
+// 	if (command.size() < 3)
+// 		throw std::invalid_argument("Missing argument");
+// 	if (command.size() == 3)
+// 	{
+// 		if (command.at(2) == "-k" || command.at(2) == "-o" || command.at(2) == "-l")
+// 			throw std::invalid_argument("Missing argument after the flag.");
+// 		else if (command.at(2) != "-i" && command.at(2) != "-t")
+// 			throw std::invalid_argument("Unknown MODE flag");
+// 		else
+// 		{
+// 			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << "." << std::endl;
+// 			//TODO function for MODE -i -t
+// 		}
+// 	}
+// 	else if (command.size() == 4)
+// 	{
+// 		if (command.at(2) == "-i" || command.at(2) == "-t")
+// 			throw std::invalid_argument("To much arguments.");
+// 		else if (command.at(2) != "-k" && command.at(2) != "-o" && command.at(2) != "-l")
+// 			throw std::invalid_argument("Unknown MODE flag");
+// 		else
+// 		{
+// 			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << ".\tcommand[3]:" << command.at(3) << "." << std::endl;
+// 			//TODO function for MODE -k -o -l
+// 		}
+// 	}
+// }
 
 
 
@@ -291,13 +298,12 @@ std::vector<std::string>	Server::splitStr(std::string str, char sep)
 	std::string::iterator it;
 	int	 nb = 0;
 
-	std::cout << "\"" << str << "\"" << std::endl;
+	// std::cout << "\"" << str << "\"" << std::endl;
 	for (it = str.begin(); *it != '\r'; ++it)
 	{	
 		if (*it == sep)
 		{
-			std::cout << "nb : " << nb << std::endl;
-		
+			// std::cout << "nb : " << nb << std::endl;
 			if (!word.empty())
 			{
 				result.push_back(word);
