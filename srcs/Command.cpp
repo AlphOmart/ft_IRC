@@ -6,16 +6,12 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 12:39:44 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 13:06:15 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
 
-void	fctPASS()
-{
-	std::cout << "PASS" << std::endl;
-}
 
 void	fctNICK()
 {

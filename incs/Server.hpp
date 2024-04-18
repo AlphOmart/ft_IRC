@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 12:56:12 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 13:06:40 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 class Client;
 
-void						fctPASS();
 class Server
 {
 
@@ -72,7 +71,7 @@ class Server
 		void										epollWait();
 
 		//		FCT_COMMANDLIST		//
-
+		void										fctPASS();
 		// int							cmdCheck(char *buffer);
 		// void						cmdMode(char *buffer);
 		

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 12:58:38 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/18 13:08:24 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,11 @@ void	Server::closeFd()
 }
 
 
+void	Server::fctPASS()
+{
+	std::cout << "PASS" << std::endl;
+}
+
 // void	Server::fctPASS()
 // {
 // 	// if (_pass)
@@ -302,7 +307,7 @@ std::string	Server::getPass()
 
 void	Server::initCommand()
 {
-	_commandList["PASS"] = &fctPASS;
+	_commandList["PASS"] = &Server::fctPASS();
 	// cmdLst["NICK"] = &fctNICK();
 	// cmdLst["USER"] = &fctUSER();
 	// cmdLst["KICK"] = &fctKICK();
