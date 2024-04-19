@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 12:58:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 14:13:01 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class Server
 		void										epollWait();
 
 		std::string									getPass();
+		bool										nickAlreadyUsed(const std::string& str);
 
 		//TODO creer une fonction pour kick le client (fonction public pour pouvoir l'appeler depuis fctPASS())
 		void	kickClient(int fd);

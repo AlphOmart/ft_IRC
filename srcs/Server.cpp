@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 13:14:03 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 14:21:19 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ void	Server::epollinEvent(int n)
 				it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
 		}
 	}
-	else // not registered
+	else // not registered client.isRegistered == false
 	{
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
@@ -425,7 +425,15 @@ std::vector< std::vector<std::string> > Server::splitVector(std::vector<std::str
 		// 	std::cout << "input[" << i << "]: " << input[i] << std::endl;
 
 
-
+bool	Server::nickAlreadyUsed(const std::string& str)
+{
+	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it < _mapClient.end(); ++it)
+	{
+		if (it->second->getNick() == str)
+			return (true);
+	}
+	return (false);
+}
 
 
 

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 13:19:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 14:12:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,16 @@ void	fctPASS(std::string str, Server& server, Client& client)
 
 void	fctNICK(std::string str, Server& server, Client& client)
 {
-	(void)server;
-	(void)client;
-		std::cout << "nickname : "<< str << std::endl;
+	if (server.nickAlreadyUsed(str) == false)
+		client.setNickname(str);
+	std::cout << "nickname : "<< str << std::endl;
 }
 
 void	fctUSER(std::string str, Server& server, Client& client)
 {
 	(void)server;
-	(void)client;
+	if (client.getIsRegistered() == false)
+		client.setUser(str);
 	std::cout << "user : "<< str << std::endl;
 }
 
