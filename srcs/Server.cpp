@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:26:20 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:52:10 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,12 @@ void	Server::epollinEvent(int n)
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass()  == true || i->at(0) == "PASS"))
 				(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
+			else if (_commandList.find(i->at(0)) != _commandList.end())
+			{
+				std::string response;
+				response = "ERROR :Password needed\r\n";
+				send(curClient->second->getFd(), response.c_str(), response.length(), 0);	//TODO : kick le client parce que probleme avec le terminal: repond 1 fois sur 2
+			}
 			else
 				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
 		}
