@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/03/27 14:37:36 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 13:14:20 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 {
+	_isPass = false;
 	_clientEvent.data.fd = this->_fd;
 	_clientEvent.events = EPOLLIN | EPOLLRDHUP;
 }
@@ -64,4 +65,15 @@ void	Client::receiveAll(int epoll_fd)
 		_mailbox.pop();
 	}
 	updateStatus(epoll_fd);
+}
+
+
+void	Client::setPass(const bool& i)
+{
+	this->_isPass = i;
+}
+
+const bool&	Client::getIspass(void) const
+{
+	return (this->_isPass);
 }

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 15:19:54 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 12:58:15 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Server
 		uint64_t 									_port;
 		const std::string 							_servName;
 		const std::string							_pass;
+		int											_n;
 
 	//----	EPOLL ATTRIBUTS	----//
 		int 										_epoll_fd;
@@ -64,7 +65,8 @@ class Server
 
 	//----	UTILS	----//
 		void										initCommand();
-		std::vector<std::string>					splitStr(char *str, char sep);
+		std::vector<std::string>					splitStr(char *str, std::string sep);
+		std::vector< std::vector<std::string> >		splitVector(std::vector<std::string> &line, std::string sep);
 
 
 //############################# PUBLIC ##########################################################//
@@ -75,10 +77,13 @@ class Server
 		~Server();
 		void										epollWait();
 
+		std::string									getPass();
+
+		//TODO creer une fonction pour kick le client (fonction public pour pouvoir l'appeler depuis fctPASS())
+		void	kickClient(int fd);
 		//		FCT_COMMANDLIST		//
 		// int							cmdCheck(char *buffer);
 		// void						cmdMode(char *buffer);
-		std::string									getPass();
 };
 
 #endif

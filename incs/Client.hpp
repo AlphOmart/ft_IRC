@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/17 16:22:27 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 13:13:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class Client
 {
 	private:
 		std::string				_username;
-		std::string				_password;
+		bool					_isPass;
 		std::string				_nickname;
 		int						_fd;
 		bool					_isInEpoll;
@@ -32,11 +32,12 @@ class Client
 		~Client();
 	
 		int			getFd();
+		const bool&	getIspass() const;
 		void		setMailbox(std::string str, int epoll_fd);
 		void		updateStatus(int epoll_fd);
 		void		receiveAll(int epoll_fd);
 		void		setClientInfo();
-	
+		void		setPass(const bool& i);
 	class err : public std::exception
 	{
 		public:

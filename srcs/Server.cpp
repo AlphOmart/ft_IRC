@@ -6,27 +6,27 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/18 15:25:27 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 13:14:03 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
 
-Server::Server(char *port) :_servName("IRCServ"), _pass(NULL), _addrLen(sizeof(_server_addr))
-{
-	std::string str(port);
-	if (std::string::npos != str.find_first_not_of("0123456789")) {
-		throw	std::invalid_argument("Error : port is not valid.");
-	}
-	_port = std::strtol(port, NULL, 10);
-	epollCreation();
-	socketCreation();
-	addrConfig();
-	linkSocket();
-	listenConnectIn();
-	addSocketToEpoll();
-	initCommand();
-}
+// Server::Server(char *port) :_servName("IRCServ"), _pass(NULL), _addrLen(sizeof(_server_addr))
+// {
+// 	std::string str(port);
+// 	if (std::string::npos != str.find_first_not_of("0123456789")) {
+// 		throw	std::invalid_argument("Error : port is not valid.");
+// 	}
+// 	_port = std::strtol(port, NULL, 10);
+// 	epollCreation();
+// 	socketCreation();
+// 	addrConfig();
+// 	linkSocket();
+// 	listenConnectIn();
+// 	addSocketToEpoll();
+// 	initCommand();
+// }
 
 Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass(pass), _addrLen(sizeof(_server_addr))
 {
@@ -121,6 +121,7 @@ void	Server::epollWait()
 
 void	Server::eventLoop(int	n)
 {
+	_n = n;
 	try
 	{
 		if (_events[n].events & EPOLLRDHUP)
@@ -163,20 +164,27 @@ void	Server::epollinEvent(int n)
 				it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
 		}
 	}
-	else
+	else // not registered
 	{
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
 		buff[br] = '\0';
-		std::vector<std::string>	input;
-		input = splitStr(buff, ' ');
-		std::map<int, Client *>::iterator curClient = _mapClient.find(n);
-		if (input.size() != 2)
-			return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
-		if (_commandList.find(input[0]) != _commandList.end())
-			(*_commandList[input[0]])(input[1], *this, *curClient->second);
-		else
-			std::cout << "unknown command : " << input[0] << std::endl;
+		std::vector<std::string>	line;
+		line = splitStr(buff, "\r\n");
+		std::vector< std::vector<std::string> >	input;
+		input = splitVector(line, " ");
+		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); ++i)
+		{
+			std::cout << "|" << i->at(0) << "|" <<  std::endl;
+			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
+			if (i->size() < 2 || curClient == _mapClient.end())
+				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
+			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass()  == true || i->at(0) == "PASS"))
+				(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
+			else
+				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
+		}
+		// ERR_NOTREGISTERED (451) 
 		// Traitement des données entrantes sur une connexion existante
 //		char buffer[1024] = {0};
 //		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
@@ -250,6 +258,16 @@ void	Server::closeFd()
 	close(_epoll_fd);
 }
 
+void	Server::kickClient(int fd)
+{
+	std::map<int, Client*>::iterator it = _mapClient.find(fd);
+	_mapClient.erase(it);
+	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &_event) == -1) {
+		throw std::runtime_error("Error while calling epoll_ctl().");
+	}
+	close(fd);
+	std::cout << "c'est ciao le client " << fd << std::endl;
+}
 
 // void	Server::fctPASS()
 // {
@@ -329,34 +347,76 @@ void	Server::initCommand()
 	// cmdLst["TOPIC"] = &fctTOPIC();
 }
 
-std::vector<std::string>	Server::splitStr(char *str, char sep)
+// std::vector<std::string>	Server::splitStr(char *str, char sep)
+// {
+// 	std::vector<std::string> result;
+// 	std::string word = "";
+// 	int	 nb = 0;
+
+// 	// std::cout << "\"" << str << "\"" << std::endl;
+// 	for (size_t it = 0; str[it] != '\r' && str[it] != '\n'; ++it)
+// 	{	
+// 		if (str[it] == sep)
+// 		{
+// 			// std::cout << "nb : " << nb << std::endl;
+// 			if (!word.empty())
+// 			{
+// 				result.push_back(word);
+// 				word = "";
+// 			}
+// 		}
+// 		else
+// 			word += str[it];
+// 		nb++;
+// 	}
+
+// 	// Ajoute le dernier mot si la chaîne ne se termine pas par le séparateur
+// 	if (!word.empty()) {
+// 	    result.push_back(word);
+// 	}
+// 	return result;
+// }
+
+
+std::vector<std::string> Server::splitStr(char *str, std::string sep)
 {
-	std::vector<std::string> result;
-	std::string word = "";
-	int	 nb = 0;
+    std::vector<std::string> result;
+    std::string word = "";
 
-	// std::cout << "\"" << str << "\"" << std::endl;
-	for (size_t it = 0; str[it] != '\r'; ++it)
-	{	
-		if (str[it] == sep)
-		{
-			// std::cout << "nb : " << nb << std::endl;
-			if (!word.empty())
-			{
-				result.push_back(word);
-				word = "";
-			}
-		}
-		else
-			word += str[it];
-		nb++;
-	}
+    for (size_t i = 0; str[i] != '\0'; ++i) // Utilise '\0' pour la fin de la chaîne
+    {   
+        if (sep.find(str[i]) != std::string::npos) // Vérifie si le caractère est un séparateur
+        {
+            if (!word.empty())
+            {
+                result.push_back(word);
+                word = "";
+            }
+        }
+        else
+            word += str[i];
+    }
 
-	// Ajoute le dernier mot si la chaîne ne se termine pas par le séparateur
-	if (!word.empty()) {
-	    result.push_back(word);
-	}
-	return result;
+    // Ajoute le dernier mot si la chaîne ne se termine pas par un séparateur
+    if (!word.empty()) {
+        result.push_back(word);
+    }
+    return result;
+}
+
+std::vector< std::vector<std::string> > Server::splitVector(std::vector<std::string> &line, std::string sep)
+{
+    std::vector< std::vector<std::string> > result;
+
+    for (size_t i = 0; i < line.size(); ++i)
+    {
+        // Convertit chaque std::string en char* pour utiliser avec splitStr
+        char *cstr = &line[i][0];
+        std::vector<std::string> split = splitStr(cstr, sep);
+        result.push_back(split);
+    }
+
+    return result;
 }
 
 //	-i -t -k -o -l
