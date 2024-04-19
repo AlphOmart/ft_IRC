@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:16:47 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 14:48:30 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Client
 		void		setPass(const bool& i);
 		void		setNickname(const std::string& str);
 		void		setUser(const std::string& str);
+		const bool&	isRegistered(void);
 
 	class err : public std::exception
 	{

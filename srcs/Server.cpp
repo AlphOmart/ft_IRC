@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:21:19 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 14:26:20 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -427,7 +427,7 @@ std::vector< std::vector<std::string> > Server::splitVector(std::vector<std::str
 
 bool	Server::nickAlreadyUsed(const std::string& str)
 {
-	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it < _mapClient.end(); ++it)
+	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); ++it)
 	{
 		if (it->second->getNick() == str)
 			return (true);

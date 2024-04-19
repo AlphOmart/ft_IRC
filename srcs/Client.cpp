@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:18:06 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:01:37 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 {
 	_isPass = false;
+	_username = "";
+	_nickname = "";
 	_isRegistered = false;
 	_clientEvent.data.fd = this->_fd;
 	_clientEvent.events = EPOLLIN | EPOLLRDHUP;
@@ -107,4 +109,11 @@ const std::string&	Client::getNick(void) const
 const std::string&	Client::getUser(void) const
 {
 	return (this->_username);
+}
+
+const bool&	Client::isRegistered(void)
+{
+	if (!_nickname.empty() && !_username.empty() && _isPass == true)
+			_isRegistered = true;
+	return (_isRegistered);
 }

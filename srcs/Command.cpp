@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:12:43 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/19 15:09:44 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,18 @@ void	fctNICK(std::string str, Server& server, Client& client)
 {
 	if (server.nickAlreadyUsed(str) == false)
 		client.setNickname(str);
-	std::cout << "nickname : "<< str << std::endl;
+	else
+	{
+		std::string response;
+		response = ":IRCServ 433 *: Nickname is already used. \r\n";
+		send(client.getFd(), response.c_str(), response.length(), 0);
+	}
+	if (client.isRegistered() == true)
+	{
+		std::string response;
+		response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + "@IRCServ\r\n";
+		send(client.getFd(), response.c_str(), response.length(), 0);
+	}
 }
 
 void	fctUSER(std::string str, Server& server, Client& client)
@@ -42,7 +53,12 @@ void	fctUSER(std::string str, Server& server, Client& client)
 	(void)server;
 	if (client.getIsRegistered() == false)
 		client.setUser(str);
-	std::cout << "user : "<< str << std::endl;
+	if (client.isRegistered() == true)
+	{
+		std::string response;
+		response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + " @IRCServ\r\n";
+		send(client.getFd(), response.c_str(), response.length(), 0);
+	}
 }
 
 void	fctKICK()
