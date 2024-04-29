@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 16:13:13 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:16:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	fctJOIN(std::string str, Server& server, Client& client)
 	std::string response;
 			response = ":IRCServ 0 " + client.getNick() + " : Join channel " + str + ".\r\n";
 			send(client.getFd(), response.c_str(), response.length(), 0);
-	
+	//TODO: add le client au channel
 }
 
 void	fctKICK()

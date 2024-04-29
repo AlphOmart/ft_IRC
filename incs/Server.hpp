@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 16:02:20 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:15:37 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ class Server
 
 	public:
 		std::map<std::string, Channel*>									_mapChannel;
+		//todo: mettre mapChannel en private et essayer de mettre les commandes fct en fonction membre de server"
 
 		Server(char *port);
 		Server(char *port, const std::string& pass);
