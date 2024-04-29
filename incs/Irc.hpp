@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/03/27 14:33:22 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 13:57:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <queue>
 # include "Client.hpp"
 # include "Server.hpp"
+# include "Channel.hpp"
 
 
 // # include <string.h>		// pour memset

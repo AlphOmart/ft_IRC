@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 15:52:10 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 12:20:21 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void	Server::epollinEvent(int n)
 			else
 				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
 		}
-		// ERR_NOTREGISTERED (451) 
+		// ERR_NOTREGISTERED (451)
 		// Traitement des données entrantes sur une connexion existante
 //		char buffer[1024] = {0};
 //		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
