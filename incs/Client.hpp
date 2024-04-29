@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:48:30 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 15:37:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "Irc.hpp"
 
+class Channel;
 class Client
 {
 	private:
@@ -26,6 +27,7 @@ class Client
 		bool					_isInEpoll;
 		std::queue<std::string>	_mailbox;
 		struct epoll_event		_clientEvent;
+		std::vector<Channel*>	_channels;
 		
 
 	public:
@@ -48,6 +50,7 @@ class Client
 		void		setNickname(const std::string& str);
 		void		setUser(const std::string& str);
 		const bool&	isRegistered(void);
+		void		addChannel(Channel *ch);
 
 	class err : public std::exception
 	{

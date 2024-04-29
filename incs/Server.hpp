@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/19 14:13:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/29 16:02:20 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 
 class Client;
 class Server;
+class Channel;
 		void	fctPASS(std::string str, Server& server, Client& client);
 		void	fctUSER(std::string str, Server& server, Client& client);
 		void	fctNICK(std::string str, Server& server, Client& client);
+		void	fctJOIN(std::string str, Server& server, Client& client);
 
 class Server
 {
@@ -28,23 +30,24 @@ class Server
 	private:
 //----------------------------- ATTRIBUTS ----------------------------------------------------------//
 
-		uint64_t 									_port;
-		const std::string 							_servName;
-		const std::string							_pass;
-		int											_n;
+		uint64_t 														_port;
+		const std::string 												_servName;
+		const std::string												_pass;
+		int																_n;
 
 	//----	EPOLL ATTRIBUTS	----//
-		int 										_epoll_fd;
-		int											_server_fd;
-		struct sockaddr_in							_server_addr;
-		socklen_t									_addrLen;
-		struct epoll_event							_event;
-		struct epoll_event							_events[MAX_EVENTS];
-		int											_nfds;
+		int 															_epoll_fd;
+		int																_server_fd;
+		struct sockaddr_in												_server_addr;
+		socklen_t														_addrLen;
+		struct epoll_event												_event;
+		struct epoll_event												_events[MAX_EVENTS];
+		int																_nfds;
 
 	//----	MAP	----//
-		std::map<int, Client*>							_mapClient;
+		std::map<int, Client*>											_mapClient;
 		std::map<std::string, void(*) (std::string, Server&, Client&)>	_commandList;
+		// std::map<std::string, Channel*>									_mapChannel;
 
 
 //----------------------------- FUNCTIONS ----------------------------------------------------------//
@@ -72,6 +75,8 @@ class Server
 //############################# PUBLIC ##########################################################//
 
 	public:
+		std::map<std::string, Channel*>									_mapChannel;
+
 		Server(char *port);
 		Server(char *port, const std::string& pass);
 		~Server();
