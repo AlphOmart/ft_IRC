@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 16:16:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/30 12:59:29 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,29 @@ void	fctUSER(std::string str, Server& server, Client& client)
 
 void	fctJOIN(std::string str, Server& server, Client& client)
 {
-	if (server._mapChannel.find(str) == server._mapChannel.end())	//verifier que le channel existe
+	if (server._mapChannel.find(str) == server._mapChannel.end())	//verifier si le channel n'existe pas
 	{
-		Channel *curChannel =  new Channel(str);		// a faire aute part en initialisation
-		server._mapChannel[curChannel->getName()] = curChannel;	// idem
+		Channel *curChannel =  new Channel(str);
+		server._mapChannel[curChannel->getName()] = curChannel;
 		client.addChannel(curChannel);
+		curChannel->addMember(&client);
 	}
-	else
-		client.addChannel(server._mapChannel[str]);
-	
-	std::cout << "channel list: " << std::endl;
-	for (std::map<std::string, Channel*>::iterator i = server._mapChannel.begin(); i != server._mapChannel.end(); i++)
+	else		// si existe deja:
 	{
-		std::cout << ": " << i->second->getName() << std::endl;
+		client.addChannel(server._mapChannel[str]);
+		server._mapChannel[str]->addMember(&client);
 	}
+	
+						std::cout << "channel list: " << std::endl;
+						for (std::map<std::string, Channel*>::iterator i = server._mapChannel.begin(); i != server._mapChannel.end(); i++)
+						{
+							std::cout << "- " << i->second->getName() << std::endl;
+						}
 
 	std::string response;
-			response = ":IRCServ 0 " + client.getNick() + " : Join channel " + str + ".\r\n";
-			send(client.getFd(), response.c_str(), response.length(), 0);
-	//TODO: add le client au channel
+	response = ":IRCServ 0 " + client.getNick() + " : Join channel " + str + ".\r\n";
+	send(client.getFd(), response.c_str(), response.length(), 0);
+	//TODO: mettre le message join channel en opposition avec un msg "already joined" dans le else
 }
 
 void	fctKICK()

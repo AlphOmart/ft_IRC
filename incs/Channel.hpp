@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 16:04:29 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/30 12:25:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ class Channel
 		Channel();
 		Channel(const std::string &name);
 		~Channel();
+
 		const std::string&	getName() const;
+		void	addMember(Client *newClient);
 };
 
 

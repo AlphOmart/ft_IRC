@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 14:56:56 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/30 12:42:40 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <map>
 # include <vector>
 # include <queue>
+# include <algorithm>	// pour std::find
 # include "Client.hpp"
 # include "Server.hpp"
 # include "Channel.hpp"

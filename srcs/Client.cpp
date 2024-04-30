@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 15:39:10 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/04/30 12:46:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,6 @@ const bool&	Client::isRegistered(void)
 
 void	Client::addChannel(Channel *ch)
 {
-	_channels.push_back(ch);
+	if (std::find(_channels.begin(), _channels.end(), ch) == _channels.end())	//ne l'ajoute pas si est déjà dedans
+		_channels.push_back(ch);
 }
