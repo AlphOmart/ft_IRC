@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/03 13:29:05 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/03 13:32:31 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ void	Server::epollinEvent(int n)
 				else
 					{
 						std::string response;
-						response = "ERROR :Registered needed\r\n";
+						response = "ERROR : Registration needed\r\n";
 						send(curClient->second->getFd(), response.c_str(), response.length(), 0);
 					}
 			}
