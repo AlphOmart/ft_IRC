@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/03 12:25:22 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/03 13:29:05 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,18 @@ void	Server::epollinEvent(int n)
 			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
 			if (i->size() < 2 || curClient == _mapClient.end())
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
-			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass()  == true || i->at(0) == "PASS"))
-				(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
+			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass() == true || i->at(0) == "PASS"))
+			{
+				if (curClient->second->isRegistered() == true || i->at(0) == "NICK" || i->at(0) == "USER" || i->at(0) == "PASS")
+					(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
+				else
+					{
+						std::string response;
+						response = "ERROR :Registered needed\r\n";
+						send(curClient->second->getFd(), response.c_str(), response.length(), 0);
+					}
+			}
+			
 			else if (_commandList.find(i->at(0)) != _commandList.end())
 			{
 				std::string response;
