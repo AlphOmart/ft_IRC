@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/30 12:31:27 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/03 12:25:22 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,6 @@ void	Server::epollinEvent(int n)
 		// Ajout du nouveau descripteur Client de fichier à l'instance epoll
 		_mapClient[acceptedClient->getFd()]->updateStatus(_epoll_fd);
 		// std::cout << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << std::endl;
-		//TODO PARSE CLIENT
 		std::stringstream buff;
 		buff << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << "\r\n";
 		std::map<int, Client *>::iterator curClient = _mapClient.find(connFd);
@@ -185,79 +184,12 @@ void	Server::epollinEvent(int n)
 			{
 				std::string response;
 				response = "ERROR :Password needed\r\n";
-				send(curClient->second->getFd(), response.c_str(), response.length(), 0);	//TODO : kick le client parce que probleme avec le terminal: repond 1 fois sur 2
+				send(curClient->second->getFd(), response.c_str(), response.length(), 0);
 			}
 			else
 				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
 		}
 	}
-	/*else		// POST-CONNEXION : all command
-	{
-		char buff[1024] = {0};
-		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
-		buff[br] = '\0';
-		std::vector<std::string>	line;
-		line = splitStr(buff, "\r\n");
-		std::vector< std::vector<std::string> >	input;
-		input = splitVector(line, " ");
-		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); ++i)
-		{
-			std::cout << "|" << i->at(0) << "|" <<  std::endl;
-			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
-			
-			if (i->size() < 2 || curClient == _mapClient.end())
-				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
-			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass()  == true || i->at(0) == "PASS"))
-				(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
-			else if (_commandList.find(i->at(0)) != _commandList.end())
-			{
-				std::string response;
-				response = "ERROR :Password needed\r\n";
-				send(curClient->second->getFd(), response.c_str(), response.length(), 0);	//TODO : kick le client parce que probleme avec le terminal: repond 1 fois sur 2
-			}
-			else
-				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
-		}
-		}*/
-		// ERR_NOTREGISTERED (451)
-		// Traitement des données entrantes sur une connexion existante
-//		char buffer[1024] = {0};
-//		ssize_t bytes_read = recv(_events[n].data.fd, buffer, sizeof(buffer) - 1, 0);
-//		if (bytes_read > 0)
-//		{
-//			buffer[bytes_read] = '\0'; // Terminer la chaîne
-//			switch (cmdCheck(buffer))
-//			{
-//			case 0:
-//				std::cout << "PASS	[#channel_name]	[user]	[reason]." << std::endl;
-//				break;
-//			case 1:
-//				std::cout << "KICK	[#channel_name]	[user]	[reason]." << std::endl;
-//				break;
-//
-//			case 2:
-//				std::cout << "INVITE	[user]	[#channel_name]." << std::endl;
-//				break;
-//
-//			case 3:
-//				std::cout << "TOPIC	[#channel_name]	[NewTopic]." << std::endl;
-//				break;
-//
-//			case 4:
-//				cmdMode(buffer);
-//				break;
-//
-//			default:
-//				std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
-//				for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-//				{
-//					if (it != curClient)
-//						it->second->setMailbox(buffer, _epoll_fd);	//ajout de l'input dans la mailbox
-//				}
-//			}
-//			// std::cout << "Client "<< _events[n].data.fd <<" : " << buffer <<std::endl ;
-//		}
-
 }
 
 void	Server::epollrdhupEvent(int n)
@@ -302,64 +234,6 @@ void	Server::kickClient(int fd)
 	close(fd);
 	std::cout << "c'est ciao le client " << fd << std::endl;
 }
-
-// void	Server::fctPASS()
-// {
-// 	// if (_pass)
-// 	std::cout << "PASS" << std::endl;
-// }
-
-// int	Server::cmdCheck(char *buffer)					// ANCIENNE FONCTION POUR LE SWITCH CASE
-// {
-// 	std::string str(buffer);
-// 	if (str.find("PASS", 0) == 0)
-// 		return (0);
-// 	if (str.find("/KICK ",0) == 0)
-// 		return (1);
-// 	if (str.find("/INVITE ",0) == 0)
-// 		return (2);
-// 	if (str.find("/TOPIC ",0) == 0)
-// 		return (3);
-// 	if (str.find("/MODE ",0) == 0)
-// 		return (4);
-// 	return (-1);
-// 	// KICK		INVITE		TOPIC		MODE
-// }
-
-
-// void	Server::cmdMode(char *buffer)					// FONCTION POUR PARSER LES COMMANDES D'APRÈS (MODE, KICK, etc...)
-// {
-// 	std::string	str(buffer);
-// 	std::vector<std::string> command = splitStr(str, ' ');
-// 	std::cout << "cmd.size() = " << command.size() << std::endl;
-// 	if (command.size() < 3)
-// 		throw std::invalid_argument("Missing argument");
-// 	if (command.size() == 3)
-// 	{
-// 		if (command.at(2) == "-k" || command.at(2) == "-o" || command.at(2) == "-l")
-// 			throw std::invalid_argument("Missing argument after the flag.");
-// 		else if (command.at(2) != "-i" && command.at(2) != "-t")
-// 			throw std::invalid_argument("Unknown MODE flag");
-// 		else
-// 		{
-// 			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << "." << std::endl;
-// 			//TODO function for MODE -i -t
-// 		}
-// 	}
-// 	else if (command.size() == 4)
-// 	{
-// 		if (command.at(2) == "-i" || command.at(2) == "-t")
-// 			throw std::invalid_argument("To much arguments.");
-// 		else if (command.at(2) != "-k" && command.at(2) != "-o" && command.at(2) != "-l")
-// 			throw std::invalid_argument("Unknown MODE flag");
-// 		else
-// 		{
-// 			std::cout << "command[0]:" << command.at(0) << ".\tcommand[1]:" << command.at(1) << ".\tcommand[2]:" << command.at(2) << ".\tcommand[3]:" << command.at(3) << "." << std::endl;
-// 			//TODO function for MODE -k -o -l
-// 		}
-// 	}
-// }
-
 
 
 //############################# UTILS ##########################################################//

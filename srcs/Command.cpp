@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/30 12:59:29 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/03 12:23:12 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	fctPASS(std::string str, Server& server, Client& client)
 		{
 			std::string response;
 			response = ":IRCServ 464 *: Password incorrect\r\n";
-			send(client.getFd(), response.c_str(), response.length(), 0);	//TODO : kick le client parce que probleme avec le terminal: repond 1 fois sur 2
+			send(client.getFd(), response.c_str(), response.length(), 0);
 			//server.kickClient(client.getFd());
 		}
 	// }
