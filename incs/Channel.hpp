@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/30 12:25:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/06 14:31:41 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class Channel
 {
 	private:
-		std::vector<Client *>	_members;
+		std::map<std::string, Client *>	_members;
 		const std::string		_name;
 	
 	public:
@@ -28,6 +28,7 @@ class Channel
 
 		const std::string&	getName() const;
 		void	addMember(Client *newClient);
+		void	rmMember(Client *newClient);
 };
 
 

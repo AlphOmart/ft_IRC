@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 15:37:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/06 14:30:34 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Client
 		bool					_isInEpoll;
 		std::queue<std::string>	_mailbox;
 		struct epoll_event		_clientEvent;
-		std::vector<Channel*>	_channels;
+		std::map<std::string, Channel*>	_channels;
 		
 
 	public:
@@ -51,6 +51,7 @@ class Client
 		void		setUser(const std::string& str);
 		const bool&	isRegistered(void);
 		void		addChannel(Channel *ch);
+		void		rmChannel(Channel *ch);
 
 	class err : public std::exception
 	{

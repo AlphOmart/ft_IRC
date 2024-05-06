@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/29 16:15:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/06 15:08:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 class Client;
 class Server;
 class Channel;
-		void	fctPASS(std::string str, Server& server, Client& client);
-		void	fctUSER(std::string str, Server& server, Client& client);
-		void	fctNICK(std::string str, Server& server, Client& client);
-		void	fctJOIN(std::string str, Server& server, Client& client);
+		void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
 class Server
 {
@@ -45,8 +46,7 @@ class Server
 		int																_nfds;
 
 	//----	MAP	----//
-		std::map<int, Client*>											_mapClient;
-		std::map<std::string, void(*) (std::string, Server&, Client&)>	_commandList;
+		std::map<std::string, void(*) (std::vector<std::vector<std::string> >::iterator, Server&, Client&)>	_commandList;
 		// std::map<std::string, Channel*>									_mapChannel;
 
 
@@ -75,6 +75,7 @@ class Server
 //############################# PUBLIC ##########################################################//
 
 	public:
+		std::map<int, Client*>											_mapClient;
 		std::map<std::string, Channel*>									_mapChannel;
 		//todo: mettre mapChannel en private et essayer de mettre les commandes fct en fonction membre de server"
 
@@ -86,8 +87,7 @@ class Server
 		std::string									getPass();
 		bool										nickAlreadyUsed(const std::string& str);
 
-		//TODO creer une fonction pour kick le client (fonction public pour pouvoir l'appeler depuis fctPASS())
-		void	kickClient(int fd);
+		// void	kickClient(int fd);
 		//		FCT_COMMANDLIST		//
 		// int							cmdCheck(char *buffer);
 		// void						cmdMode(char *buffer);

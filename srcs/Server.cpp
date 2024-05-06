@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/03 13:32:31 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/06 15:41:06 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void	Server::epollinEvent(int n)
 			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass() == true || i->at(0) == "PASS"))
 			{
 				if (curClient->second->isRegistered() == true || i->at(0) == "NICK" || i->at(0) == "USER" || i->at(0) == "PASS")
-					(*_commandList[i->at(0)])(i->at(1), *this, *curClient->second);
+					(*_commandList[i->at(0)])(i, *this, *curClient->second);
 				else
 					{
 						std::string response;
@@ -234,16 +234,16 @@ void	Server::closeFd()
 	close(_epoll_fd);
 }
 
-void	Server::kickClient(int fd)
-{
-	std::map<int, Client*>::iterator it = _mapClient.find(fd);
-	_mapClient.erase(it);
-	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &_event) == -1) {
-		throw std::runtime_error("Error while calling epoll_ctl().");
-	}
-	close(fd);
-	std::cout << "c'est ciao le client " << fd << std::endl;
-}
+// void	Server::kickClient(int fd)
+// {
+// 	std::map<int, Client*>::iterator it = _mapClient.find(fd);
+// 	_mapClient.erase(it);
+// 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &_event) == -1) {
+// 		throw std::runtime_error("Error while calling epoll_ctl().");
+// 	}
+// 	close(fd);
+// 	std::cout << "c'est ciao le client " << fd << std::endl;
+// }
 
 
 //############################# UTILS ##########################################################//
@@ -260,40 +260,11 @@ void	Server::initCommand()
 	_commandList["NICK"] = &fctNICK;
 	_commandList["USER"] = &fctUSER;
 	_commandList["JOIN"] = &fctJOIN;
-	// _commandList["KICK"] = &fctKICK();
+	_commandList["KICK"] = &fctKICK;
 	// cmdLst["INVITE"] = &fctINVITE();
 	// cmdLst["TOPIC"] = &fctTOPIC();
 }
 
-// std::vector<std::string>	Server::splitStr(char *str, char sep)
-// {
-// 	std::vector<std::string> result;
-// 	std::string word = "";
-// 	int	 nb = 0;
-
-// 	// std::cout << "\"" << str << "\"" << std::endl;
-// 	for (size_t it = 0; str[it] != '\r' && str[it] != '\n'; ++it)
-// 	{	
-// 		if (str[it] == sep)
-// 		{
-// 			// std::cout << "nb : " << nb << std::endl;
-// 			if (!word.empty())
-// 			{
-// 				result.push_back(word);
-// 				word = "";
-// 			}
-// 		}
-// 		else
-// 			word += str[it];
-// 		nb++;
-// 	}
-
-// 	// Ajoute le dernier mot si la chaîne ne se termine pas par le séparateur
-// 	if (!word.empty()) {
-// 	    result.push_back(word);
-// 	}
-// 	return result;
-// }
 
 
 std::vector<std::string> Server::splitStr(char *str, std::string sep)
@@ -337,10 +308,6 @@ std::vector< std::vector<std::string> > Server::splitVector(std::vector<std::str
     return result;
 }
 
-//	-i -t -k -o -l
-
-		// for (size_t i = 0; i < input.size(); i++)
-		// 	std::cout << "input[" << i << "]: " << input[i] << std::endl;
 
 
 bool	Server::nickAlreadyUsed(const std::string& str)
@@ -367,6 +334,10 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 
 
 
+//	-i -t -k -o -l
+
+		// for (size_t i = 0; i < input.size(); i++)
+		// 	std::cout << "input[" << i << "]: " << input[i] << std::endl;
 
 
 
