@@ -6,27 +6,11 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/06 15:41:06 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/07 12:35:47 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
-
-// Server::Server(char *port) :_servName("IRCServ"), _pass(NULL), _addrLen(sizeof(_server_addr))
-// {
-// 	std::string str(port);
-// 	if (std::string::npos != str.find_first_not_of("0123456789")) {
-// 		throw	std::invalid_argument("Error : port is not valid.");
-// 	}
-// 	_port = std::strtol(port, NULL, 10);
-// 	epollCreation();
-// 	socketCreation();
-// 	addrConfig();
-// 	linkSocket();
-// 	listenConnectIn();
-// 	addSocketToEpoll();
-// 	initCommand();
-// }
 
 Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass(pass), _addrLen(sizeof(_server_addr))
 {
@@ -122,7 +106,6 @@ void	Server::epollWait()
 void	Server::eventLoop(int	n)
 {
 	_n = n;
-	try
 	{
 		if (_events[n].events & EPOLLRDHUP)
 			epollrdhupEvent(n);
@@ -130,10 +113,6 @@ void	Server::eventLoop(int	n)
 			epollinEvent(n);
 		else if (_events[n].events & EPOLLOUT)
 			epolloutEvent(n);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
 	}
 }
 

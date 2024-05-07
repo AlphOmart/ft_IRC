@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/06 15:55:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/07 12:27:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//verifier si le channel n'existe pas
+	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//si le channel n'existe pas
 	{
-		Channel *curChannel =  new Channel(i->at(1));		//TODO: creer un constructeur avec nick client pour MOD
+		Channel *curChannel =  new Channel(i->at(1), client);
 		server._mapChannel[curChannel->getName()] = curChannel;
 		client.addChannel(curChannel);
 		curChannel->addMember(&client);
@@ -78,17 +78,10 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
-	
-						std::cout << "channel list: " << std::endl;
-						for (std::map<std::string, Channel*>::iterator it = server._mapChannel.begin(); it != server._mapChannel.end(); it++)
-						{
-							std::cout << "- " << it->second->getName() << std::endl;
-						}
-
-	std::string response;
-	response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
-	send(client.getFd(), response.c_str(), response.length(), 0);
-	//TODO: mettre le message join channel en opposition avec un msg "already joined" dans le else
+	throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n");
+	// std::string response;
+	// response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
+	// send(client.getFd(), response.c_str(), response.length(), 0);
 }
 
 
@@ -101,14 +94,12 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	while (it != server._mapClient.end() && it->second->getNick() != i->at(2))
 		it++;
 	if (it == server._mapClient.end())
-		throw ("//TODO:NR : client doesn't exist.");
-
+		throw ("NR : client doesn't exist.");
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
-		throw ("//TODO:NR : channel doesn't exist.");		//pour l'instant (core dumped) a fix
+		throw ("NR : channel doesn't exist.");
 	it->second->rmChannel(server._mapChannel[i->at(1)]);
-	// client.rmChannel(server._mapChannel[i->at(1)]);
 	server._mapChannel[i->at(1)]->rmMember(it->second);
-	std::cout << "KICK" << std::endl;
+	throw ("NR : kick successfully.");
 }
 
 // ---------------------------------------------------------------------//
