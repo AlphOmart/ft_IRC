@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/07 12:32:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:05:55 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,15 @@ class Channel
 		std::map<std::string, Client *>	_members;
 		std::map<std::string, Client *> _moderators;
 		const std::string				_name;
-	
+
+
+		int								_userLimit;
+		std::string						_mdp;
+
+		bool							_isUserLimit;
+		bool							_isMdp;
+		bool							_invitOnly;
+
 	public:
 		Channel();
 		Channel(const std::string& name, Client& mod);
@@ -32,6 +40,16 @@ class Channel
 		void				addMember(Client *newClient);
 		void				addModerator(Client *newClient);
 		void				rmMember(Client *newClient);
+
+
+		void				setUserLimit(int nb);
+		const int&			getUserLimit() const;
+		void				setMdp(std::string	mdp);
+		const std::string&	getMdp() const;
+
+		bool				getIsUserLimit();
+		bool				getIsMdp();
+		bool				getInvitOnly();
 };
 
 

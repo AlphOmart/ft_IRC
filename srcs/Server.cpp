@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/07 12:35:47 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 12:48:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -379,14 +379,12 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 // ---------------------------------------------------------------------//
 
 
-
-
 // ---------------------------------------------------------------------//
 //    Examples:	MODE
 
 //            Use of Channel Modes:
 
-// MODE #Finnish +im               ; Makes #Finnish channel moderated and 'invite-only'.
+// MODE #Finnish +i               ; Makes #Finnish channel 'invite-only'.
 
 // MODE #Finnish +o Kilroy         ; Gives 'chanop' privileges to Kilroy on #Fins.
 
