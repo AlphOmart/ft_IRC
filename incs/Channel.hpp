@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 14:50:25 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 15:23:14 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ class Channel
 
 		~Channel();
 
-		std::size_t	getMemberSize();
+		std::size_t			getMemberSize();
 		const std::string&	getName() const;
 		void				addMember(Client *newClient);
 		void				addModerator(Client *newClient);
+		bool				isModerator(std::string client);
 		void				rmMember(Client *newClient);
 
 

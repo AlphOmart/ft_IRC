@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 14:51:03 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 15:25:37 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,13 @@ void	Channel::addModerator(Client *newClient)
 		_moderators[newClient->getNick()] = newClient;
 	else
 		throw ("NR : client already is moderator");
+}
+
+bool	Channel::isModerator(std::string client)
+{
+	if (_moderators.find(client) == _moderators.end())
+		return (false);
+	return (true);
 }
 
 void	Channel::rmMember(Client *newClient)
