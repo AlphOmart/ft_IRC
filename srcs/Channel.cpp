@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:44:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 14:51:03 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ void	Channel::rmMember(Client *newClient)
 void	Channel::setUserLimit(int nb)
 {
 	_userLimit = nb;
+	if (nb == 0)
+		_isUserLimit = false;
+	else
+		_isUserLimit = true;
 };
 
 const int&	Channel::getUserLimit() const
@@ -75,13 +79,16 @@ const int&	Channel::getUserLimit() const
 void	Channel::setMdp(std::string	mdp)
 {
 	_mdp = mdp;
+	if (mdp.empty())
+		_isMdp = false;
+	else
+		_isMdp = true;
 };
 
 const std::string&	Channel::getMdp() const
 {
 	return (_mdp);
 };
-
 
 bool	Channel::getIsUserLimit()
 {
@@ -91,6 +98,11 @@ bool	Channel::getIsUserLimit()
 bool	Channel::getIsMdp()
 {
 	return (_isMdp);
+};
+
+void	Channel::setInvitOnly(bool i)
+{
+	_invitOnly = i;
 };
 
 bool	Channel::getInvitOnly()

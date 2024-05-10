@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/07 12:21:39 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 15:14:07 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ int main(int argc, char **argv)
 		catch(const char *e)
 		{
 			std::cerr << e << std::endl;
+		}
+		catch(const std::out_of_range& e)
+		{
+			std::cerr << e.what() << std::endl;
 		}
 	}
 	return (0);

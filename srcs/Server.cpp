@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 12:48:43 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:57:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,7 @@ void	Server::initCommand()
 	_commandList["USER"] = &fctUSER;
 	_commandList["JOIN"] = &fctJOIN;
 	_commandList["KICK"] = &fctKICK;
+	_commandList["MODE"] = &fctMODE;
 	// cmdLst["INVITE"] = &fctINVITE();
 	// cmdLst["TOPIC"] = &fctTOPIC();
 }

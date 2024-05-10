@@ -6,11 +6,13 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:47:56 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 15:14:29 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
+
+int	flagCheck(std::string	str);
 
 void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
@@ -75,12 +77,12 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	else		// si existe deja:
 	{
-		if (server._mapChannel[i->at(1)]->getIsMdp() == true && !i->at(2).empty())
-		{
+		if (server._mapChannel[i->at(1)]->getIsMdp() == true && !i->at(2).empty())	//si le channel a un mdp et qu'on a passé un mdp
+		{																			//si pas de 2eme arguments TODO fix
 			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
 				throw ("NR : wrong password");
 		}
-		else if (i->at(2).empty())
+		else if (i->at(2).empty()) //si pas de 2eme arguments TODO fix : l'ecriture i->at().empty() throw un std::out_of_range
 			throw ("NR : need password to join the channel");
 
 		if (server._mapChannel[i->at(1)]->getInvitOnly() == true)
@@ -127,6 +129,104 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 //            ERR_NOTONCHANNEL
 // ---------------------------------------------------------------------//
 
+
+
+void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
+		throw ("NR : Channel doesn't exist");
+	
+	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
+		throw ("NR : need operand + or - before flag");
+	if (i->at(2).at(0) == '+')
+	{
+		switch (flagCheck(i->at(2)))
+		{
+		case 0:
+			throw ("NR : too many args, only 1 letter");
+		case 1:
+			server._mapChannel[i->at(1)]->setInvitOnly(true);
+			throw ("NR : invit only mode added successfully");
+		case 2:
+			std::cout << "+t.(todo)" << std::endl;
+			break;
+		case 3:
+			if (i->at(3).empty())	//si pas de 3eme arguments TODO fix
+				throw ("NR : new password missed");
+			server._mapChannel[i->at(1)]->setMdp(i->at(3));
+			throw ("NR : password added successfully");
+		case 4:
+			std::cout << "+o." << std::endl;
+			break;
+		case 5:
+			if (i->at(3).empty()) //si pas de 3eme arguments TODO fix
+				throw ("NR : new limit missed");
+			server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
+			throw ("NR : user limit added successfully");
+		default:
+			throw("NR : unknown flag");
+		}
+	}
+	else
+	{
+		switch (flagCheck(i->at(2)))
+		{
+		case 0:
+			throw ("NR : too many args, only 1 letter");
+		case 1:
+			server._mapChannel[i->at(1)]->setInvitOnly(false);
+			throw ("NR : invit only mode removed successfully");
+		case 2:
+			std::cout << "-t." << std::endl;
+			break;
+		case 3:
+			server._mapChannel[i->at(1)]->setMdp(i->at(3));
+			throw ("NR : password removed successfully");
+		case 4:
+			std::cout << "-o." << std::endl;
+			break;
+		case 5:
+			server._mapChannel[i->at(1)]->setUserLimit(0);
+			throw ("NR : user limit added successfully");
+		default:
+			throw("NR : unknown flag");
+		}
+	}
+	// i->at(2) = +-iktol
+	// i->at(3) = okl arg
+	
+	(void)client;
+}
+
+int	flagCheck(std::string	str)
+{
+	if (str.size() > 2)
+		return (0);
+	if (str.find("i",0) == 1)
+		return (1);
+	if (str.find("t",0) == 1)
+		return (2);
+	if (str.find("k",0) == 1)
+		return (3);
+	if (str.find("o",0) == 1)
+		return (4);
+	if (str.find("l",0) == 1)
+		return (5);
+	return (-1);
+}
+
+// ---------------------------------------------------------------------//
+//    Examples:	MODE
+
+//            Use of Channel Modes:
+
+// MODE #Finnish +i               ; Makes #Finnish channel 'invite-only'.
+
+// MODE #Finnish +o Kilroy         ; Gives 'chanop' privileges to Kilroy on #Fins.
+
+// MODE #42 +k oulu                ; Set the channel key to "oulu".
+
+// MODE #eu-opers +l 10            ; Set the limit for the number of users on channel to 10.
 
 
 

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:44:24 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 14:50:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Channel
 
 		bool				getIsUserLimit();
 		bool				getIsMdp();
+		void				setInvitOnly(bool i);
 		bool				getInvitOnly();
 };
 
