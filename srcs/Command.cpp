@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/07 12:27:43 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:47:56 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,18 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	else		// si existe deja:
 	{
+		if (server._mapChannel[i->at(1)]->getIsMdp() == true && !i->at(2).empty())
+		{
+			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
+				throw ("NR : wrong password");
+		}
+		else if (i->at(2).empty())
+			throw ("NR : need password to join the channel");
+
+		if (server._mapChannel[i->at(1)]->getInvitOnly() == true)
+			throw ("NR : Channel is on invit only");
+		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
+			throw ("NR : Channel is full");
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}

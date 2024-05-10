@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:13:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 13:44:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ Channel::Channel(const std::string& name, Client& mod) : _name(name), _isUserLim
 
 Channel::~Channel()
 {
+}
+
+std::size_t	Channel::getMemberSize()
+{
+	std::size_t size = _members.size();
+	return (size);
 }
 
 const std::string&	Channel::getName(void) const
