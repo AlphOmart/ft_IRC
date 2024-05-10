@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 15:25:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:40:27 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ std::size_t	Channel::getMemberSize()
 {
 	std::size_t size = _members.size();
 	return (size);
+}
+
+std::map<std::string, Client *>	Channel::getMembers() const
+{
+	return (_members);
 }
 
 const std::string&	Channel::getName(void) const
@@ -60,14 +65,21 @@ bool	Channel::isModerator(std::string client)
 	return (true);
 }
 
-void	Channel::rmMember(Client *newClient)
+void	Channel::rmMember(Client *client)
 {
-	if (_members.find(newClient->getNick()) != _members.end())	//ne le remove pas si est déjà remove
-		_members.erase(newClient->getNick());
+	if (_members.find(client->getNick()) != _members.end())	//ne le remove pas si est déjà remove
+		_members.erase(client->getNick());
 	else
 		throw ("NR : client is not in the channel");
 }
 
+void	Channel::rmModerator(Client *client)
+{
+	if (_moderators.find(client->getNick()) != _moderators.end())	//ne le remove pas si est déjà remove
+		_moderators.erase(client->getNick());
+	else
+		throw ("NR : client is not in the channel");
+}
 
 void	Channel::setUserLimit(int nb)
 {

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 15:39:24 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:42:42 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,13 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	else		// si existe deja:
 	{
-		if (server._mapChannel[i->at(1)]->getIsMdp() == true /*&& !i->at(2).empty()*/)	//si le channel a un mdp et qu'on a passé un mdp
-		{																			//si pas de 2eme arguments TODO fix
+		if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
+		{
 			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
 				throw ("NR : wrong password");
 		}
-		/*else if (i->at(2).empty())				//si pas de 2eme arguments TODO fix : l'ecriture i->at().empty() throw un std::out_of_range
-			throw ("NR : need password to join the channel");*/
+		else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
+			throw ("NR : need password to join the channel");
 
 		if (server._mapChannel[i->at(1)]->getInvitOnly() == true)
 			throw ("NR : Channel is on invit only");
@@ -105,13 +105,20 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 {
 	if (i->size() != 3)
 		throw ("NR : wrong number of arguments");
+	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
+		throw ("NR : channel doesn't exist.");
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
 	while (it != server._mapClient.end() && it->second->getNick() != i->at(2))
 		it++;
 	if (it == server._mapClient.end())
 		throw ("NR : client doesn't exist.");
-	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
-		throw ("NR : channel doesn't exist.");
+	std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
+	std::map<std::string, Client *>::iterator it2 = members.begin();
+	while (it2 != members.end() && it2->second->getNick() != i->at(2))
+		it2++;
+	if (it2 == members.end())
+		throw ("NR : client is not in the channel.");
+
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 		throw ("NR : you're not allowed to use this command (not a moderator)");
 	it->second->rmChannel(server._mapChannel[i->at(1)]);
@@ -136,10 +143,12 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
+	if (i->size() != 3 && i->size() != 4)
+		throw ("NR : Wrong numbers fo args");
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
 		throw ("NR : Channel doesn't exist");
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
-		throw ("NR : yoou're not allowed to use this command (not a moderator)");
+		throw ("NR : you're not allowed to use this command (not a moderator)");
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
 		throw ("NR : need operand + or - before flag");
 	if (i->at(2).at(0) == '+')
@@ -152,19 +161,31 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			throw ("NR : invit only mode added successfully");
 		case 2:
-			std::cout << "+t.(todo)" << std::endl;
+			std::cout << "+t.(TODO)" << std::endl;
 			break;
 		case 3:
-			if (i->at(3).empty())	//si pas de 3eme arguments TODO fix
-				throw ("NR : new password missed");
+		{
+			if (i->size() != 4)
+				throw ("NR : wrong numbers of args");
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			throw ("NR : password added successfully");
+		}
 		case 4:
-			std::cout << "+o." << std::endl;
-			break;
+		{
+			if (i->size() != 4)
+				throw ("NR : wrong numbers of args");
+			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
+			std::map<std::string, Client*>::iterator it = members.begin();
+			while (it != members.end() && it->second->getNick() != i->at(3))
+				it++;
+			if (it == members.end())
+				throw ("NR : client doesn't exist.");
+			server._mapChannel[i->at(1)]->addModerator(it->second);
+			throw ("NR : moderator added successfully");
+		}
 		case 5:
-			if (i->at(3).empty()) //si pas de 3eme arguments TODO fix
-				throw ("NR : new limit missed");
+			if (i->size() != 4)
+				throw ("NR : wrong numbers of args");
 			server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
 			throw ("NR : user limit added successfully");
 		default:
@@ -187,8 +208,19 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			throw ("NR : password removed successfully");
 		case 4:
-			std::cout << "-o." << std::endl;
-			break;
+		{
+
+			if (i->size() != 4)
+				throw ("NR : wrong numbers of args");
+			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
+			std::map<std::string, Client*>::iterator it = members.begin();
+			while (it != members.end() && it->second->getNick() != i->at(3))
+				it++;
+			if (it == members.end())
+				throw ("NR : client doesn't exist.");
+			server._mapChannel[i->at(1)]->rmModerator(it->second);
+			throw ("NR : moderator removed successfully");
+		}
 		case 5:
 			server._mapChannel[i->at(1)]->setUserLimit(0);
 			throw ("NR : user limit added successfully");
