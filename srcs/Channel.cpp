@@ -6,13 +6,13 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 13:23:06 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 14:19:07 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Channel.hpp"
 
-Channel::Channel() : _name("default"), _isUserLimit(false), _isMdp(false), _invitOnly(false)
+Channel::Channel(const std::string& name) : _name(name), _isUserLimit(false), _isMdp(false), _invitOnly(false)
 {
 }
 
@@ -35,6 +35,11 @@ std::size_t	Channel::getMemberSize()
 std::map<std::string, Client *>	Channel::getMembers() const
 {
 	return (_members);
+}
+
+void	Channel::setName(std::string name)
+{
+	_name = name;
 }
 
 const std::string&	Channel::getName(void) const
@@ -157,4 +162,14 @@ void	Channel::setInvitOnly(bool i)
 bool	Channel::getInvitOnly()
 {
 	return (_invitOnly);
+};
+
+void	Channel::setTopicRestriction(bool i)
+{
+	_topicRestriction = i;
+};
+
+bool	Channel::getTopicRestriction()
+{
+	return (_topicRestriction);
 };

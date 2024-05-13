@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 13:51:12 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 14:36:32 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,36 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 // ---------------------------------------------------------------------//
 
 
+void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	if (i->size() != 4)
+		throw ("NR : Wrong numbers fo args");
+	std::string chan = i->at(2).substr(1);
+	if (server._mapChannel.find(chan) == server._mapChannel.end())
+		throw ("NR : Channel doesn't exist");
+	if (server._mapChannel[chan]->getTopicRestriction() == true && server._mapChannel[chan]->isModerator(client.getNick()) == false)
+		throw ("NR : you're not allowed to use this command (not a moderator)");
+
+	throw ("Changed Topic successfully");
+}
+// ---------------------------------------------------------------------//
+//  Examples:	TOPIC
+
+//    :Wiz TOPIC #test :New topic     ;User Wiz setting the topic.
+
+//    TOPIC #test :another topic      ;set the topic on #test to "another topic".
+
+//    TOPIC #test                     ; check the topic for #test.
+
+//  Numeric Replies:
+
+//            ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
+//            RPL_NOTOPIC                     RPL_TOPIC
+//            ERR_CHANOPRIVSNEEDED
+// ---------------------------------------------------------------------//
+
+
+
 void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	if (i->size() != 3 && i->size() != 4)
@@ -196,8 +226,9 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			throw ("NR : invit only mode added successfully");
 		case 2:
-			std::cout << "+t.(TODO)" << std::endl;
-			break;
+			// std::cout << "+t.(TODO) only +o can change topic" << std::endl;
+			server._mapChannel[i->at(1)]->setTopicRestriction(true);
+			throw ("NR : topic restriction added successfully");
 		case 3:
 		{
 			if (i->size() != 4)
@@ -237,8 +268,9 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->setInvitOnly(false);
 			throw ("NR : invit only mode removed successfully");
 		case 2:
-			std::cout << "-t." << std::endl;
-			break;
+			// std::cout << "-t. everyone can change topic" << std::endl;
+			server._mapChannel[i->at(1)]->setTopicRestriction(false);
+			throw ("NR : topic restriction removed successfully");
 		case 3:
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			throw ("NR : password removed successfully");
