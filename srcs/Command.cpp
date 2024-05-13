@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 13:28:12 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 13:51:12 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,25 +104,26 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (i->size() != 3)
+	if (i->size() != 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
 		throw ("NR : wrong number of arguments");
-	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
+	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 		throw ("NR : channel doesn't exist.");
+	std::string usr = i->at(3).substr(1);		//	pour gérer ":" devant client pour Hexchat : 'kick' 'irc' '#general' ':tim'
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
-	while (it != server._mapClient.end() && it->second->getNick() != i->at(2))
+	while (it != server._mapClient.end() && it->second->getNick() != usr)
 		it++;
 	if (it == server._mapClient.end())
 		throw ("NR : client doesn't exist.");
-	if (server._mapChannel[i->at(1)]->isMember(it->second->getNick()) == false)
+	if (server._mapChannel[i->at(2)]->isMember(it->second->getNick()) == false)
 		throw ("NR : client is not in the channel.");
-	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
+	if (server._mapChannel[i->at(2)]->isModerator(client.getNick()) == false)
 		throw ("NR : you're not allowed to use this command (not a moderator)");
-	it->second->rmChannel(server._mapChannel[i->at(1)]);
-	server._mapChannel[i->at(1)]->rmMember(it->second);
-	if (server._mapChannel[i->at(1)]->isModerator(it->second->getNick()) == true)
-		server._mapChannel[i->at(1)]->rmModerator(it->second);
-	if (server._mapChannel[i->at(1)]->isInvited(it->second->getNick()) == true)
-		server._mapChannel[i->at(1)]->rmInvitMember(it->second);
+	it->second->rmChannel(server._mapChannel[i->at(2)]);
+	server._mapChannel[i->at(2)]->rmMember(it->second);
+	if (server._mapChannel[i->at(2)]->isModerator(it->second->getNick()) == true)
+		server._mapChannel[i->at(2)]->rmModerator(it->second);
+	if (server._mapChannel[i->at(2)]->isInvited(it->second->getNick()) == true)
+		server._mapChannel[i->at(2)]->rmInvitMember(it->second);
 	throw ("NR : kick successfully.");
 }
 
