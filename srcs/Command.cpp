@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 16:42:42 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 13:28:12 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	else		// si existe deja:
 	{
+		if (server._mapChannel[i->at(1)]->getInvitOnly() == true && server._mapChannel[i->at(1)]->isInvited(client.getNick()) == false)
+			throw ("NR : Channel is on invit only");
+
 		if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
 		{
 			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
@@ -85,8 +88,6 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
 			throw ("NR : need password to join the channel");
 
-		if (server._mapChannel[i->at(1)]->getInvitOnly() == true)
-			throw ("NR : Channel is on invit only");
 		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
 			throw ("NR : Channel is full");
 		client.addChannel(server._mapChannel[i->at(1)]);
@@ -112,17 +113,16 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		it++;
 	if (it == server._mapClient.end())
 		throw ("NR : client doesn't exist.");
-	std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
-	std::map<std::string, Client *>::iterator it2 = members.begin();
-	while (it2 != members.end() && it2->second->getNick() != i->at(2))
-		it2++;
-	if (it2 == members.end())
+	if (server._mapChannel[i->at(1)]->isMember(it->second->getNick()) == false)
 		throw ("NR : client is not in the channel.");
-
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 		throw ("NR : you're not allowed to use this command (not a moderator)");
 	it->second->rmChannel(server._mapChannel[i->at(1)]);
 	server._mapChannel[i->at(1)]->rmMember(it->second);
+	if (server._mapChannel[i->at(1)]->isModerator(it->second->getNick()) == true)
+		server._mapChannel[i->at(1)]->rmModerator(it->second);
+	if (server._mapChannel[i->at(1)]->isInvited(it->second->getNick()) == true)
+		server._mapChannel[i->at(1)]->rmInvitMember(it->second);
 	throw ("NR : kick successfully.");
 }
 
@@ -139,6 +139,40 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 //            ERR_NOTONCHANNEL
 // ---------------------------------------------------------------------//
 
+
+void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	if (i->size() != 3)
+		throw ("NR : Wrong numbers fo args");
+	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
+		throw ("NR : Channel doesn't exist");
+	if (server._mapChannel[i->at(2)]->isMember(client.getNick()) == false)
+		throw ("NR : You must be in the channel to invite someone (?ERR_NOTONCHANNEL?)");
+	std::map<int, Client*>::iterator it = server._mapClient.begin();
+	while (it != server._mapClient.end() && it->second->getNick() != i->at(1))
+		it++;
+	if (it == server._mapClient.end())
+		throw ("NR : client doesn't exist.");
+	server._mapChannel[i->at(2)]->addInvitMember(it->second);
+	throw ("NR : client invited successfully");
+}
+
+// i->at(1) = user
+// i->at(2) = channel
+
+// ---------------------------------------------------------------------//
+// Examples:	INVITE
+
+//    :Angel INVITE Wiz #Dust         ; User Angel inviting WiZ to channel #Dust
+
+//    INVITE Wiz #Twilight_Zone       ; Command to invite WiZ to #Twilight_zone
+
+//  Numeric Replies:
+//            ERR_NEEDMOREPARAMS              ERR_NOSUCHNICK
+//            ERR_NOTONCHANNEL                ERR_USERONCHANNEL
+//            ERR_CHANOPRIVSNEEDED
+//            RPL_INVITING                    RPL_AWAY
+// ---------------------------------------------------------------------//
 
 
 void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
@@ -264,12 +298,6 @@ int	flagCheck(std::string	str)
 
 // MODE #eu-opers +l 10            ; Set the limit for the number of users on channel to 10.
 
-
-
-void	fctINVITE()
-{
-	std::cout << "INVITE" << std::endl;
-}
 
 void	fctTOPIC()
 {

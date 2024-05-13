@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:52:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 12:56:57 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Channel;
 		void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
 class Server

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/10 13:57:25 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/13 12:58:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,8 +240,8 @@ void	Server::initCommand()
 	_commandList["USER"] = &fctUSER;
 	_commandList["JOIN"] = &fctJOIN;
 	_commandList["KICK"] = &fctKICK;
+	_commandList["INVITE"] = &fctINVITE;
 	_commandList["MODE"] = &fctMODE;
-	// cmdLst["INVITE"] = &fctINVITE();
 	// cmdLst["TOPIC"] = &fctTOPIC();
 }
 
@@ -314,51 +314,7 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 
 
 
-//	-i -t -k -o -l
 
-		// for (size_t i = 0; i < input.size(); i++)
-		// 	std::cout << "input[" << i << "]: " << input[i] << std::endl;
-
-
-
-
-
-
-/*
-//TODO: deconnecter le client si catch un throw dans le client ?
-*/
-
-
-
-// ---------------------------------------------------------------------//
-//    Examples:	KICK
-
-// KICK &Melbourne Matthew         ; Kick Matthew from &Melbourne
-
-// KICK #Finnish John :Speaking English       ; Kick John from #Finnish using "Speaking English" as the reason (comment).
-
-//  Numeric Replies:
-//            ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
-//            ERR_BADCHANMASK                 ERR_CHANOPRIVSNEEDED
-//            ERR_NOTONCHANNEL
-// ---------------------------------------------------------------------//
-
-
-
-
-// ---------------------------------------------------------------------//
-// Examples:	INVITE
-
-//    :Angel INVITE Wiz #Dust         ; User Angel inviting WiZ to channel #Dust
-
-//    INVITE Wiz #Twilight_Zone       ; Command to invite WiZ to #Twilight_zone
-
-//  Numeric Replies:
-//            ERR_NEEDMOREPARAMS              ERR_NOSUCHNICK
-//            ERR_NOTONCHANNEL                ERR_USERONCHANNEL
-//            ERR_CHANOPRIVSNEEDED
-//            RPL_INVITING                    RPL_AWAY
-// ---------------------------------------------------------------------//
 
 
 
