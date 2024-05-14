@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:56:11 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 14:51:42 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
-	throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n");
+	throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\nTopic : " + server._mapChannel[i->at(1)]->getTopic());
 	// std::string response;
 	// response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
 	// send(client.getFd(), response.c_str(), response.length(), 0);
