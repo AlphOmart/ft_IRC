@@ -6,48 +6,121 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/07 12:19:14 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:31:15 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Client.hpp"
 
+
+// ----- Constructor Destructor ----- //
+
 Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
-{
-	_isPass = false;
-	_username = "";
-	_nickname = "";
-	_isRegistered = false;
-	_clientEvent.data.fd = this->_fd;
-	_clientEvent.events = EPOLLIN | EPOLLRDHUP;
-}
+	{
+		_isPass = false;
+		_username = "";
+		_nickname = "";
+		_isRegistered = false;
+		_clientEvent.data.fd = this->_fd;
+		_clientEvent.events = EPOLLIN | EPOLLRDHUP;
+	}
 
 Client::~Client()
-{
-}
+	{
+	}
 
-int	Client::getFd()
-{
-	return (_fd);
-}
+
+// ----- Setter ----- //
+
+void	Client::setNickname(const std::string& str)
+	{
+		this->_nickname = str;
+	}
+
+void	Client::setUser(const std::string& str)
+	{
+		this->_username = str;
+	}
 
 void	Client::setMailbox(std::string str, int epoll_fd)
-{
-	_mailbox.push(str);
-	updateStatus(epoll_fd);
-}
+	{
+		_mailbox.push(str);
+		updateStatus(epoll_fd);
+	}
+
+void	Client::setPass(const bool& i)
+	{
+		this->_isPass = i;
+	}
+
+
+//	--------------- GET ------------//
+
+const std::string&	Client::getNick(void) const
+	{
+		return (this->_nickname);
+	}
+
+const std::string&	Client::getUser(void) const
+	{
+		return (this->_username);
+	}
+
+int	Client::getFd()
+	{
+		return (_fd);
+	}
+
+const bool&	Client::getIspass(void) const
+	{
+		return (this->_isPass);
+	}
+
+const bool&	Client::getIsRegistered(void) const
+	{
+		return (this->_isRegistered);
+	}
+
+
+// ----- Channel List ----- //
+
+void	Client::addChannel(Channel *ch)
+	{
+		if (_channels.find(ch->getName()) == _channels.end())	//ne l'ajoute pas si est déjà dedans
+			_channels[ch->getName()] = ch;
+		else
+			throw ("NR : channel already joined !");
+	}
+
+void	Client::rmChannel(Channel *ch)
+	{
+		if (_channels.find(ch->getName()) != _channels.end())
+			_channels.erase(ch->getName());
+		else
+			throw ("NR : client is not in the channel");
+	}
+
+
+// ----- Utils ----- //
+
+const bool&	Client::isRegistered(void)
+	{
+		if (!_nickname.empty() && !_username.empty() && _isPass == true)
+				_isRegistered = true;
+		return (_isRegistered);
+	}
 
 void	Client::updateStatus(int epoll_fd)
-{
-	if (_isInEpoll == false)
 	{
-		if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, _fd, &_clientEvent) == -1)
+		if (_isInEpoll == false)
 		{
-			throw std::runtime_error("error in epoll_ctl");
+			if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, _fd, &_clientEvent) == -1)
+			{
+				throw std::runtime_error("error in epoll_ctl");
+			}
+			_isInEpoll = true;
+			return;
 		}
-		_isInEpoll = true;
-		return;
-	}
 		if (_mailbox.empty())
 			_clientEvent.events = EPOLLIN | EPOLLRDHUP;
 		else
@@ -56,80 +129,16 @@ void	Client::updateStatus(int epoll_fd)
 		{
 			throw std::runtime_error("error in epoll_ctl ok");
 		}
-}
+	}
 
 void	Client::receiveAll(int epoll_fd)
-{
-	while (!_mailbox.empty())
 	{
-		std::string toSend = this->_mailbox.front();
-		if (send(_fd, toSend.c_str(), toSend.size(), 0) == -1)
-			throw std::runtime_error("Error while sending.");
-		_mailbox.pop();
+		while (!_mailbox.empty())
+		{
+			std::string toSend = this->_mailbox.front();
+			if (send(_fd, toSend.c_str(), toSend.size(), 0) == -1)
+				throw std::runtime_error("Error while sending.");
+			_mailbox.pop();
+		}
+		updateStatus(epoll_fd);
 	}
-	updateStatus(epoll_fd);
-}
-
-
-//	--------------- SET ------------//
-
-void	Client::setPass(const bool& i)
-{
-	this->_isPass = i;
-}
-
-void	Client::setNickname(const std::string& str)
-{
-	this->_nickname = str;
-}
-
-void	Client::setUser(const std::string& str)
-{
-	this->_username = str;
-}
-
-
-//	--------------- GET ------------//
-
-const bool&	Client::getIspass(void) const
-{
-	return (this->_isPass);
-}
-
-const bool&	Client::getIsRegistered(void) const
-{
-	return (this->_isRegistered);
-}
-
-const std::string&	Client::getNick(void) const
-{
-	return (this->_nickname);
-}
-
-const std::string&	Client::getUser(void) const
-{
-	return (this->_username);
-}
-
-const bool&	Client::isRegistered(void)
-{
-	if (!_nickname.empty() && !_username.empty() && _isPass == true)
-			_isRegistered = true;
-	return (_isRegistered);
-}
-
-void	Client::addChannel(Channel *ch)
-{
-	if (_channels.find(ch->getName()) == _channels.end())	//ne l'ajoute pas si est déjà dedans
-		_channels[ch->getName()] = ch;
-	else
-		throw ("NR : channel already joined !");
-}
-
-void	Client::rmChannel(Channel *ch)
-{
-	if (_channels.find(ch->getName()) != _channels.end())
-		_channels.erase(ch->getName());
-	else
-		throw ("NR : client is not in the channel");
-}

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/06 14:30:34 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:24:05 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,49 +19,56 @@ class Channel;
 class Client
 {
 	private:
-		std::string				_username;
-		bool					_isPass;
-		bool					_isRegistered;
-		std::string				_nickname;
-		int						_fd;
-		bool					_isInEpoll;
-		std::queue<std::string>	_mailbox;
-		struct epoll_event		_clientEvent;
+
+	// attributs //
+		std::string						_nickname;
+		std::string						_username;
+		int								_fd;
 		std::map<std::string, Channel*>	_channels;
-		
+		std::queue<std::string>			_mailbox;
+		struct epoll_event				_clientEvent;
+	
+	// check //
+		bool							_isPass;
+		bool							_isRegistered;
+		bool							_isInEpoll;
+
 
 	public:
+
+	// Constructor Destructor //
 		Client(int	connFd);
 		~Client();
-	
-		int			getFd();
-		const bool&	getIspass() const;
+
+	// getter setter //
+		void				setNickname(const std::string& str);
+		void				setUser(const std::string& str);
+		void				setMailbox(std::string str, int epoll_fd);
+		void				setPass(const bool& i);
+
 		const std::string&	getNick() const;
 		const std::string&	getUser() const;
-		const bool&	getIsRegistered() const;
+		int					getFd();
+		const bool&			getIspass() const;
+		const bool&			getIsRegistered() const;
 
-		void		setMailbox(std::string str, int epoll_fd);
-		void		updateStatus(int epoll_fd);
-		void		receiveAll(int epoll_fd);
+	// Channel List //
+		void				addChannel(Channel *ch);
+		void				rmChannel(Channel *ch);
 
-		// void		setClientInfo();
+	// utils //
+		const bool&			isRegistered(void);
+		void				updateStatus(int epoll_fd);
+		void				receiveAll(int epoll_fd);
 
-		void		setPass(const bool& i);
-		void		setNickname(const std::string& str);
-		void		setUser(const std::string& str);
-		const bool&	isRegistered(void);
-		void		addChannel(Channel *ch);
-		void		rmChannel(Channel *ch);
-
-	class err : public std::exception
-	{
-		public:
-			virtual const char* what(void) const throw()
-			{
-				return ("error.exception");
-			}
-	};
-	
+	// class err : public std::exception
+	// {
+	// 	public:
+	// 		virtual const char* what(void) const throw()
+	// 		{
+	// 			return ("error.exception");
+	// 		}
+	// };
 };
 
 #endif
