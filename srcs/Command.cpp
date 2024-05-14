@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 12:46:05 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:50:46 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,18 +178,26 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 
 void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (i->size() != 4)
+	if (i->size() != 2 && i->size() != 3)
 		throw ("NR : Wrong numbers fo args");
-	std::string chan = i->at(2).substr(1);
-	if (server._mapChannel.find(chan) == server._mapChannel.end())
+	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
 		throw ("NR : Channel doesn't exist");
-	if (server._mapChannel[chan]->getTopicRestriction() == true && server._mapChannel[chan]->isModerator(client.getNick()) == false)
+	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 		throw ("NR : you're not allowed to use this command (not a moderator)");
-
-	throw ("Changed Topic successfully");
+	if (i->size() == 2)
+		throw ("Topic : " + server._mapChannel[i->at(1)]->getTopic());
+	std::string newtopic = i->at(2).substr(1);
+	server._mapChannel[i->at(1)]->setTopic(newtopic);
+	throw ("Changed Topic successfully : new topic : " + server._mapChannel[i->at(1)]->getTopic());
 }
 // ---------------------------------------------------------------------//
 //  Examples:	TOPIC
+// 							i->at(0) = TOPIC
+// 							i->at(1) = #channel
+// 							i->at(2) = :newTopic
+
+//		TOPIC irc #test :Newtopic		-> change if size == 4
+//		TOPIC irc #test					-> print	-> if size == 3
 
 //    :Wiz TOPIC #test :New topic     ;User Wiz setting the topic.
 
