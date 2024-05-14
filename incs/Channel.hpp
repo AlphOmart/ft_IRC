@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 12:58:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:14:27 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,14 @@ class Channel
 		const std::string&				getTopic() const;
 		const std::string&				getMdp() const;
 		const int&						getUserLimit() const;
-		std::map<std::string, Client *>	getMembers() const;
-		std::size_t						getMemberSize();
 
 		bool							getIsMdp();
 		bool							getIsUserLimit();
 		bool							getInvitOnly();
 		bool							getTopicRestriction();
+
+		std::map<std::string, Client *>	getMembers() const;
+		std::size_t						getMemberSize();
 
 
 	// Client List //
