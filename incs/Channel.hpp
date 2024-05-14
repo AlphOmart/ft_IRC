@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 14:19:44 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 12:58:01 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,54 +18,66 @@
 class Channel
 {
 	private:
-		std::map<std::string, Client *>	_members;
-		std::map<std::string, Client *> _moderators;
+
+	// attributs //
 		std::string						_name;
-		std::map<std::string, Client *>	_invitedMembers;
-
-
-		int								_userLimit;
+		std::string						_topic;
 		std::string						_mdp;
+		int								_userLimit;
 
-		bool							_isUserLimit;
+	// check //
 		bool							_isMdp;
+		bool							_isUserLimit;
 		bool							_invitOnly;
 		bool							_topicRestriction;
 
+	// client list //
+		std::map<std::string, Client *>	_members;
+		std::map<std::string, Client *> _moderators;
+		std::map<std::string, Client *>	_invitedMembers;
+
 	public:
+
+	// Constructor Destructor //
 		Channel(const std::string& name);
 		Channel(const std::string& name, Client& mod);
 
 		~Channel();
 
-		void				setName(std::string name);
-		const std::string&	getName() const;
-		std::size_t			getMemberSize();
+	// getter setter //
+		void							setName(std::string name);
+		void							setTopic(std::string topic);
+		void							setMdp(std::string	mdp);
+		void							setUserLimit(int nb);
+		void							setInvitOnly(bool i);
+		void							setTopicRestriction(bool i);
+
+		const std::string&				getName() const;
+		const std::string&				getTopic() const;
+		const std::string&				getMdp() const;
+		const int&						getUserLimit() const;
 		std::map<std::string, Client *>	getMembers() const;
-		void				addMember(Client *newClient);
-		void				rmMember(Client *client);
-		void				addModerator(Client *newClient);
-		void				rmModerator(Client *client);
-		void				addInvitMember(Client *newClient);
-		void				rmInvitMember(Client *client);
+		std::size_t						getMemberSize();
 
-		bool				isMember(std::string client);
-		bool				isModerator(std::string client);
-		bool				isInvited(std::string client);
+		bool							getIsMdp();
+		bool							getIsUserLimit();
+		bool							getInvitOnly();
+		bool							getTopicRestriction();
 
 
-		void				setUserLimit(int nb);
-		const int&			getUserLimit() const;
-		void				setMdp(std::string	mdp);
-		const std::string&	getMdp() const;
+	// Client List //
+		void							addMember(Client *newClient);
+		void							addModerator(Client *newClient);
+		void							addInvitMember(Client *newClient);
 
-		bool				getIsUserLimit();
-		bool				getIsMdp();
-		void				setInvitOnly(bool i);
-		bool				getInvitOnly();
-		void				setTopicRestriction(bool i);
-		bool				getTopicRestriction();
+		void							rmMember(Client *client);
+		void							rmModerator(Client *client);
+		void							rmInvitMember(Client *client);
+
+		bool							isMember(std::string client);
+		bool							isModerator(std::string client);
+		bool							isInvited(std::string client);
+
 };
-
 
 #endif

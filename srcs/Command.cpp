@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 14:36:32 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 12:46:05 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,6 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			throw ("NR : invit only mode added successfully");
 		case 2:
-			// std::cout << "+t.(TODO) only +o can change topic" << std::endl;
 			server._mapChannel[i->at(1)]->setTopicRestriction(true);
 			throw ("NR : topic restriction added successfully");
 		case 3:

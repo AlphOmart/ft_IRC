@@ -6,18 +6,18 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 14:19:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 12:58:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Channel.hpp"
 
-Channel::Channel(const std::string& name) : _name(name), _isUserLimit(false), _isMdp(false), _invitOnly(false)
+Channel::Channel(const std::string& name) : _name(name), _isMdp(false), _isUserLimit(false), _invitOnly(false)
 {
 }
 
 
-Channel::Channel(const std::string& name, Client& mod) : _name(name), _isUserLimit(false), _isMdp(false), _invitOnly(false)
+Channel::Channel(const std::string& name, Client& mod) : _name(name), _isMdp(false), _isUserLimit(false), _invitOnly(false)
 {
 	addModerator(&mod);
 }
@@ -45,6 +45,16 @@ void	Channel::setName(std::string name)
 const std::string&	Channel::getName(void) const
 {
 	return (this->_name);
+}
+
+void	Channel::setTopic(std::string topic)
+{
+	_topic = topic;
+}
+
+const std::string&	Channel::getTopic(void) const
+{
+	return (this->_topic);
 }
 
 void	Channel::addMember(Client *newClient)
