@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:50:46 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:56:11 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,14 +190,15 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 	server._mapChannel[i->at(1)]->setTopic(newtopic);
 	throw ("Changed Topic successfully : new topic : " + server._mapChannel[i->at(1)]->getTopic());
 }
+
 // ---------------------------------------------------------------------//
 //  Examples:	TOPIC
 // 							i->at(0) = TOPIC
 // 							i->at(1) = #channel
 // 							i->at(2) = :newTopic
 
-//		TOPIC irc #test :Newtopic		-> change if size == 4
-//		TOPIC irc #test					-> print	-> if size == 3
+//		TOPIC #test :Newtopic		-> change 	-> if size == 3
+//		TOPIC #test					-> print	-> if size == 2
 
 //    :Wiz TOPIC #test :New topic     ;User Wiz setting the topic.
 
