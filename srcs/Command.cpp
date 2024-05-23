@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 14:51:42 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/23 14:23:19 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	// {
 		if (i->at(1) == server.getPass())
 		{
-			std::cout << "PASS" << std::endl;
 			client.setPass(true);
 		}
 		else
@@ -68,35 +67,44 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//si le channel n'existe pas
-	{
-		Channel *curChannel =  new Channel(i->at(1), client);
-		server._mapChannel[curChannel->getName()] = curChannel;
-		client.addChannel(curChannel);
-		curChannel->addMember(&client);
-	}
-	else		// si existe deja:
-	{
-		if (server._mapChannel[i->at(1)]->getInvitOnly() == true && server._mapChannel[i->at(1)]->isInvited(client.getNick()) == false)
-			throw ("NR : Channel is on invit only");
-
-		if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
+	try {
+		
+		if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//si le channel n'existe pas
 		{
-			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
-				throw ("NR : wrong password");
+			Channel *curChannel =  new Channel(i->at(1), client);
+			server._mapChannel[curChannel->getName()] = curChannel;
+			client.addChannel(curChannel);
+			curChannel->addMember(&client);
 		}
-		else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
-			throw ("NR : need password to join the channel");
+		else		// si existe deja:
+		{
+			if (server._mapChannel[i->at(1)]->getInvitOnly() == true && server._mapChannel[i->at(1)]->isInvited(client.getNick()) == false)
+				throw InvitOnlyException();
 
-		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
-			throw ("NR : Channel is full");
-		client.addChannel(server._mapChannel[i->at(1)]);
-		server._mapChannel[i->at(1)]->addMember(&client);
+			if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
+			{
+				if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
+					throw WrongPasswordException();
+			}
+			else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
+				throw NeedPasswordException();
+
+			if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
+				throw ChannelIsFullException();
+			client.addChannel(server._mapChannel[i->at(1)]);
+			server._mapChannel[i->at(1)]->addMember(&client);
+		}
+		// throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\nTopic : " + server._mapChannel[i->at(1)]->getTopic());
+		// std::string response;
+		// response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
+		// send(client.getFd(), response.c_str(), response.length(), 0);
+		std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN " + ":" +  i->at(1) + "\r\n";
+		send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
 	}
-	throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\nTopic : " + server._mapChannel[i->at(1)]->getTopic());
-	// std::string response;
-	// response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
-	// send(client.getFd(), response.c_str(), response.length(), 0);
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 
@@ -104,27 +112,36 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (i->size() != 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
-		throw ("NR : wrong number of arguments");
-	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
-		throw ("NR : channel doesn't exist.");
-	std::string usr = i->at(3).substr(1);		//	pour gérer ":" devant client pour Hexchat : 'kick' 'irc' '#general' ':tim'
-	std::map<int, Client*>::iterator it = server._mapClient.begin();
-	while (it != server._mapClient.end() && it->second->getNick() != usr)
-		it++;
-	if (it == server._mapClient.end())
-		throw ("NR : client doesn't exist.");
-	if (server._mapChannel[i->at(2)]->isMember(it->second->getNick()) == false)
-		throw ("NR : client is not in the channel.");
-	if (server._mapChannel[i->at(2)]->isModerator(client.getNick()) == false)
-		throw ("NR : you're not allowed to use this command (not a moderator)");
-	it->second->rmChannel(server._mapChannel[i->at(2)]);
-	server._mapChannel[i->at(2)]->rmMember(it->second);
-	if (server._mapChannel[i->at(2)]->isModerator(it->second->getNick()) == true)
-		server._mapChannel[i->at(2)]->rmModerator(it->second);
-	if (server._mapChannel[i->at(2)]->isInvited(it->second->getNick()) == true)
-		server._mapChannel[i->at(2)]->rmInvitMember(it->second);
-	throw ("NR : kick successfully.");
+	try
+	{
+		if (i->size() != 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
+			throw WrongArgsException();
+		if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
+			throw ChannelDoesNotExistException();
+		std::string usr = i->at(3).substr(1);		//	pour gérer ":" devant client pour Hexchat : 'kick' 'irc' '#general' ':tim'
+		std::map<int, Client*>::iterator it = server._mapClient.begin();
+		while (it != server._mapClient.end() && it->second->getNick() != usr)
+			it++;
+		if (it == server._mapClient.end())
+			throw ClientDoesNotExistException();
+		if (server._mapChannel[i->at(2)]->isMember(it->second->getNick()) == false)
+			throw ClientIsNotInChannelException();
+		if (server._mapChannel[i->at(2)]->isModerator(client.getNick()) == false)
+			throw NotAllowedException();
+		it->second->rmChannel(server._mapChannel[i->at(2)]);
+		server._mapChannel[i->at(2)]->rmMember(it->second);
+		if (server._mapChannel[i->at(2)]->isModerator(it->second->getNick()) == true)
+			server._mapChannel[i->at(2)]->rmModerator(it->second);
+		if (server._mapChannel[i->at(2)]->isInvited(it->second->getNick()) == true)
+			server._mapChannel[i->at(2)]->rmInvitMember(it->second);
+		// throw ("NR : kick successfully.");
+		std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv KICK " + ":" +  it->second->getUser() + "successfully.\r\n";
+		send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 // ---------------------------------------------------------------------//

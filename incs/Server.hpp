@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/13 14:17:30 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/17 13:36:36 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,6 @@ class Server
 
 		std::string									getPass();
 		bool										nickAlreadyUsed(const std::string& str);
-
-		// void	kickClient(int fd);
-		//		FCT_COMMANDLIST		//
-		// int							cmdCheck(char *buffer);
-		// void						cmdMode(char *buffer);
 };
 
 #endif

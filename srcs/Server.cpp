@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:18:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/23 13:30:01 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,6 @@ void	Server::epollinEvent(int n)
 		input = splitVector(line, " ");
 		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); ++i)
 		{
-			std::cout << "|" << i->at(0) << "|" <<  std::endl;
 			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
 			if (i->size() < 2 || curClient == _mapClient.end())
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
@@ -175,8 +174,8 @@ void	Server::epollinEvent(int n)
 				response = "ERROR :Password needed\r\n";
 				send(curClient->second->getFd(), response.c_str(), response.length(), 0);
 			}
-			else
-				std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
+			// else
+				// std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
 		}
 	}
 }

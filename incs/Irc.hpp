@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/04/30 12:42:40 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/23 14:12:56 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include "Client.hpp"
 # include "Server.hpp"
 # include "Channel.hpp"
-
+# include "Exceptions.hpp"
 
 // # include <string.h>		// pour memset
 // # include <sys/socket.h>
