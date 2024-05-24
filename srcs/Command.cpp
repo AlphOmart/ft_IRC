@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 16:32:52 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 17:04:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	if (i->size() != 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
 		{
 			
-		throw WrongArgsException();
+		throw WrongArgsException(); //todo trouver quoi mettre comme NR
 		}
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 	{
@@ -210,7 +210,7 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	if (i->size() != 3)
-		throw ("NR1 : Wrong numbers of args");
+		throw ("NR1 : Wrong numbers of args"); //todo trouver quoi mettre comme NR
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 		throw ("NR : Channel doesn't exist");
 	if (server._mapChannel[i->at(2)]->isMember(client.getNick()) == false)
@@ -245,7 +245,7 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	if (i->size() != 2 && i->size() != 3)
-		throw ("NR3 : Wrong numbers of args");
+		throw ("NR3 : Wrong numbers of args"); //todo trouver quoi mettre comme NR
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
 		throw ("NR : Channel doesn't exist");
 	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
@@ -290,11 +290,24 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
 	}
 	if (i->size() != 2 && i->size() != 3 && i->size() != 4)
-		throw ("NR2 : Wrong numbers of args");
+	{
+
+		throw ("NR2 : Wrong numbers of args");	//todo trouver quoi mettre comme NR
+	}
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
-		throw ("NR : Channel doesn't exist");
+	{
+		str << client.getNick() << " " << i->at(1) << " :No such channel";
+		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		return ;
+		// throw ("NR : Channel doesn't exist");
+	}
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
-		throw ("NR : you're not allowed to use this command (not a moderator)");
+	{
+		str << client.getNick() << " :Permission Denied- You're not an IRC operator";
+		printERR(ERR_NOPRIVILEGES, str.str(), client);
+		return ;
+		// throw ("NR : you're not allowed to use this command (not a moderator)");
+	}
 	if (i->size() == 2)
 	{
 		str << "MODE " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
@@ -304,16 +317,25 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
-		throw ("NR : need operand + or - before flag");
+	{
+		str << client.getNick() << " :Unknown MODE flag";
+		printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+		return ;
+		// throw ("NR : need operand + or - before flag");
+	}
 	if (i->at(2).at(0) == '+')
 	{
 		switch (flagCheck(i->at(2)))
 		{
 		case 0:
-			throw ("NR : too many args, only 1 letter");
+			str << client.getNick() << " :Unknown MODE flag";
+			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			return ;
+			// throw ("NR : too many args, only 1 letter");
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			server._mapChannel[i->at(1)]->addMode("i", true);
+			
 			throw ("NR : invit only mode added successfully");
 		case 2:
 			server._mapChannel[i->at(1)]->setTopicRestriction(true);
@@ -322,7 +344,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		case 3:
 		{
 			if (i->size() != 4)
-				throw ("NR : wrong numbers of args");
+				throw ("NR : password missed");
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			server._mapChannel[i->at(1)]->addMode("k", true);
 			throw ("NR : password added successfully");
@@ -336,7 +358,12 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			while (it != members.end() && it->second->getNick() != i->at(3))
 				it++;
 			if (it == members.end())
-				throw ("NR : client doesn't exist.");
+			{
+				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
+				printERR(ERR_NOSUCHNICK, str.str(), client);
+				return ;
+				// throw ("NR : client doesn't exist.");
+			}
 			server._mapChannel[i->at(1)]->addModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", true);
 			throw ("NR : moderator added successfully");
@@ -348,7 +375,10 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->addMode("l", true);
 			throw ("NR : user limit added successfully");
 		default:
-			throw("NR : unknown flag");
+			str << client.getNick() << " :Unknown MODE flag";
+			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			return ;
+			// throw("NR : unknown flag");
 		}
 	}
 	else
@@ -356,7 +386,10 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		switch (flagCheck(i->at(2)))
 		{
 		case 0:
-			throw ("NR : too many args, only 1 letter");
+			str << client.getNick() << " :Unknown MODE flag";
+			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			return ;
+			// throw ("NR : too many args, only 1 letter");
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(false);
 			server._mapChannel[i->at(1)]->addMode("i", false);
@@ -380,7 +413,13 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			while (it != members.end() && it->second->getNick() != i->at(3))
 				it++;
 			if (it == members.end())
-				throw ("NR : client doesn't exist.");
+			{
+
+				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
+				printERR(ERR_NOSUCHNICK, str.str(), client);
+				return ;
+				// throw ("NR : client doesn't exist.");
+			}
 			server._mapChannel[i->at(1)]->rmModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", false);
 			throw ("NR : moderator removed successfully");
@@ -390,13 +429,12 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			server._mapChannel[i->at(1)]->addMode("l", false);
 			throw ("NR : user limit removed successfully");
 		default:
-			throw("NR : unknown flag");
+			str << client.getNick() << " :Unknown MODE flag";
+			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			return ;
+			// throw("NR : unknown flag");
 		}
 	}
-	// i->at(2) = +-iktol
-	// i->at(3) = okl arg
-	
-	(void)client;
 }
 
 int	flagCheck(std::string	str)
