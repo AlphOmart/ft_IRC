@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/23 13:30:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 13:51:12 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,25 @@
 
 Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass(pass), _addrLen(sizeof(_server_addr))
 {
-	std::string str(port);
-	if (std::string::npos != str.find_first_not_of("0123456789")) {
-		throw	std::invalid_argument("Error : port is not valid.");
+	try
+	{
+		std::string str(port);
+		if (std::string::npos != str.find_first_not_of("0123456789")) {
+			throw	std::invalid_argument("Error : port is not valid.");
+		}
+		_port = std::strtol(port, NULL, 10);
+		epollCreation();
+		socketCreation();
+		addrConfig();
+		linkSocket();
+		listenConnectIn();
+		addSocketToEpoll();
+		initCommand();
 	}
-	_port = std::strtol(port, NULL, 10);
-	epollCreation();
-	socketCreation();
-	addrConfig();
-	linkSocket();
-	listenConnectIn();
-	addSocketToEpoll();
-	initCommand();
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 }
 
 Server::~Server()
@@ -155,7 +162,15 @@ void	Server::epollinEvent(int n)
 		{
 			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
 			if (i->size() < 2 || curClient == _mapClient.end())
+			{
+				if (i->size() < 2)
+				{
+					std::stringstream str;
+					str << curClient->second->getNick() << " " << i->at(0) << " :Not enough parameters";
+					printERR(ERR_NEEDMOREPARAMS, str.str(), *curClient->second);
+				}	
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
+			}
 			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass() == true || i->at(0) == "PASS"))
 			{
 				if (curClient->second->isRegistered() == true || i->at(0) == "NICK" || i->at(0) == "USER" || i->at(0) == "PASS")

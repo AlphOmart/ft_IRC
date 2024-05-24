@@ -6,35 +6,41 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 12:20:31 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 13:40:41 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
 
 int		flagCheck(std::string	str);
-void	printERR(int nr, std::string str, Client &client);
 
 void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	// if (client.getIsRegistered() == false)
-	// {
+	std::stringstream str;
+	if (client.getIsRegistered() == false)
+	{
 		if (i->at(1) == server.getPass())
 		{
 			client.setPass(true);
 		}
 		else
 		{
-			std::string response;
-			response = ":IRCServ 464 *: Password incorrect\r\n";
-			send(client.getFd(), response.c_str(), response.length(), 0);
+			str << "*" << " :Password incorrect";
+			printERR(ERR_PASSWDMISMATCH, str.str(), client);
 			//server.kickClient(client.getFd());
 		}
-	// }
+	}
+	else
+	{
+		// std::stringstream str;
+		str << client.getNick() << " :You may not reregister";
+		printERR(ERR_ALREADYREGISTERED, str.str(), client);
+	}
 }
 
 void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
+	std::stringstream str;
 	if (server.nickAlreadyUsed(i->at(1)) == false)
 		client.setNickname(i->at(1));
 	else
@@ -46,24 +52,34 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	if (client.getIsRegistered() == false && client.isRegistered() == true)	//permet de ignorer quand déjà  connecté
 	{
-		std::string response;
-		response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + "@IRCServ\r\n";
-		send(client.getFd(), response.c_str(), response.length(), 0);
+		str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
+		printERR(RPL_WELCOME, str.str(), client);
+		// std::string response;
+		// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + "@IRCServ\r\n";
+		// send(client.getFd(), response.c_str(), response.length(), 0);
 	}
 }
 
 void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	(void)server;
+	std::stringstream str;
 	if (client.getIsRegistered() == false)	//permet de ignorer la fonction quand connecté
 	{
 		client.setUser(i->at(1));
 		if (client.isRegistered() == true)
 		{
-			std::string response;
-			response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + " @IRCServ\r\n";
-			send(client.getFd(), response.c_str(), response.length(), 0);
+			str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
+			printERR(RPL_WELCOME, str.str(), client);
+			// std::string response;
+			// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + " @IRCServ\r\n";
+			// send(client.getFd(), response.c_str(), response.length(), 0);
 		}
+	}
+	else
+	{
+		str << client.getNick() << " :You may not reregister";
+		printERR(ERR_ALREADYREGISTERED, str.str(), client);
 	}
 }
 
