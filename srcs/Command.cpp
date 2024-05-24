@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/23 16:24:35 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 12:20:31 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		std::string response;
 		response = ":IRCServ 433 *: Nickname is already used. \r\n";
 		send(client.getFd(), response.c_str(), response.length(), 0);
+		return ;
 	}
 	if (client.getIsRegistered() == false && client.isRegistered() == true)	//permet de ignorer quand déjà  connecté
 	{
@@ -71,6 +72,12 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	std::stringstream str;
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//si le channel n'existe pas
 	{
+		if (i->at(1).find('#') != 0)
+		{
+			str << client.getNick() << " " << i->at(1) << " :No such channel";
+			printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+			return ;
+		}
 		Channel *curChannel =  new Channel(i->at(1), client);
 		server._mapChannel[curChannel->getName()] = curChannel;
 		client.addChannel(curChannel);
@@ -82,7 +89,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+i)";
 			printERR(ERR_INVITEONLYCHAN, str.str(), client);
-			// throw InvitOnlyException();
+			return ;// throw InvitOnlyException();
 		}
 		if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
 		{
@@ -90,28 +97,24 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 				str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
 				printERR(ERR_BADCHANNELKEY, str.str(), client);
-				// throw WrongPasswordException();
+				return ;//throw WrongPasswordException();
 			}
 		}
 		else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
 			printERR(ERR_BADCHANNELKEY, str.str(), client);
-			// throw NeedPasswordException();//todo simplifier
+			return ;//throw NeedPasswordException();//todo simplifier
 		}
 		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+l)";
 			printERR(ERR_CHANNELISFULL, str.str(), client);
-			// throw ChannelIsFullException();
+			return ;//throw ChannelIsFullException();
 		}
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
-	// throw("NR : IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\nTopic : " + server._mapChannel[i->at(1)]->getTopic());
-	// std::string response;
-	// response = ":IRCServ 0 " + client.getNick() + " : Join channel " + i->at(1) + ".\r\n";
-	// send(client.getFd(), response.c_str(), response.length(), 0);
 	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN " + ":" +  i->at(1) + "\r\n";
 	send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
 }
