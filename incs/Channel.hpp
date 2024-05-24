@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:14:27 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 16:14:47 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ class Channel
 		std::map<std::string, Client *>	_members;
 		std::map<std::string, Client *> _moderators;
 		std::map<std::string, Client *>	_invitedMembers;
+
+		std::map<std::string, bool>		_modes;
 
 	public:
 
@@ -78,6 +80,9 @@ class Channel
 		bool							isMember(std::string client);
 		bool							isModerator(std::string client);
 		bool							isInvited(std::string client);
+
+		void							addMode(const std::string& modeName, bool isActive);
+		std::string						getModes() const;
 
 };
 

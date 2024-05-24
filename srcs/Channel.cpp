@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:15:21 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/24 16:22:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,4 +197,20 @@ bool	Channel::isInvited(std::string client)
 		if (_invitedMembers.find(client) == _invitedMembers.end())
 			return (false);
 		return (true);
+	}
+
+void 	Channel::addMode(const std::string& flag, bool isActive)
+	{
+		_modes[flag] = isActive;
+	}
+
+std::string	Channel::getModes() const
+	{
+		std::string str;
+		for (std::map<std::string,bool>::const_iterator it = _modes.begin(); it != _modes.end(); it++)
+		{
+			if (it->second == true)
+				str += "+" + it->first;
+		}
+		return (str);
 	}
