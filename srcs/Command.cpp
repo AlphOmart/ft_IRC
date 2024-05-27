@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 12:39:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:18:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,17 +142,17 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
-	if (i->size() != 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
-		{
-			
-		throw WrongArgsException(); //todo trouver quoi mettre comme NR
-		}
+	if (i->size() < 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
+	{
+		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		return ;
+	}
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 	{
 		str << client.getNick() << " " << i->at(2) << " :No such channel";
 		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
-		return ;
-		// throw ChannelDoesNotExistException();
+		return ; // throw ChannelDoesNotExistException();
 	}
 	std::string usr = i->at(3).substr(1);		//	pour gérer ":" devant client pour Hexchat : 'kick' 'irc' '#general' ':tim'
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
@@ -162,22 +162,19 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << i->at(3) << " " << i->at(2) << " :They aren't on that channel";
 		printERR(ERR_USERNOTINCHANNEL, str.str(), client);
-		return ;
-		// throw ClientDoesNotExistException();
+		return ; // throw ClientDoesNotExistException();
 	}
 	if (server._mapChannel[i->at(2)]->isMember(it->second->getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(3) << " " << i->at(2) << " :They aren't on that channel";
 		printERR(ERR_USERNOTINCHANNEL, str.str(), client);
-		return ;
-		// throw ClientIsNotInChannelException();
+		return ; // throw ClientIsNotInChannelException();
 	}
 	if (server._mapChannel[i->at(2)]->isModerator(client.getNick()) == false)
 	{
-		str << client.getNick() << " :Permission Denied- You're not an IRC operator";
-		printERR(ERR_NOPRIVILEGES, str.str(), client);
-		return ;
-		// throw NotAllowedException();
+		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
+		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
+		return ; // throw NotAllowedException();
 	}
 	it->second->rmChannel(server._mapChannel[i->at(2)]);
 	server._mapChannel[i->at(2)]->rmMember(it->second);
@@ -245,22 +242,40 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	if (i->size() < 2)
-		throw ("NR3 : Wrong numbers of args"); //todo trouver quoi mettre comme NR
+	{
+		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		return ;
+	}
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
-		throw ("NR : Channel doesn't exist");
+	{
+		str << client.getNick() << " " << i->at(1) << " :No such channel";
+		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		return ;
+	}
+	if (server._mapChannel[i->at(1)]->isMember(client.getNick()) == false)
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not on that channel";
+		printERR(ERR_NOTONCHANNEL, str.str(), client);
+		return ;
+	}
 	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
-		throw ("NR : you're not allowed to use this command (not a moderator)");
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
+		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
+		return ;
+	}
 	if (i->size() == 2)
 		throw ("Topic : " + server._mapChannel[i->at(1)]->getTopic());
-	std::string newtopics;
+	std::string newtopic;
 	std::size_t n = 2;
 	while (n < i->size())
 	{
-		newtopics += i->at(n) + " ";
+		newtopic += i->at(n) + " ";
 		n++;
 	}
 	// std::string newtopic = i->at(2).substr(1);
-	server._mapChannel[i->at(1)]->setTopic(newtopics);
+	server._mapChannel[i->at(1)]->setTopic(newtopic);
 	throw ("Changed Topic successfully : new topic : " + server._mapChannel[i->at(1)]->getTopic());
 }
 
@@ -293,7 +308,6 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	std::stringstream str;
 	if (i->size() < 2 /*&& i->size() != 3 && i->size() != 4*/)
 	{
-
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
 		return ;
@@ -306,8 +320,8 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 	{
-		str << client.getNick() << " :Permission Denied- You're not an IRC operator";
-		printERR(ERR_NOPRIVILEGES, str.str(), client);
+		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
+		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
 		return ; // throw ("NR : you're not allowed to use this command (not a moderator)");
 	}
 	if (i->size() == 2)

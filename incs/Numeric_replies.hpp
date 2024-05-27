@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 12:04:10 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:17:31 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #define ERR_TOOMANYCHANNELS 405
 
 #define ERR_USERNOTINCHANNEL 441
+#define ERR_NOTONCHANNEL 442
 #define ERR_NEEDMOREPARAMS 461
 #define ERR_ALREADYREGISTERED 462
 #define ERR_PASSWDMISMATCH 464
@@ -27,7 +28,7 @@
 #define ERR_INVITEONLYCHAN 473
 #define ERR_BANNEDFROMCHAN 474
 #define ERR_BADCHANNELKEY 475
-#define ERR_NOPRIVILEGES 481
+#define ERR_CHANOPRIVSNEEDED 482
 #define ERR_UMODEUNKNOWNFLAG 501
 
 #define ERR_INVALIDKEY 525
