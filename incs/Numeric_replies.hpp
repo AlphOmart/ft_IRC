@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:17:31 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:24:37 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 // JOIN rpl//
 
 #define RPL_WELCOME 001
+#define RPL_CHANNELMODEIS 324
 #define RPL_TOPIC 332
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHCHANNEL 403
@@ -33,7 +34,6 @@
 
 #define ERR_INVALIDKEY 525
 // #define ERR_UNKNOWNCOMMAND 421
-// #define
 // #define
 // #define
 // #define

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:18:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:33:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		server._mapChannel[i->at(2)]->rmInvitMember(it->second);
 	// throw ("NR : kick successfully.");
 	
-	str << client.getNick() << " :kicked " << usr << " from " << i->at(2) << ".";
-	printERR(9999, str.str(), client);
+	// str << client.getNick() << " :kicked " << usr << " from " << i->at(2) << ".";
+	// printERR(9999, str.str(), client);
 	// std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv KICK " + ":" +  it->second->getUser() + "successfully.\r\n";
 	// send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
 }
@@ -326,8 +326,8 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	if (i->size() == 2)
 	{
-		str << "MODE " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
-		printERR(9999, str.str(), client);
+		str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
+		printERR(RPL_CHANNELMODEIS, str.str(), client);
 		return ; // :ircserver MODE #channel +m
 	}
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
