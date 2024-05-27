@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:24:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:56:23 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@
 #define RPL_WELCOME 001
 #define RPL_CHANNELMODEIS 324
 #define RPL_TOPIC 332
+#define RPL_INVITING 341
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHCHANNEL 403
 #define ERR_TOOMANYCHANNELS 405
 
 #define ERR_USERNOTINCHANNEL 441
 #define ERR_NOTONCHANNEL 442
+#define ERR_USERONCHANNEL 443
 #define ERR_NEEDMOREPARAMS 461
 #define ERR_ALREADYREGISTERED 462
 #define ERR_PASSWDMISMATCH 464

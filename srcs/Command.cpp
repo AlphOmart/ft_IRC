@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:33:04 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 13:59:16 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,19 +206,42 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	if (i->size() != 3)
-		throw ("NR1 : Wrong numbers of args"); //todo trouver quoi mettre comme NR
+	if (i->size() < 3)
+		{
+		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		return ;
+		}
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
-		throw ("NR : Channel doesn't exist");
+	{
+		str << client.getNick() << " " << i->at(2) << " :No such channel";
+		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		return ;
+	}
 	if (server._mapChannel[i->at(2)]->isMember(client.getNick()) == false)
-		throw ("NR : You must be in the channel to invite someone (?ERR_NOTONCHANNEL?)");
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not on that channel";
+		printERR(ERR_NOTONCHANNEL, str.str(), client);
+		return ;
+	}
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
 	while (it != server._mapClient.end() && it->second->getNick() != i->at(1))
 		it++;
 	if (it == server._mapClient.end())
-		throw ("NR : client doesn't exist.");
+	{
+		str << client.getNick() << " " << i->at(1) << " :No such nick/channel";
+		printERR(ERR_NOSUCHNICK, str.str(), client);
+		return ;
+	}
+	if (server._mapChannel[i->at(2)]->isMember(i->at(1)) == true)
+	{
+		str << client.getNick() << " " << i->at(1) << " " << i->at(2) << " :is already on channel";
+		printERR(ERR_USERONCHANNEL, str.str(), client);
+		return ;
+	}
 	server._mapChannel[i->at(2)]->addInvitMember(it->second);
-	throw ("NR : client invited successfully");
+	str << client.getNick() << " " << i->at(1) << " " << i->at(2);
+	printERR(RPL_INVITING, str.str(), client);
 }
 
 // i->at(1) = user
@@ -266,7 +289,17 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		return ;
 	}
 	if (i->size() == 2)
-		throw ("Topic : " + server._mapChannel[i->at(1)]->getTopic());
+	{
+		if (server._mapChannel[i->at(1)]->getTopic().empty())
+		{
+			str << client.getNick() << " " << i->at(1) << " :No topic is set";
+			printERR(RPL_NOTOPIC, str.str(), client);
+			return ;
+		}
+		str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
+		printERR(RPL_TOPIC, str.str(), client);
+		return ;
+	}
 	std::string newtopic;
 	std::size_t n = 2;
 	while (n < i->size())
@@ -276,7 +309,6 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 	}
 	// std::string newtopic = i->at(2).substr(1);
 	server._mapChannel[i->at(1)]->setTopic(newtopic);
-	throw ("Changed Topic successfully : new topic : " + server._mapChannel[i->at(1)]->getTopic());
 }
 
 // ---------------------------------------------------------------------//
