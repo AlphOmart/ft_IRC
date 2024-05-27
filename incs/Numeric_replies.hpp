@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:56:23 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 14:01:16 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #define RPL_WELCOME 001
 #define RPL_CHANNELMODEIS 324
+#define RPL_NOTOPIC 331
 #define RPL_TOPIC 332
 #define RPL_INVITING 341
 #define ERR_NOSUCHNICK 401

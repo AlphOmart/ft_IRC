@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 13:59:16 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 14:00:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,7 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
+	std::stringstream str;
 	if (i->size() < 3)
 		{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
@@ -264,6 +265,7 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 
 void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
+	std::stringstream str;
 	if (i->size() < 2)
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
