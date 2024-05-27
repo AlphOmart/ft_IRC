@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 16:22:04 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 14:22:35 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,24 +132,24 @@ void	Channel::addMember(Client *newClient)
 	{
 		if (_members.find(newClient->getNick()) == _members.end())	//ne l'ajoute pas si est déjà dedans
 			_members[newClient->getNick()] = newClient;
-		else
-			throw ("from client NR : channel already joined !");
+		// else
+		// 	throw ("from client NR : channel already joined !");
 	}
 
 void	Channel::addModerator(Client *newClient)
 	{
 		if (_moderators.find(newClient->getNick()) == _moderators.end())	//ne l'ajoute pas si est déjà dedans
 			_moderators[newClient->getNick()] = newClient;
-		else
-			throw ("NR : client already is moderator");
+		// else
+		// 	throw ("NR : client already is moderator");
 	}
 
 void	Channel::addInvitMember(Client *newClient)
 	{
 		if (_invitedMembers.find(newClient->getNick()) == _invitedMembers.end())	//ne l'ajoute pas si est déjà dedans
 			_invitedMembers[newClient->getNick()] = newClient;
-		else
-			throw ("from client NR : channel already joined !");
+		// else
+		// 	throw ("from client NR : channel already joined !");
 	}
 
 
@@ -157,24 +157,24 @@ void	Channel::rmMember(Client *client)
 	{
 		if (_members.find(client->getNick()) != _members.end())	//ne le remove pas si est déjà remove
 			_members.erase(client->getNick());
-		else
-			throw ("NR : client is not in the channel");
+		// else
+		// 	throw ("NR : client is not in the channel");
 	}
 
 void	Channel::rmModerator(Client *client)
 	{
 		if (_moderators.find(client->getNick()) != _moderators.end())	//ne le remove pas si est déjà remove
 			_moderators.erase(client->getNick());
-		else
-			throw ("NR : client is not moderator");
+		// else
+		// 	throw ("NR : client is not moderator");
 	}
 
 void	Channel::rmInvitMember(Client *client)
 	{
 		if (_invitedMembers.find(client->getNick()) != _invitedMembers.end())	//ne le remove pas si est déjà remove
 			_invitedMembers.erase(client->getNick());
-		else
-			throw ("NR : client is not invited");
+		// else
+		// 	throw ("NR : client is not invited");
 	}
 
 

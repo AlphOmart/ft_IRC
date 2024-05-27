@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 14:00:43 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 14:13:09 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 	}
 	if (server._mapChannel[i->at(2)]->isMember(client.getNick()) == false)
 	{
-		str << client.getNick() << " " << i->at(1) << " :You're not on that channel";
+		str << client.getNick() << " " << i->at(2) << " :You're not on that channel";
 		printERR(ERR_NOTONCHANNEL, str.str(), client);
 		return ;
 	}
@@ -303,7 +303,8 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		return ;
 	}
 	std::string newtopic;
-	std::size_t n = 2;
+	newtopic = i->at(2).substr(1) + " ";
+	std::size_t n = 3;
 	while (n < i->size())
 	{
 		newtopic += i->at(n) + " ";
