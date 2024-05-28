@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:31:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/27 15:40:29 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,16 +88,16 @@ void	Client::addChannel(Channel *ch)
 	{
 		if (_channels.find(ch->getName()) == _channels.end())	//ne l'ajoute pas si est déjà dedans
 			_channels[ch->getName()] = ch;
-		else
-			throw ("NR : channel already joined !");
+		// else
+		// 	throw ("NR : channel already joined !");
 	}
 
 void	Client::rmChannel(Channel *ch)
 	{
 		if (_channels.find(ch->getName()) != _channels.end())
 			_channels.erase(ch->getName());
-		else
-			throw ("NR : client is not in the channel");
+		// else
+		// 	throw ("NR : client is not in the channel");
 	}
 
 
