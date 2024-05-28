@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 15:40:29 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 11:21:06 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	Client::updateStatus(int epoll_fd)
 			_clientEvent.events = EPOLLIN | EPOLLOUT | EPOLLRDHUP;
 		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, _fd, &_clientEvent) == -1)
 		{
-			throw std::runtime_error("error in epoll_ctl ok");
+			throw std::runtime_error("error in epoll_ctl");
 		}
 	}
 

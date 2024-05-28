@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 13:50:33 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 11:12:46 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,6 @@ int main(int argc, char **argv)
 		try
 		{
 			Serv.epollWait();
-		}
-		catch(const std::string& e)
-		{
-			std::cerr << e << std::endl;
-		}
-		catch(const char *e)
-		{
-			std::cerr << e << std::endl;
 		}
 		catch(const std::out_of_range& e)
 		{

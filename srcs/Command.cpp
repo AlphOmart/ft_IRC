@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/27 14:13:09 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 11:23:12 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		std::string response;
 		response = ":IRCServ 433 *: Nickname is already used. \r\n";
-		send(client.getFd(), response.c_str(), response.length(), 0);
+		if (send(client.getFd(), response.c_str(), response.length(), 0) == -1)
+			throw std::runtime_error("Error while sending.");
 		return ;
 	}
 	if (client.getIsRegistered() == false && client.isRegistered() == true)	//permet de ignorer quand déjà  connecté
@@ -132,7 +133,8 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
 	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN " + ":" +  i->at(1) + "\r\n";
-	send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
+	if (send(client.getFd(), server_msg.c_str(), server_msg.size(), 0) == -1)
+		throw std::runtime_error("Error while sending.");
 }
 
 // : ircserv NR : 

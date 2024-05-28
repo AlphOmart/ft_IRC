@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 13:51:12 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 11:23:54 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,8 @@ void	Server::epollinEvent(int n)
 					{
 						std::string response;
 						response = "ERROR : Registration needed\r\n";
-						send(curClient->second->getFd(), response.c_str(), response.length(), 0);
+						if (send(curClient->second->getFd(), response.c_str(), response.length(), 0) == -1)
+							throw std::runtime_error("Error while sending.");
 					}
 			}
 			
@@ -187,7 +188,8 @@ void	Server::epollinEvent(int n)
 			{
 				std::string response;
 				response = "ERROR :Password needed\r\n";
-				send(curClient->second->getFd(), response.c_str(), response.length(), 0);
+				if (send(curClient->second->getFd(), response.c_str(), response.length(), 0) == -1)
+					throw std::runtime_error("Error while sending.");
 			}
 			// else
 				// std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
