@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/24 16:14:47 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:09:17 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ class Channel
 
 		void							addMode(const std::string& modeName, bool isActive);
 		std::string						getModes() const;
+		std::string						getList() const;
 
 };
 

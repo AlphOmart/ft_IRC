@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 11:23:12 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:28:59 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,8 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		client.setNickname(i->at(1));
 	else
 	{
-		std::string response;
-		response = ":IRCServ 433 *: Nickname is already used. \r\n";
-		if (send(client.getFd(), response.c_str(), response.length(), 0) == -1)
-			throw std::runtime_error("Error while sending.");
+		str << client.getNick() << " " << i->at(1) << " " << i->at(1) << " is already used.";
+		printERR(ERR_NICKNAMEINUSE, str.str(), client);
 		return ;
 	}
 	if (client.getIsRegistered() == false && client.isRegistered() == true)	//permet de ignorer quand déjà  connecté
@@ -108,20 +106,14 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			printERR(ERR_INVITEONLYCHAN, str.str(), client);
 			return ;// throw InvitOnlyException();
 		}
-		if (server._mapChannel[i->at(1)]->getIsMdp() == true && i->size() == 3)	//si le channel a un mdp et qu'on a passé un mdp
+		if (server._mapChannel[i->at(1)]->getIsMdp() == true)	//si le channel a un mdp et qu'on a passé un mdp
 		{
-			if (server._mapChannel[i->at(1)]->getMdp() != i->at(2))
+			if ((i->size() != 3) || (i->size() == 3 && server._mapChannel[i->at(1)]->getMdp() != i->at(2)))
 			{
 				str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
 				printERR(ERR_BADCHANNELKEY, str.str(), client);
 				return ;//throw WrongPasswordException();
 			}
-		}
-		else if (server._mapChannel[i->at(1)]->getIsMdp() == true)
-		{
-			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
-			printERR(ERR_BADCHANNELKEY, str.str(), client);
-			return ;//throw NeedPasswordException();//todo simplifier
 		}
 		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
 		{
@@ -135,6 +127,23 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN " + ":" +  i->at(1) + "\r\n";
 	if (send(client.getFd(), server_msg.c_str(), server_msg.size(), 0) == -1)
 		throw std::runtime_error("Error while sending.");
+
+	str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
+	printERR(RPL_TOPIC, str.str(), client);
+	// #TODO: SENT TOPIC WITH RPL_TOPIC332
+
+	str.str("");
+	str.clear();
+	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+	printERR(RPL_NAMREPLY, str.str(), client);
+
+	// #TODO: SENT USER LIST WITH RPL_NAMREPLY353 & RPL_ENDOFNAME336
+	str.str("");
+	str.clear();
+	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+	printERR(RPL_ENDOFNAMES, str.str(), client);
+
+
 }
 
 // : ircserv NR : 
@@ -392,7 +401,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ; // throw ("NR : topic restriction added successfully");
 		case 3:
 		{
-			if (i->size() != 4)
+			if (i->size() < 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printERR(ERR_NEEDMOREPARAMS, str.str(), client);

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 11:05:59 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:31:17 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,3 +202,17 @@ std::string	Channel::getModes() const
 		}
 		return (str);
 	}
+
+std::string	Channel::getList() const
+{
+	std::stringstream str;
+	for (std::map<std::string, Client*>::const_iterator it = _moderators.begin(); it!= _moderators.end(); ++it)
+		str << "@" << it->second->getNick() << " ";
+	for (std::map<std::string, Client*>::const_iterator it = _members.begin(); it!= _members.end(); ++it)
+	{
+		if (_moderators.find(it->first) == _moderators.end())
+				str << it->second->getNick() << " ";
+	}
+	// str.str().pop_back();
+	return (str.str());
+}
