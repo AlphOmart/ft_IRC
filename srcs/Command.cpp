@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 15:28:59 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:46:09 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		else
 		{
 			str << "*" << " :Password incorrect";
-			printERR(ERR_PASSWDMISMATCH, str.str(), client);
+			printRPL(ERR_PASSWDMISMATCH, str.str(), client, server.getEpollfd());
 			//server.kickClient(client.getFd());
 		}
 	}
@@ -34,7 +34,7 @@ void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		// std::stringstream str;
 		str << client.getNick() << " :You may not reregister";
-		printERR(ERR_ALREADYREGISTERED, str.str(), client);
+		printRPL(ERR_ALREADYREGISTERED, str.str(), client, server.getEpollfd());
 	}
 }
 
@@ -46,13 +46,13 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	else
 	{
 		str << client.getNick() << " " << i->at(1) << " " << i->at(1) << " is already used.";
-		printERR(ERR_NICKNAMEINUSE, str.str(), client);
+		printRPL(ERR_NICKNAMEINUSE, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (client.getIsRegistered() == false && client.isRegistered() == true)	//permet de ignorer quand déjà  connecté
 	{
 		str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
-		printERR(RPL_WELCOME, str.str(), client);
+		printRPL(RPL_WELCOME, str.str(), client, server.getEpollfd());
 		// std::string response;
 		// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + "@IRCServ\r\n";
 		// send(client.getFd(), response.c_str(), response.length(), 0);
@@ -69,7 +69,7 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		if (client.isRegistered() == true)
 		{
 			str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
-			printERR(RPL_WELCOME, str.str(), client);
+			printRPL(RPL_WELCOME, str.str(), client, server.getEpollfd());
 			// std::string response;
 			// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + " @IRCServ\r\n";
 			// send(client.getFd(), response.c_str(), response.length(), 0);
@@ -78,7 +78,7 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	else
 	{
 		str << client.getNick() << " :You may not reregister";
-		printERR(ERR_ALREADYREGISTERED, str.str(), client);
+		printRPL(ERR_ALREADYREGISTERED, str.str(), client, server.getEpollfd());
 	}
 }
 
@@ -90,7 +90,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		if (i->at(1).find('#') != 0)
 		{
 			str << client.getNick() << " " << i->at(1) << " :No such channel";
-			printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+			printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server.getEpollfd());
 			return ;
 		}
 		Channel *curChannel =  new Channel(i->at(1), client);
@@ -103,7 +103,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		if (server._mapChannel[i->at(1)]->getInvitOnly() == true && server._mapChannel[i->at(1)]->isInvited(client.getNick()) == false)
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+i)";
-			printERR(ERR_INVITEONLYCHAN, str.str(), client);
+			printRPL(ERR_INVITEONLYCHAN, str.str(), client, server.getEpollfd());
 			return ;// throw InvitOnlyException();
 		}
 		if (server._mapChannel[i->at(1)]->getIsMdp() == true)	//si le channel a un mdp et qu'on a passé un mdp
@@ -111,14 +111,14 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if ((i->size() != 3) || (i->size() == 3 && server._mapChannel[i->at(1)]->getMdp() != i->at(2)))
 			{
 				str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
-				printERR(ERR_BADCHANNELKEY, str.str(), client);
+				printRPL(ERR_BADCHANNELKEY, str.str(), client, server.getEpollfd());
 				return ;//throw WrongPasswordException();
 			}
 		}
 		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+l)";
-			printERR(ERR_CHANNELISFULL, str.str(), client);
+			printRPL(ERR_CHANNELISFULL, str.str(), client, server.getEpollfd());
 			return ;//throw ChannelIsFullException();
 		}
 		client.addChannel(server._mapChannel[i->at(1)]);
@@ -129,19 +129,19 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		throw std::runtime_error("Error while sending.");
 
 	str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
-	printERR(RPL_TOPIC, str.str(), client);
+	printRPL(RPL_TOPIC, str.str(), client, server.getEpollfd());
 	// #TODO: SENT TOPIC WITH RPL_TOPIC332
 
 	str.str("");
 	str.clear();
 	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
-	printERR(RPL_NAMREPLY, str.str(), client);
+	printRPL(RPL_NAMREPLY, str.str(), client, server.getEpollfd());
 
 	// #TODO: SENT USER LIST WITH RPL_NAMREPLY353 & RPL_ENDOFNAME336
 	str.str("");
 	str.clear();
 	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
-	printERR(RPL_ENDOFNAMES, str.str(), client);
+	printRPL(RPL_ENDOFNAMES, str.str(), client, server.getEpollfd());
 
 
 }
@@ -156,13 +156,13 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	if (i->size() < 4)	// 4 instead of 3 because of HexChat ('kick' 'irc' '#general' ':tim')
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 	{
 		str << client.getNick() << " " << i->at(2) << " :No such channel";
-		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server.getEpollfd());
 		return ; // throw ChannelDoesNotExistException();
 	}
 	std::string usr = i->at(3).substr(1);		//	pour gérer ":" devant client pour Hexchat : 'kick' 'irc' '#general' ':tim'
@@ -172,19 +172,19 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	if (it == server._mapClient.end())
 	{
 		str << client.getNick() << " " << i->at(3) << " " << i->at(2) << " :They aren't on that channel";
-		printERR(ERR_USERNOTINCHANNEL, str.str(), client);
+		printRPL(ERR_USERNOTINCHANNEL, str.str(), client, server.getEpollfd());
 		return ; // throw ClientDoesNotExistException();
 	}
 	if (server._mapChannel[i->at(2)]->isMember(it->second->getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(3) << " " << i->at(2) << " :They aren't on that channel";
-		printERR(ERR_USERNOTINCHANNEL, str.str(), client);
+		printRPL(ERR_USERNOTINCHANNEL, str.str(), client, server.getEpollfd());
 		return ; // throw ClientIsNotInChannelException();
 	}
 	if (server._mapChannel[i->at(2)]->isModerator(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
-		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
+		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server.getEpollfd());
 		return ; // throw NotAllowedException();
 	}
 	it->second->rmChannel(server._mapChannel[i->at(2)]);
@@ -196,7 +196,7 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	// throw ("NR : kick successfully.");
 	
 	// str << client.getNick() << " :kicked " << usr << " from " << i->at(2) << ".";
-	// printERR(9999, str.str(), client);
+	// printRPL(9999, str.str(), client, server.getEpollfd());
 	// std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv KICK " + ":" +  it->second->getUser() + "successfully.\r\n";
 	// send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
 }
@@ -221,19 +221,19 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 	if (i->size() < 3)
 		{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 		return ;
 		}
 	if (server._mapChannel.find(i->at(2)) == server._mapChannel.end())
 	{
 		str << client.getNick() << " " << i->at(2) << " :No such channel";
-		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel[i->at(2)]->isMember(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(2) << " :You're not on that channel";
-		printERR(ERR_NOTONCHANNEL, str.str(), client);
+		printRPL(ERR_NOTONCHANNEL, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
@@ -242,18 +242,18 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 	if (it == server._mapClient.end())
 	{
 		str << client.getNick() << " " << i->at(1) << " :No such nick/channel";
-		printERR(ERR_NOSUCHNICK, str.str(), client);
+		printRPL(ERR_NOSUCHNICK, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel[i->at(2)]->isMember(i->at(1)) == true)
 	{
 		str << client.getNick() << " " << i->at(1) << " " << i->at(2) << " :is already on channel";
-		printERR(ERR_USERONCHANNEL, str.str(), client);
+		printRPL(ERR_USERONCHANNEL, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	server._mapChannel[i->at(2)]->addInvitMember(it->second);
 	str << client.getNick() << " " << i->at(1) << " " << i->at(2);
-	printERR(RPL_INVITING, str.str(), client);
+	printRPL(RPL_INVITING, str.str(), client, server.getEpollfd());
 }
 
 // i->at(1) = user
@@ -280,25 +280,25 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 	if (i->size() < 2)
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
 	{
 		str << client.getNick() << " " << i->at(1) << " :No such channel";
-		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel[i->at(1)]->isMember(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not on that channel";
-		printERR(ERR_NOTONCHANNEL, str.str(), client);
+		printRPL(ERR_NOTONCHANNEL, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
-		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
+		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (i->size() == 2)
@@ -306,11 +306,11 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		if (server._mapChannel[i->at(1)]->getTopic().empty())
 		{
 			str << client.getNick() << " " << i->at(1) << " :No topic is set";
-			printERR(RPL_NOTOPIC, str.str(), client);
+			printRPL(RPL_NOTOPIC, str.str(), client, server.getEpollfd());
 			return ;
 		}
 		str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
-		printERR(RPL_TOPIC, str.str(), client);
+		printRPL(RPL_TOPIC, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	std::string newtopic;
@@ -355,31 +355,31 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	if (i->size() < 2 /*&& i->size() != 3 && i->size() != 4*/)
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-		printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 		return ;
 	}
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
 	{
 		str << client.getNick() << " " << i->at(1) << " :No such channel";
-		printERR(ERR_NOSUCHCHANNEL, str.str(), client);
+		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server.getEpollfd());
 		return ; // throw ("NR : Channel doesn't exist");
 	}
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
-		printERR(ERR_CHANOPRIVSNEEDED, str.str(), client);
+		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server.getEpollfd());
 		return ; // throw ("NR : you're not allowed to use this command (not a moderator)");
 	}
 	if (i->size() == 2)
 	{
 		str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
-		printERR(RPL_CHANNELMODEIS, str.str(), client);
+		printRPL(RPL_CHANNELMODEIS, str.str(), client, server.getEpollfd());
 		return ; // :ircserver MODE #channel +m
 	}
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
 	{
 		str << client.getNick() << " :Unknown MODE flag";
-		printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+		printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server.getEpollfd());
 		return ;
 		// throw ("NR : need operand + or - before flag");
 	}
@@ -389,7 +389,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
-			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server.getEpollfd());
 			return ; // throw ("NR : too many args, only 1 letter");
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
@@ -404,9 +404,9 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if (i->size() < 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-				printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 				// str << client.getNick() << " " << i->at(1) << " :Key is not well-formed";
-				// printERR(ERR_INVALIDKEY, str.str(), client);
+				// printRPL(ERR_INVALIDKEY, str.str(), client, server.getEpollfd());
 				return ; // throw ("NR : password missed");
 			}
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
@@ -418,7 +418,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if (i->size() != 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-				printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 				return ;
 			}
 			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
@@ -428,7 +428,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if (it == members.end())
 			{
 				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
-				printERR(ERR_NOSUCHNICK, str.str(), client);
+				printRPL(ERR_NOSUCHNICK, str.str(), client, server.getEpollfd());
 				return ;
 			}
 			server._mapChannel[i->at(1)]->addModerator(it->second);
@@ -439,7 +439,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if (i->size() != 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-				printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 				return ;
 			}
 			server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
@@ -447,7 +447,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ; //throw ("NR : user limit added successfully");
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
-			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server.getEpollfd());
 			return ; // throw("NR : unknown flag");
 		}
 	}
@@ -457,7 +457,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
-			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server.getEpollfd());
 			return ; // throw ("NR : too many args, only 1 letter");
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(false);
@@ -478,7 +478,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			if (i->size() != 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
-				printERR(ERR_NEEDMOREPARAMS, str.str(), client);
+				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server.getEpollfd());
 				return ;
 			}
 			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
@@ -489,7 +489,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 
 				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
-				printERR(ERR_NOSUCHNICK, str.str(), client);
+				printRPL(ERR_NOSUCHNICK, str.str(), client, server.getEpollfd());
 				return ;
 			}
 			server._mapChannel[i->at(1)]->rmModerator(it->second);
@@ -502,7 +502,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ; //throw ("NR : user limit removed successfully");
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
-			printERR(ERR_UMODEUNKNOWNFLAG, str.str(), client);
+			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server.getEpollfd());
 			return ; // throw("NR : unknown flag");
 		}
 	}

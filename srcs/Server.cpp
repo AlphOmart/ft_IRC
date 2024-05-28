@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 11:23:54 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/28 15:46:09 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void	Server::epollinEvent(int n)
 				{
 					std::stringstream str;
 					str << curClient->second->getNick() << " " << i->at(0) << " :Not enough parameters";
-					printERR(ERR_NEEDMOREPARAMS, str.str(), *curClient->second);
+					printRPL(ERR_NEEDMOREPARAMS, str.str(), *curClient->second, _epoll_fd);
 				}	
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 			}
@@ -243,6 +243,10 @@ void	Server::closeFd()
 
 //############################# UTILS ##########################################################//
 
+int		Server::getEpollfd()
+{
+	return (_epoll_fd);
+}
 
 std::string	Server::getPass()
 {
