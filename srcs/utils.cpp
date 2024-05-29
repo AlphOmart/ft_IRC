@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 14:31:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/29 17:52:29 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,21 @@ void	printRPL(int nr, std::string str, Client &client, Server &server)	//affiche
 	// 	throw std::runtime_error("Error while sending.");
 }
 
-void	printChannel(std::string str, Client &client, Channel &chan)
+void	printMSG(std::string str, Client &client, Client &target, Server &server)
 {
-	std::string result = str + "\r\n";
+	std::string result = ":" + client.getNick() + " PRIVMSG " + target.getNick() + " :" + str + "\r\n";
+	target.setMailbox(result, server.getEpollfd());
+}
+
+void	printChannel(std::string str, Client &client, Channel &chan, Server &server)
+{
+	std::string result = ":" + client.getNick() + " PRIVMSG " + chan.getName() + " :" + str + "\r\n";
 	std::map<std::string, Client *> members = chan.getMembers();
 
-	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != chan.getMembers().end(); ++it)
+	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); ++it)
 	{
 		if (it->first != client.getNick())
-			it->second->setMailbox(result, client.getFd());
+			it->second->setMailbox(result, server.getEpollfd());
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 14:19:32 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/29 17:25:46 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ class Channel;
 		void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
 		void	printRPL(int nr, std::string str, Client &client, Server& server);
-		void	printChannel(std::string str, Client &client, Channel &chan);
+		void	printMSG(std::string str, Client &client, Client &target, Server& server);
+		void	printChannel(std::string str, Client &client, Channel &chan, Server& server);
 
 class Server
 {

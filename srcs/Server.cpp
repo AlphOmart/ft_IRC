@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 14:24:57 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/29 17:37:34 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ void	Server::initCommand()
 	_commandList["INVITE"] = &fctINVITE;
 	_commandList["MODE"] = &fctMODE;
 	_commandList["TOPIC"] = &fctTOPIC;
-	_commandList["fctPRIVMSG"] = &fctPRIVMSG;
+	_commandList["PRIVMSG"] = &fctPRIVMSG;
 }
 
 
