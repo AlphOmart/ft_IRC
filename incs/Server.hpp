@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 15:46:09 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:19:32 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ class Channel;
 		void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		
-		void	printRPL(int nr, std::string str, Client &client, int epoll_fd);
+		void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+
+		void	printRPL(int nr, std::string str, Client &client, Server& server);
+		void	printChannel(std::string str, Client &client, Channel &chan);
 
 class Server
 {

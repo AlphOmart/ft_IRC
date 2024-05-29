@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 15:46:09 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/29 14:24:57 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass
 	try
 	{
 		std::string str(port);
-		if (std::string::npos != str.find_first_not_of("0123456789")) {
+		if (str.find_first_not_of("0123456789") != std::string::npos) {
 			throw	std::invalid_argument("Error : port is not valid.");
 		}
 		_port = std::strtol(port, NULL, 10);
@@ -167,7 +167,7 @@ void	Server::epollinEvent(int n)
 				{
 					std::stringstream str;
 					str << curClient->second->getNick() << " " << i->at(0) << " :Not enough parameters";
-					printRPL(ERR_NEEDMOREPARAMS, str.str(), *curClient->second, _epoll_fd);
+					printRPL(ERR_NEEDMOREPARAMS, str.str(), *curClient->second, *this);
 				}	
 				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
 			}
@@ -263,6 +263,7 @@ void	Server::initCommand()
 	_commandList["INVITE"] = &fctINVITE;
 	_commandList["MODE"] = &fctMODE;
 	_commandList["TOPIC"] = &fctTOPIC;
+	_commandList["fctPRIVMSG"] = &fctPRIVMSG;
 }
 
 
