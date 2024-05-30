@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 17:26:56 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/05/30 14:38:00 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,10 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
-	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN " + ":" +  i->at(1) + "\r\n";
-	if (send(client.getFd(), server_msg.c_str(), server_msg.size(), 0) == -1)
-		throw std::runtime_error("Error while sending.");
+	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN :" +  i->at(1) + "\r\n";
+	client.setMailbox(server_msg, server.getEpollfd());
+	// if (send(client.getFd(), server_msg.c_str(), server_msg.size(), 0) == -1)
+	// 	throw std::runtime_error("Error while sending.");
 
 	str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
 	printRPL(RPL_TOPIC, str.str(), client, server);
@@ -140,12 +141,21 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	str.str("");
 	str.clear();
 	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
-	printRPL(RPL_NAMREPLY, str.str(), client, server);
+	std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
+	for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+	{
+		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
+	}
+	
 
 	str.str("");
 	str.clear();
 	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
-	printRPL(RPL_ENDOFNAMES, str.str(), client, server);
+	std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
+	for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+	{
+		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
+	}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
 
 
 }
@@ -368,17 +378,17 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
 		return ; // throw ("NR : Channel doesn't exist");
 	}
-	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
-	{
-		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
-		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
-		return ; // throw ("NR : you're not allowed to use this command (not a moderator)");
-	}
 	if (i->size() == 2)
 	{
 		str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
 		printRPL(RPL_CHANNELMODEIS, str.str(), client, server);
 		return ; // :ircserver MODE #channel +m
+	}
+	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
+		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
+		return ; // throw ("NR : you're not allowed to use this command (not a moderator)");
 	}
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
 	{
@@ -510,7 +520,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ; // throw("NR : unknown flag");
 		}
 	}
-}
+}		//	"MODE #l\r\nWHO #l\r\n"
 
 int	flagCheck(std::string	str)
 {
