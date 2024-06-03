@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:43:22 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 16:19:06 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,10 @@ void	Client::rmChannel(Channel *ch)
 			_channels.erase(ch->getName());
 	}
 
+void	Client::clearChannel()
+	{
+			_channels.clear();
+	}
 
 // ----- Utils ----- //
 

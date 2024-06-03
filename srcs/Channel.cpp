@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:10:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 16:25:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,8 @@ void	Channel::rmMember(Client *client)
 	{
 		if (_members.find(client->getNick()) != _members.end())	//ne le remove pas si est déjà remove
 			_members.erase(client->getNick());
+		rmModerator(client);		//si rm des membres alors aussi du moderator et invtmember
+		rmInvitMember(client);
 	}
 
 void	Channel::rmModerator(Client *client)

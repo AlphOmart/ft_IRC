@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:42:04 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 16:17:59 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class Client
 	// Channel List //
 		void				addChannel(Channel *ch);
 		void				rmChannel(Channel *ch);
+		void				clearChannel();
 
 	// utils //
 		const bool&			isRegistered(void);

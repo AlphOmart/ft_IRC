@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 15:43:55 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 17:10:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
 	}
-	
 
 	str.str("");
 	str.clear();
@@ -588,15 +587,112 @@ void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& serv
 // ERR_CANNOTSENDTOCHAN (404)
 // ERR_NOTEXTTOSEND (412)
 
-// ---------------------------------------------------------------------//
-//    Examples:	MODE
 
-//            Use of Channel Modes:
 
-// MODE #Finnish +i               ; Makes #Finnish channel 'invite-only'.
+void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	std::stringstream str;
 
-// MODE #Finnish +o Kilroy         ; Gives 'chanop' privileges to Kilroy on #Fins.
+	if (i->size() < 3)	// HexChat ('part' '#general' ':reason')
+	{
+		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
+		return ;
+	}
+	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
+	{
+		str << client.getNick() << " " << i->at(1) << " :No such channel";
+		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
+		return ;
+	}
+	if (server._mapChannel[i->at(1)]->isMember(client.getNick()) == false)
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not on that channel";
+		printRPL(ERR_NOTONCHANNEL, str.str(), client, server);
+		return ;
+	}
 
-// MODE #42 +k oulu                ; Set the channel key to "oulu".
+	client.rmChannel(server._mapChannel[i->at(1)]);
+	server._mapChannel[i->at(1)]->rmMember(&client);
+	
+	// str << ":" << client.getNick() << "!" << client.getUser() << " is leaving the channel " << i->at(1) << "\r\n";
+	str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " PART " << i->at(1) << " " << i->at(2) << "\r\n";
+	// str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " KICK " << i->at(1) << " " << i->at(2) << " " << com << "\r\n";
+	
+	std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
+	for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+	{
+			it->second->setMailbox(str.str(), server.getEpollfd());
+	}
+	client.setMailbox(str.str(), server.getEpollfd());
+	
+	str.str("");
+	str.clear();
+	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+	std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
+	for (std::map<std::string, Client *>::iterator it = ptr2.begin(); it != ptr2.end(); ++it)
+	{
+		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
+	}
+	client.setMailbox(str.str(), server.getEpollfd());
 
-// MODE #eu-opers +l 10            ; Set the limit for the number of users on channel to 10.
+	str.str("");
+	str.clear();
+	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+	std::map<std::string, Client *> ptr3 = server._mapChannel[i->at(1)]->getMembers();
+	for (std::map<std::string, Client *>::iterator it2 = ptr3.begin(); it2 != ptr3.end(); ++it2)
+	{
+		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
+	}
+	client.setMailbox(str.str(), server.getEpollfd());
+}
+	//todo : trouver pourquoi doit rejoindre 2fois si part
+
+
+
+
+
+void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	std::stringstream str;
+	client.clearChannel();	//maybe leaks for later
+	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); it++)
+	{
+		if (it->second->isMember(client.getNick()))
+			it->second->rmMember(&client);
+	}
+
+	str << client.getNick() << " is exiting the network with the message: Quit: " << i->at(1) << "\r\n";
+
+	std::map<int, Client *>::iterator curClient = server._mapClient.find(client.getFd());
+	for (std::map<int, Client *>::iterator it2 = server._mapClient.begin(); it2 != server._mapClient.end(); it2++)
+	{
+		if (it2 != curClient)
+			it2->second->setMailbox(str.str(), server.getEpollfd());
+	}
+}
+//i->at(0) "QUIT"
+//i->at(1) ":leaving"
+
+
+/*TODO :
+	fctQUIT pour avoi segfault
+	fctPART pour kick soi meme proprement
+	finir la registration (below)	pour avoir le bouton join channel
+	leaks
+*/
+
+
+
+//Upon successful completion of the registration process, the server MUST send, in this order:
+
+// RPL_WELCOME (001),
+// RPL_YOURHOST (002),
+// RPL_CREATED (003),
+// RPL_MYINFO (004),
+// at least one RPL_ISUPPORT (005) numeric to the client.
+// The server MAY then send other numerics and messages.
+// The server SHOULD then respond as though the client sent the LUSERS command and return the appropriate numerics.
+// The server MUST then respond as though the client sent it the MOTD command, i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
+// If the user has client modes set on them automatically upon joining the network, the server SHOULD send the client the RPL_UMODEIS (221) reply or a MODE message with the client as target, preferably the former.
+// The first parameter of the RPL_WELCOME (001) message is the nickname assigned by the network to the client. Since it may differ from the nickname the client requested with the NICK command (due to, e.g. length limits or policy restrictions on nicknames), the client SHOULD use this parameter to determine its actual nickname at the time of connection. Subsequent nickname changes, client-initiated or not, will be communicated by the server sending a NICK

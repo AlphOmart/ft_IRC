@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 15:40:51 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 16:41:28 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,14 +197,14 @@ void	Server::epollinEvent(int n)
 void	Server::epollrdhupEvent(int n)
 {
 	std::stringstream buff;
-	buff << "Le client " << _mapClient[_events[n].data.fd]->getNick() << " s'est déconnecté.\r\n";
+	// buff << "Le client " << _mapClient[_events[n].data.fd]->getNick() << " s'est déconnecté.\r\n";
 
-	std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
-	for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-	{
-		if (it != curClient)
-			it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
-	}
+	// std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
+	// for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
+	// {
+	// 	if (it != curClient)
+	// 		it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
+	// }
 
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
@@ -260,6 +260,8 @@ void	Server::initCommand()
 	_commandList["MODE"] = &fctMODE;
 	_commandList["TOPIC"] = &fctTOPIC;
 	_commandList["PRIVMSG"] = &fctPRIVMSG;
+	_commandList["PART"] = &fctPART;
+	_commandList["QUIT"] = &fctQUIT;
 }
 
 
