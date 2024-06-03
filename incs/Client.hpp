@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/14 13:24:05 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:42:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,6 @@ class Client
 		void				updateStatus(int epoll_fd);
 		void				receiveAll(int epoll_fd);
 
-	// class err : public std::exception
-	// {
-	// 	public:
-	// 		virtual const char* what(void) const throw()
-	// 		{
-	// 			return ("error.exception");
-	// 		}
-	// };
 };
 
 #endif

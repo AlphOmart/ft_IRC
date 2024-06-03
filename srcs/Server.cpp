@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 17:37:34 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:43:52 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,6 @@ void	Server::epollinEvent(int n)
 				if (send(curClient->second->getFd(), response.c_str(), response.length(), 0) == -1)
 					throw std::runtime_error("Error while sending.");
 			}
-			// else
-				// std::cout << "unknown command : " << input[0][0] << std::endl; // ERR_UNKNOWNCOMMAND (421) 
 		}
 	}
 }

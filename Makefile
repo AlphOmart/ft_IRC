@@ -6,7 +6,7 @@
 #    By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:52:16 by tdutel            #+#    #+#              #
-#    Updated: 2024/05/23 15:51:35 by tdutel           ###   ########.fr        #
+#    Updated: 2024/06/03 14:42:48 by tdutel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ SRC			=	main.cpp \
 				srcs/Server.cpp \
 				srcs/Client.cpp \
 				srcs/Channel.cpp \
-				srcs/Exceptions.cpp \
 				srcs/utils.cpp \
 				srcs/Command.cpp
 
@@ -29,7 +28,6 @@ HEADER		=	incs/Irc.hpp \
 				incs/Server.hpp \
 				incs/Client.hpp \
 				incs/Channel.hpp \
-				incs/Exceptions.hpp \
 				incs/Numeric_replies.hpp \
 				incs/Color.hpp
 DEP			=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.d))

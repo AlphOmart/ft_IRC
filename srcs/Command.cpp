@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:24:59 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:39:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,10 @@ void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			str << "*" << " :Password incorrect";
 			printRPL(ERR_PASSWDMISMATCH, str.str(), client, server);
-			//server.kickClient(client.getFd());
 		}
 	}
 	else
 	{
-		// std::stringstream str;
 		str << client.getNick() << " :You may not reregister";
 		printRPL(ERR_ALREADYREGISTERED, str.str(), client, server);
 	}
@@ -59,9 +57,6 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 		printRPL(RPL_WELCOME, str.str(), client, server);
-		// std::string response;
-		// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + "@IRCServ\r\n";
-		// send(client.getFd(), response.c_str(), response.length(), 0);
 	}
 }
 
@@ -76,9 +71,6 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 			printRPL(RPL_WELCOME, str.str(), client, server);
-			// std::string response;
-			// response = ":IRCServ 001 " + client.getNick() + " : Welcome to the IRCServ " + client.getUser() + " @IRCServ\r\n";
-			// send(client.getFd(), response.c_str(), response.length(), 0);
 		}
 	}
 	else
@@ -110,7 +102,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+i)";
 			printRPL(ERR_INVITEONLYCHAN, str.str(), client, server);
-			return ;// throw InvitOnlyException();
+			return ;
 		}
 		if (server._mapChannel[i->at(1)]->getIsMdp() == true)	//si le channel a un mdp et qu'on a passé un mdp
 		{
@@ -118,22 +110,20 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 				str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+k)";
 				printRPL(ERR_BADCHANNELKEY, str.str(), client, server);
-				return ;//throw WrongPasswordException();
+				return ;
 			}
 		}
 		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getUserLimit())
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+l)";
 			printRPL(ERR_CHANNELISFULL, str.str(), client, server);
-			return ;//throw ChannelIsFullException();
+			return ;
 		}
 		client.addChannel(server._mapChannel[i->at(1)]);
 		server._mapChannel[i->at(1)]->addMember(&client);
 	}
 	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN :" +  i->at(1) + "\r\n";
 	client.setMailbox(server_msg, server.getEpollfd());
-	// if (send(client.getFd(), server_msg.c_str(), server_msg.size(), 0) == -1)
-	// 	throw std::runtime_error("Error while sending.");
 
 	str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
 	printRPL(RPL_TOPIC, str.str(), client, server);
@@ -381,7 +371,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << i->at(1) << " :No such channel";
 		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
-		return ; // throw ("NR : Channel doesn't exist");
+		return ;
 	}
 	if (i->size() == 2)
 	{
@@ -393,14 +383,13 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
 		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
-		return ; // throw ("NR : you're not allowed to use this command (not a moderator)");
+		return ;
 	}
 	if (i->at(2).at(0) != '+' && i->at(2).at(0) != '-')
 	{
 		str << client.getNick() << " :Unknown MODE flag";
 		printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
 		return ;
-		// throw ("NR : need operand + or - before flag");
 	}
 	if (i->at(2).at(0) == '+')
 	{
@@ -409,28 +398,26 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ; // throw ("NR : too many args, only 1 letter");
+			return ;
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			server._mapChannel[i->at(1)]->addMode("i", true);
-			return ; // throw ("NR : invit only mode added successfully");
+			return ;
 		case 2:
 			server._mapChannel[i->at(1)]->setTopicRestriction(true);
 			server._mapChannel[i->at(1)]->addMode("t", true);
-			return ; // throw ("NR : topic restriction added successfully");
+			return ;
 		case 3:
 		{
 			if (i->size() < 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
-				// str << client.getNick() << " " << i->at(1) << " :Key is not well-formed";
-				// printRPL(ERR_INVALIDKEY, str.str(), client, server);
-				return ; // throw ("NR : password missed");
+				return ;
 			}
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			server._mapChannel[i->at(1)]->addMode("k", true);
-			return ; //throw ("NR : password added successfully");
+			return ;
 		}
 		case 4:
 		{
@@ -452,7 +439,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			}
 			server._mapChannel[i->at(1)]->addModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", true);
-			return ; // throw ("NR : moderator added successfully");
+			return ;
 		}
 		case 5:
 			if (i->size() != 4)
@@ -463,11 +450,11 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			}
 			server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
 			server._mapChannel[i->at(1)]->addMode("l", true);
-			return ; //throw ("NR : user limit added successfully");
+			return ;
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ; // throw("NR : unknown flag");
+			return ;
 		}
 	}
 	else
@@ -477,20 +464,19 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ; // throw ("NR : too many args, only 1 letter");
+			return ;
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(false);
 			server._mapChannel[i->at(1)]->addMode("i", false);
-			return ; //throw ("NR : invit only mode removed successfully");
+			return ;
 		case 2:
-			// std::cout << "-t. everyone can change topic" << std::endl;
 			server._mapChannel[i->at(1)]->setTopicRestriction(false);
 			server._mapChannel[i->at(1)]->addMode("t", false);
-			return ; //throw ("NR : topic restriction removed successfully");
+			return ;
 		case 3:
 			server._mapChannel[i->at(1)]->setMdp("");
 			server._mapChannel[i->at(1)]->addMode("k", false);
-			return ; //throw ("NR : password removed successfully");
+			return ;
 		case 4:
 		{
 
@@ -513,16 +499,16 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			}
 			server._mapChannel[i->at(1)]->rmModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", false);
-			return ; //throw ("NR : moderator removed successfully");
+			return ;
 		}
 		case 5:
 			server._mapChannel[i->at(1)]->setUserLimit(0);
 			server._mapChannel[i->at(1)]->addMode("l", false);
-			return ; //throw ("NR : user limit removed successfully");
+			return ;
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ; // throw("NR : unknown flag");
+			return ;
 		}
 	}
 }		//	"MODE #l\r\nWHO #l\r\n"

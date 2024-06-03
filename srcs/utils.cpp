@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/29 17:52:29 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:44:29 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	printRPL(int nr, std::string str, Client &client, Server &server)	//affiche
 	rpl << ":IRCserv " << nr << " " << str;
 	std::string result = rpl.str() + "\r\n";
 	client.setMailbox(result, server.getEpollfd());
-	// if (send(client.getFd(), result.c_str(), result.size(), 0) == -1)
-	// 	throw std::runtime_error("Error while sending.");
 }
 
 void	printMSG(std::string str, Client &client, Client &target, Server &server)
