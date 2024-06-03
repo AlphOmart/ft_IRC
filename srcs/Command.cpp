@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:39:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 15:43:55 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,14 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 		printRPL(RPL_WELCOME, str.str(), client, server);
+
+		std::stringstream buff;
+		buff << "Nouvelle connexion de " << client.getNick() << "\r\n";
+		for (std::map<int, Client *>::iterator it = server._mapClient.begin(); it != server._mapClient.end(); it++)
+		{
+			if (it->second != &client)
+				it->second->setMailbox(buff.str(), server.getEpollfd());	//ajout de l'input dans la mailbox
+		}
 	}
 }
 

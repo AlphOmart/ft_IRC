@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:43:52 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 15:40:51 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,15 +139,14 @@ void	Server::epollinEvent(int n)
 		_mapClient[acceptedClient->getFd()] = acceptedClient;
 		// Ajout du nouveau descripteur Client de fichier à l'instance epoll
 		_mapClient[acceptedClient->getFd()]->updateStatus(_epoll_fd);
-		// std::cout << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << std::endl;
-		std::stringstream buff;
-		buff << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << "\r\n";
-		std::map<int, Client *>::iterator curClient = _mapClient.find(connFd);
-		for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-		{
-			if (it != curClient)
-				it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
-		}
+		// std::stringstream buff;
+		// buff << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << _mapClient[connFd]->getNick() << "\r\n";
+		// std::map<int, Client *>::iterator curClient = _mapClient.find(connFd);
+		// for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
+		// {
+		// 	if (it != curClient)
+		// 		it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
+		// }
 	}
 	else /*if (_mapClient.find(_events[n].data.fd)->second->getIsRegistered() == false)	// PRE-CONNEXION : PASS USER NICK only*/
 	{
@@ -198,8 +197,8 @@ void	Server::epollinEvent(int n)
 void	Server::epollrdhupEvent(int n)
 {
 	std::stringstream buff;
-	buff << "Le client " << _events[n].data.fd << " s'est déconnecté.\r\n";
-	
+	buff << "Le client " << _mapClient[_events[n].data.fd]->getNick() << " s'est déconnecté.\r\n";
+
 	std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
 	for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
 	{
@@ -207,7 +206,6 @@ void	Server::epollrdhupEvent(int n)
 			it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
 	}
 
-	// Le client s'est déconnecté
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
 	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
