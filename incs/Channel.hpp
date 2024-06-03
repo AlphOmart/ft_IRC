@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 15:09:17 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:10:49 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ class Channel
 		bool							getTopicRestriction();
 
 		std::map<std::string, Client *>	getMembers() const;
-		std::size_t						getMemberSize();
+		int								getMemberSize();
 
 
 	// Client List //

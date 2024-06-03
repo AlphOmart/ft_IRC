@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/31 14:43:03 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:24:59 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 				return ;//throw WrongPasswordException();
 			}
 		}
-		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getIsUserLimit())
+		if (server._mapChannel[i->at(1)]->getIsUserLimit() == true && server._mapChannel[i->at(1)]->getMemberSize() >= server._mapChannel[i->at(1)]->getUserLimit())
 		{
 			str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " :Cannot join channel (+l)";
 			printRPL(ERR_CHANNELISFULL, str.str(), client, server);
@@ -177,9 +177,11 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << i->at(1) << " :No such channel";
 		printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
-		return ; // throw ChannelDoesNotExistException();
+		return ;
 	}
-	std::string com = i->at(3).substr(1);		//	pour gérer ":" devant motif Hexchat
+	std::string com;
+	if (i->size() > 3)
+		com = i->at(3).substr(1);		//	pour gérer ":" devant motif Hexchat
 	std::map<int, Client*>::iterator it = server._mapClient.begin();
 	while (it != server._mapClient.end() && it->second->getNick() != i->at(2))
 		it++;
@@ -187,19 +189,19 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << i->at(2) << " " << i->at(1) << " :They aren't on that channel";
 		printRPL(ERR_USERNOTINCHANNEL, str.str(), client, server);
-		return ; // throw ClientDoesNotExistException();
+		return ;
 	}
 	if (server._mapChannel[i->at(1)]->isMember(it->second->getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(2) << " " << i->at(1) << " :They aren't on that channel";
 		printRPL(ERR_USERNOTINCHANNEL, str.str(), client, server);
-		return ; // throw ClientIsNotInChannelException();
+		return ;
 	}
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 	{
 		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
 		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
-		return ; // throw NotAllowedException();
+		return ;
 	}
 	it->second->rmChannel(server._mapChannel[i->at(1)]);
 	server._mapChannel[i->at(1)]->rmMember(it->second);
@@ -207,7 +209,6 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		server._mapChannel[i->at(1)]->rmModerator(it->second);
 	if (server._mapChannel[i->at(1)]->isInvited(it->second->getNick()) == true)
 		server._mapChannel[i->at(1)]->rmInvitMember(it->second);
-	// throw ("NR : kick successfully.");
 	
 	str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " KICK " << i->at(1) << " " << i->at(2) << " " << com << "\r\n";
 	
@@ -217,11 +218,6 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			it2->second->setMailbox(str.str(), server.getEpollfd());
 	}
 	it->second->setMailbox(str.str(), server.getEpollfd());
-
-	// str << client.getNick() << " :kicked " << usr << " from " << i->at(2) << ".";
-	// printRPL(9999, str.str(), client, server);
-	// std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv KICK " + ":" +  it->second->getUser() + "successfully.\r\n";
-	// send(client.getFd(), server_msg.c_str(), server_msg.size(), 0);
 }
 
 // ---------------------------------------------------------------------//

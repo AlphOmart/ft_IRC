@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 15:31:17 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/03 14:10:37 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ std::map<std::string, Client *>	Channel::getMembers() const
 		return (_members);
 	}
 
-std::size_t	Channel::getMemberSize()
+int	Channel::getMemberSize()
 	{
 		std::size_t size = _members.size();
-		return (size);
+		return (static_cast<int>(size));
 	}
 
 
