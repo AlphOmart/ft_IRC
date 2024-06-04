@@ -6,11 +6,18 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/05/28 11:12:46 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/04 13:29:45 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incs/Irc.hpp"
+#include <csignal> 
+
+void signal_handler(int signal_num) 
+{
+	(void)signal_num;
+	throw (0);//std::runtime_error("program ended with ^C");
+} 
 
 int main(int argc, char **argv)
 {
@@ -18,20 +25,31 @@ int main(int argc, char **argv)
 		return (std::cerr << RED "Error\n" YELLOW "Usage: ./ircserv <port> <password>" RESET << std::endl, 1);
 
 	Server Serv(argv[1], argv[2]);
-	while (1)
+
+	try
 	{
-		try
+		signal(SIGINT, signal_handler);
+		while (1)
 		{
-			Serv.epollWait();
+			try
+			{
+				Serv.epollWait();
+			}
+			catch(const std::out_of_range& e)
+			{
+				std::cerr << e.what() << std::endl;
+			}
+			catch(std::exception& e)
+			{
+				std::cerr << e.what() << std::endl;
+			}
 		}
-		catch(const std::out_of_range& e)
-		{
-			std::cerr << e.what() << std::endl;
-		}
-		catch(std::exception& e)
-		{
-			std::cerr << e.what() << std::endl;
-		}
+	}
+	catch(int)
+	{
+		std::cerr << "program ended with ^C" << std::endl;
+		Serv.clearMapChannel();
+		Serv.clearMapClient();
 	}
 	return (0);
 }

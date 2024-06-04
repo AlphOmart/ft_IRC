@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/04 11:37:19 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/04 13:10:14 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,24 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 		printRPL(RPL_WELCOME, str.str(), client, server);
 
+
+		str.str("");
+		str.clear();
+		str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
+		printRPL(RPL_YOURHOST, str.str(), client, server);
+
+		str.str("");
+		str.clear();
+		str << client.getNick() << " :This server was created 05/10/24"; 
+		printRPL(RPL_CREATED, str.str(), client, server);
+
+		str.str("");
+		str.clear();
+		str << client.getNick() << " IRCSERV 1.0 " << server.getUlist() << " " << server.getClist() ; 
+		printRPL(RPL_MYINFO, str.str(), client, server);
+
+
+		//	avertir autres clients.	//
 		std::stringstream buff;
 		buff << "Nouvelle connexion de " << client.getNick() << "\r\n";
 		for (std::map<int, Client *>::iterator it = server._mapClient.begin(); it != server._mapClient.end(); it++)
@@ -70,7 +88,6 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	(void)server;
 	std::stringstream str;
 	if (client.getIsRegistered() == false)	//permet de ignorer la fonction quand connecté
 	{
@@ -79,6 +96,21 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 			printRPL(RPL_WELCOME, str.str(), client, server);
+		
+			str.str("");
+			str.clear();
+			str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
+			printRPL(RPL_YOURHOST, str.str(), client, server);
+
+			str.str("");
+			str.clear();
+			str << client.getNick() << " :This server was created 05/10/24"; 
+			printRPL(RPL_CREATED, str.str(), client, server);
+
+			str.str("");
+			str.clear();
+			str << client.getNick() << " IRCSERV 1.0 " << server.getUlist() << " " << server.getClist() ; 
+			printRPL(RPL_MYINFO, str.str(), client, server);
 		}
 	}
 	else
@@ -681,7 +713,7 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 
 
-//Upon successful completion of the registration process, the server MUST send, in this order:
+// Upon successful completion of the registration process, the server MUST send, in this order:
 
 // RPL_WELCOME (001),
 // RPL_YOURHOST (002),

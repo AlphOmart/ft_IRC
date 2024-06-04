@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 16:41:28 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/04 13:29:11 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,22 @@ std::string	Server::getPass()
 	return (_pass);
 }
 
+std::string	Server::getUlist() const
+{
+	std::stringstream str;
+	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); ++it)
+		str  << it->second->getNick() << " ";
+	return (str.str());
+}
+
+std::string	Server::getClist() const
+{
+	std::stringstream str;
+	for (std::map<std::string, Channel*>::const_iterator it = _mapChannel.begin(); it!= _mapChannel.end(); ++it)
+		str << it->second->getName() << " ";
+	return (str.str());
+}
+
 void	Server::initCommand()
 {
 	_commandList["PASS"] = &fctPASS;
@@ -321,7 +337,21 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 
 
 
+void	Server::clearMapClient()
+{
+	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); ++it)
+	{
+		delete(it->second);
+	}
+}
 
+void	Server::clearMapChannel()
+{
+	for (std::map<std::string, Channel*>::iterator it = _mapChannel.begin(); it != _mapChannel.end(); ++it)
+	{
+		delete(it->second);
+	}
+}
 
 
 
