@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 17:10:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/04 11:33:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -628,23 +628,23 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	
 	str.str("");
 	str.clear();
-	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList() << "\r\n";
 	std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
 	for (std::map<std::string, Client *>::iterator it = ptr2.begin(); it != ptr2.end(); ++it)
 	{
 		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
 	}
-	client.setMailbox(str.str(), server.getEpollfd());
+	// client.setMailbox(str.str(), server.getEpollfd());
 
 	str.str("");
 	str.clear();
-	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list\r\n";
 	std::map<std::string, Client *> ptr3 = server._mapChannel[i->at(1)]->getMembers();
 	for (std::map<std::string, Client *>::iterator it2 = ptr3.begin(); it2 != ptr3.end(); ++it2)
 	{
 		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 	}
-	client.setMailbox(str.str(), server.getEpollfd());
+	// client.setMailbox(str.str(), server.getEpollfd());
 }
 	//todo : trouver pourquoi doit rejoindre 2fois si part
 
