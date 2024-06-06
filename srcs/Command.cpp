@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 16:09:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 16:20:52 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -821,11 +821,11 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 //i->at(1) ":leaving"
 
 
+
 /*TODO :
-	fctQUIT pour avoi segfault
-	fctPART pour kick soi meme proprement
-	finir la registration (below)	pour avoir le bouton join channel
-	leaks
+	tester part join 0 et quit
+	verif registration
+	faire ping pong
 */
 
 
