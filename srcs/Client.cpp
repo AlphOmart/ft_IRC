@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 16:19:06 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:25:40 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 		_isPass = false;
 		_username = "";
 		_nickname = "";
+		_buffer = "";
 		_isRegistered = false;
 		_clientEvent.data.fd = this->_fd;
 		_clientEvent.events = EPOLLIN | EPOLLRDHUP;
@@ -81,6 +82,20 @@ const bool&	Client::getIsRegistered(void) const
 		return (this->_isRegistered);
 	}
 
+const std::string&	Client::getBuffer(void) const
+{
+	return (_buffer);
+}
+
+void	Client::addBuffer(std::string tmp)
+{
+	_buffer += tmp;
+}
+
+void	Client::clearBuffer()
+{
+	_buffer = "";
+}
 
 // ----- Channel List ----- //
 

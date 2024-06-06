@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/04 13:25:36 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:19:21 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ class Server
 
 	//----	UTILS	----//
 		void										initCommand();
-		std::vector<std::string>					splitStr(char *str, std::string sep);
+		std::vector<std::string>					splitStr(const char *str, std::string sep);
 		std::vector< std::vector<std::string> >		splitVector(std::vector<std::string> &line, std::string sep);
 
 

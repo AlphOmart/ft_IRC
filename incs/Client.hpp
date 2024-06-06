@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 16:17:59 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:25:53 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Client
 		bool							_isPass;
 		bool							_isRegistered;
 		bool							_isInEpoll;
+		std::string						_buffer;
 
 
 	public:
@@ -51,6 +52,9 @@ class Client
 		int					getFd();
 		const bool&			getIspass() const;
 		const bool&			getIsRegistered() const;
+		const std::string&	getBuffer(void) const;
+		void				addBuffer(std::string tmp);
+		void				clearBuffer();
 
 	// Channel List //
 		void				addChannel(Channel *ch);

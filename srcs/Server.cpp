@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/04 13:29:11 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 12:26:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,16 @@ void	Server::epollinEvent(int n)
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
 		buff[br] = '\0';
+		std::string tmp = buff;
+		if (tmp.find("\r\n") == std::string::npos)
+		{
+			_mapClient[_events[n].data.fd]->addBuffer(tmp);
+			return ;
+		}
+		std::string tmp2 = _mapClient[_events[n].data.fd]->getBuffer() + tmp;
+		_mapClient[_events[n].data.fd]->clearBuffer();
 		std::vector<std::string>	line;
-		line = splitStr(buff, "\r\n");
+		line = splitStr(tmp2.c_str(), "\r\n");
 		std::vector< std::vector<std::string> >	input;
 		input = splitVector(line, " ");
 		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); ++i)
@@ -282,7 +290,7 @@ void	Server::initCommand()
 
 
 
-std::vector<std::string> Server::splitStr(char *str, std::string sep)
+std::vector<std::string> Server::splitStr(const char *str, std::string sep)
 {
     std::vector<std::string> result;
     std::string word = "";
