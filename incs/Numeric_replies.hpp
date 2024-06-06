@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 14:28:39 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 15:04:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@
 #define RPL_INVITING 341
 #define RPL_NAMREPLY 353
 #define RPL_ENDOFNAMES 366
+
+#define RPL_MOTD 372
+#define RPL_MOTDSTART 375
+#define RPL_ENDOFMOTD 376
+
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHCHANNEL 403
 #define ERR_TOOMANYCHANNELS 405

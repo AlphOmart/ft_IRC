@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 14:47:54 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 15:06:38 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 					str.str("");
 					str.clear();
-					str << client.getNick() << " IRCSERV 1.0 o itkol";
+					str << client.getNick() << " IRCServ 1.0 o itkol";
 					printRPL(RPL_MYINFO, str.str(), client, server);
 
 					str.str("");
@@ -91,6 +91,19 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 					str.clear();
 					str << client.getNick() << " :I have " << server.getUserSize() << " clients and " << 0 << " servers";
 					printRPL(RPL_LUSERME, str.str(), client, server);
+
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :- IRCServ Message of the day - ";
+					printRPL(RPL_MOTDSTART, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :Bienvenue sur mon serveur IRC";
+					printRPL(RPL_MOTD, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :End of /MOTD command.";
+					printRPL(RPL_ENDOFMOTD, str.str(), client, server);
 
 		//	avertir autres clients.	//
 		std::stringstream buff;
@@ -126,7 +139,7 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 					str.str("");
 					str.clear();
-					str << client.getNick() << " IRCSERV 1.0 o itkol";
+					str << client.getNick() << " IRCServ 1.0 o itkol";
 					printRPL(RPL_MYINFO, str.str(), client, server);
 
 					str.str("");
@@ -146,6 +159,28 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 					str.clear();
 					str << client.getNick() << " :I have " << server.getUserSize() << " clients and " << 0 << " servers";
 					printRPL(RPL_LUSERME, str.str(), client, server);
+
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :- IRCServ Message of the day - ";
+					printRPL(RPL_MOTDSTART, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :Bienvenue sur mon serveur IRC";
+					printRPL(RPL_MOTD, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :End of /MOTD command.";
+					printRPL(RPL_ENDOFMOTD, str.str(), client, server);
+
+				//	avertir autres clients.	//
+				std::stringstream buff;
+				buff << "Nouvelle connexion de " << client.getNick() << "\r\n";
+				for (std::map<int, Client *>::iterator it = server._mapClient.begin(); it != server._mapClient.end(); it++)
+				{
+					if (it->second != &client)
+						it->second->setMailbox(buff.str(), server.getEpollfd());	//ajout de l'input dans la mailbox
+				}
 		}
 	}
 	else
