@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 12:26:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 14:40:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ Server::Server(char *port, const std::string& pass) :_servName("IRCServ"), _pass
 
 Server::~Server()
 {
+	clearMapChannel();
+	clearMapClient();
 }
 
 
@@ -257,21 +259,28 @@ std::string	Server::getPass()
 	return (_pass);
 }
 
-std::string	Server::getUlist() const
+int	Server::getUserSize()
 {
-	std::stringstream str;
+	int	c = 0;
 	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); ++it)
-		str  << it->second->getNick() << " ";
-	return (str.str());
+		c++;
+	return (c);
 }
+// std::string	Server::getUlist() const
+// {
+// 	std::stringstream str;
+// 	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); ++it)
+// 		str  << it->second->getNick() << " ";
+// 	return (str.str());
+// }
 
-std::string	Server::getClist() const
-{
-	std::stringstream str;
-	for (std::map<std::string, Channel*>::const_iterator it = _mapChannel.begin(); it!= _mapChannel.end(); ++it)
-		str << it->second->getName() << " ";
-	return (str.str());
-}
+// std::string	Server::getClist() const
+// {
+// 	std::stringstream str;
+// 	for (std::map<std::string, Channel*>::const_iterator it = _mapChannel.begin(); it!= _mapChannel.end(); ++it)
+// 		str << it->second->getName() << " ";
+// 	return (str.str());
+// }
 
 void	Server::initCommand()
 {

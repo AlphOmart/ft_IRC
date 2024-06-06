@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/04 11:45:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 14:28:39 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 #define RPL_YOURHOST 002
 #define RPL_CREATED 003
 #define RPL_MYINFO 004
+
+#define RPL_LUSERCLIENT 251
+#define RPL_LUSEROP 252
+#define RPL_LUSERME 255
+
 #define RPL_CHANNELMODEIS 324
 #define RPL_NOTOPIC 331
 #define RPL_TOPIC 332

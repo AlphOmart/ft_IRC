@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/04 13:10:14 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 14:47:54 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,21 +59,38 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		printRPL(RPL_WELCOME, str.str(), client, server);
 
 
-		str.str("");
-		str.clear();
-		str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
-		printRPL(RPL_YOURHOST, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
+					printRPL(RPL_YOURHOST, str.str(), client, server);
 
-		str.str("");
-		str.clear();
-		str << client.getNick() << " :This server was created 05/10/24"; 
-		printRPL(RPL_CREATED, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :This server was created 05/10/24"; 
+					printRPL(RPL_CREATED, str.str(), client, server);
 
-		str.str("");
-		str.clear();
-		str << client.getNick() << " IRCSERV 1.0 " << server.getUlist() << " " << server.getClist() ; 
-		printRPL(RPL_MYINFO, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " IRCSERV 1.0 o itkol";
+					printRPL(RPL_MYINFO, str.str(), client, server);
 
+					str.str("");
+					str.clear();
+					str << client.getNick() << " CHANMODES=,,tkl,i :are supported by this server";
+					printRPL(RPL_MYINFO, str.str(), client, server);
+
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :There are " << server.getUserSize() << " users and " << 0 << " invisible on " << 0 << " servers";
+					printRPL(RPL_LUSERCLIENT, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " 0 :operator(s) online";
+					printRPL(RPL_LUSEROP, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :I have " << server.getUserSize() << " clients and " << 0 << " servers";
+					printRPL(RPL_LUSERME, str.str(), client, server);
 
 		//	avertir autres clients.	//
 		std::stringstream buff;
@@ -97,20 +114,38 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			str << client.getNick() << " :Welcome to the " << "IRCServ" << " Network, " << client.getNick() << "[!" << client.getUser() << "@IRCServ]";
 			printRPL(RPL_WELCOME, str.str(), client, server);
 		
-			str.str("");
-			str.clear();
-			str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
-			printRPL(RPL_YOURHOST, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
+					printRPL(RPL_YOURHOST, str.str(), client, server);
 
-			str.str("");
-			str.clear();
-			str << client.getNick() << " :This server was created 05/10/24"; 
-			printRPL(RPL_CREATED, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :This server was created 05/10/24"; 
+					printRPL(RPL_CREATED, str.str(), client, server);
 
-			str.str("");
-			str.clear();
-			str << client.getNick() << " IRCSERV 1.0 " << server.getUlist() << " " << server.getClist() ; 
-			printRPL(RPL_MYINFO, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " IRCSERV 1.0 o itkol";
+					printRPL(RPL_MYINFO, str.str(), client, server);
+
+					str.str("");
+					str.clear();
+					str << client.getNick() << " CHANMODES=,,tkl,i :are supported by this server";
+					printRPL(RPL_MYINFO, str.str(), client, server);
+
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :There are " << server.getUserSize() << " users and " << 0 << " invisible on " << 0 << " servers";
+					printRPL(RPL_LUSERCLIENT, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " 0 :operator(s) online";
+					printRPL(RPL_LUSEROP, str.str(), client, server);
+					str.str("");
+					str.clear();
+					str << client.getNick() << " :I have " << server.getUserSize() << " clients and " << 0 << " servers";
+					printRPL(RPL_LUSERME, str.str(), client, server);
 		}
 	}
 	else
@@ -478,6 +513,24 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			}
 			server._mapChannel[i->at(1)]->addModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", true);
+							str.str("");
+							str.clear();
+							str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+							std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
+							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+							{
+								printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
+							}
+						
+							str.str("");
+							str.clear();
+							str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+							std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
+							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+							{
+								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
+							}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
+
 			return ;
 		}
 		case 5:
@@ -538,6 +591,23 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			}
 			server._mapChannel[i->at(1)]->rmModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", false);
+							str.str("");
+							str.clear();
+							str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+							std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
+							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+							{
+								printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
+							}
+						
+							str.str("");
+							str.clear();
+							str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+							std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
+							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+							{
+								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
+							}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
 			return ;
 		}
 		case 5:

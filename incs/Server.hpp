@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 12:19:21 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 14:36:50 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,9 @@ class Server
 
 		int											getEpollfd();
 		std::string									getPass();
-		std::string									getUlist() const;
-		std::string									getClist() const;
+		int											getUserSize();
+		// std::string									getUlist() const;
+		// std::string									getClist() const;
 		bool										nickAlreadyUsed(const std::string& str);
 
 		void										clearMapClient();

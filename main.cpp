@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 11:42:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 13:08:46 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ int main(int argc, char **argv)
 	catch(int)
 	{
 		std::cerr  << std::endl << "program ended with ^C" << std::endl;
-		Serv.clearMapChannel();
-		Serv.clearMapClient();	//todo mettre dans le destructeur ?
 	}
 	return (0);
 }
