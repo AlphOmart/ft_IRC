@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 14:36:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 15:44:15 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class Channel;
 		void	printRPL(int nr, std::string str, Client &client, Server& server);
 		void	printMSG(std::string str, Client &client, Client &target, Server& server);
 		void	printChannel(std::string str, Client &client, Channel &chan, Server& server);
+		std::vector<std::string> splitStr(const char *str, std::string sep);
+		std::vector< std::vector<std::string> > splitVector(std::vector<std::string> &line, std::string sep);
 
 class Server
 {
@@ -78,8 +80,6 @@ class Server
 
 	//----	UTILS	----//
 		void										initCommand();
-		std::vector<std::string>					splitStr(const char *str, std::string sep);
-		std::vector< std::vector<std::string> >		splitVector(std::vector<std::string> &line, std::string sep);
 
 
 //############################# PUBLIC ##########################################################//

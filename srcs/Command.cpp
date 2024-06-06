@@ -6,13 +6,14 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 15:06:38 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/06 16:09:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/Server.hpp"
 
 int		flagCheck(std::string	str);
+void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
 void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
@@ -197,9 +198,17 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		if (i->at(1).find('#') != 0)
 		{
-			str << client.getNick() << " " << i->at(1) << " :No such channel";
-			printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
-			return ;
+			if (i->at(1).find('0') == 0 && i->at(1).size() == 1)
+			{
+				JOIN0(i, server, client);
+				return;
+			}
+			else
+			{
+				str << client.getNick() << " " << i->at(1) << " :No such channel";
+				printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
+				return ;
+			}
 		}
 		Channel *curChannel =  new Channel(i->at(1), client);
 		server._mapChannel[curChannel->getName()] = curChannel;
@@ -760,35 +769,38 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			it->second->setMailbox(str.str(), server.getEpollfd());
 	}
 	client.setMailbox(str.str(), server.getEpollfd());
-	
-	str.str("");
-	str.clear();
-	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList() << "\r\n";
-	std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
-	for (std::map<std::string, Client *>::iterator it = ptr2.begin(); it != ptr2.end(); ++it)
-	{
-		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
-	}
-	// client.setMailbox(str.str(), server.getEpollfd());
-
-	str.str("");
-	str.clear();
-	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list\r\n";
-	std::map<std::string, Client *> ptr3 = server._mapChannel[i->at(1)]->getMembers();
-	for (std::map<std::string, Client *>::iterator it2 = ptr3.begin(); it2 != ptr3.end(); ++it2)
-	{
-		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
-	}
-	// client.setMailbox(str.str(), server.getEpollfd());
 }
 
 
+void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+{
+	std::vector<std::string> str;
+	std::string tmp;
+	std::vector<std::vector<std::string> > j;
 
+	(void)i;
+	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); ++it)
+	{
+		str.clear();
+		tmp = "PART " + it->second->getName() + " leaving";
+		str.push_back(tmp);
+		j = splitVector(str, " ");
+		if (it->second->isMember(client.getNick()))
+		{
+			fctPART(j.begin(), server, client);
+			// it->second->rmMember(&client);
+		}
+			
+	}
+	
+}
 
 
 void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
+
+	JOIN0(i, server, client);
 	client.clearChannel();	//maybe leaks for later
 	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); it++)
 	{
