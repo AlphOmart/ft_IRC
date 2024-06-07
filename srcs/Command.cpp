@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 16:21:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 16:20:52 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/07 14:54:34 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -821,6 +821,23 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 //i->at(1) ":leaving"
 
 
+void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+// (std::string& client_msg, int const client_fd)
+{
+	std::string	str;
+	std::string tmp;
+	size_t	c = 1;
+
+	while (c < i->size())
+	{
+		tmp += i->at(c) + " ";
+		c++;
+	}
+	tmp = tmp.substr(0, tmp.size() - 1);
+	str = "PONG IRCServ : " + tmp + "\r\n";
+	client.setMailbox(str, server.getEpollfd());
+	// send(client_fd, str.c_str(), str.size(), 0);
+}
 
 /*TODO :
 	tester part join 0 et quit

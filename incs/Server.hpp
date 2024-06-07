@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 15:44:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/07 14:42:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Channel;
 		void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 		void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+		void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
 		void	printRPL(int nr, std::string str, Client &client, Server& server);
 		void	printMSG(std::string str, Client &client, Client &target, Server& server);

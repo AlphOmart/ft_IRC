@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 15:43:54 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/07 14:41:55 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,7 @@ void	Server::initCommand()
 	_commandList["PRIVMSG"] = &fctPRIVMSG;
 	_commandList["PART"] = &fctPART;
 	_commandList["QUIT"] = &fctQUIT;
+	_commandList["PING"] = &fctPONG;
 }
 
 
