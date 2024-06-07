@@ -6,7 +6,7 @@
 #    By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:52:16 by tdutel            #+#    #+#              #
-#    Updated: 2024/06/03 14:42:48 by tdutel           ###   ########.fr        #
+#    Updated: 2024/06/07 15:56:36 by tdutel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,21 @@ SRC			=	main.cpp \
 				srcs/Server.cpp \
 				srcs/Client.cpp \
 				srcs/Channel.cpp \
-				srcs/utils.cpp \
-				srcs/Command.cpp
+				srcs/cmd/Invite.cpp \
+				srcs/cmd/Join.cpp \
+				srcs/cmd/Kick.cpp \
+				srcs/cmd/Mode.cpp \
+				srcs/cmd/Nick.cpp \
+				srcs/cmd/Part.cpp \
+				srcs/cmd/Pass.cpp \
+				srcs/cmd/Pong.cpp \
+				srcs/cmd/Privmsg.cpp \
+				srcs/cmd/Quit.cpp \
+				srcs/cmd/Topic.cpp \
+				srcs/cmd/User.cpp \
+				srcs/cmd/utils.cpp \
+				# srcs/utils.cpp \
+				# srcs/Command.cpp
 
 OBJS_DIR	=	.OBJS/
 OBJS		=	$(addprefix $(OBJS_DIR), $(SRC:.cpp=.o))
@@ -50,6 +63,7 @@ dir:			$(OBJS_DIR)
 $(OBJS_DIR):
 				@mkdir -p $(OBJS_DIR)
 				@mkdir -p $(OBJS_DIR)srcs
+				@mkdir -p $(OBJS_DIR)srcs/cmd
 
 clean:
 				@echo "\033[0;31mDeleting $(NAME) object...\n"
