@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 14:41:55 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/10 17:18:44 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	Server::epollinEvent(int n)
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
 		buff[br] = '\0';
+		std::cout << "[debug] <-" <<  buff << std::endl;
 		std::string tmp = buff;
 		if (tmp.find("\r\n") == std::string::npos)
 		{
@@ -227,6 +228,11 @@ void	Server::epollrdhupEvent(int n)
 void	Server::epolloutEvent(int n)
 {
 	_mapClient[_events[n].data.fd]->receiveAll(_epoll_fd);
+	if (_mapClient[_events[n].data.fd]->getDestroy() == true)
+	{
+		delete(_mapClient[_events[n].data.fd]);
+		_mapClient.erase(_events[n].data.fd);
+	}
 }
 
 void	Server::closeFd()

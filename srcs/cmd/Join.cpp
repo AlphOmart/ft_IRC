@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:26:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/10 15:10:24 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,57 @@ void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, C
 	}
 }
 
+void	MultipleJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+	// 	i->at(0)	i->at(1) 	i->at(2)					//		vCmd(0) | vChan(i)	| vParam(i)
+	// 	JOIN 	| #a,#b,#c 	| ok,lol			--> objectif : //	JOIN | #a | ok
+																//	JOIN | #b | lol
+																//	JOIN | #c | lol
+{
+	// std::vector<std::string> vCmd = splitStr(i->at(0).c_str(), "");
+
+	std::vector<std::string> vChan = splitStr(i->at(1).c_str(), ",");	// vChan->at(0) = #a
+																		// vChan->at(1) = #b
+																		// vChan->at(2) = #c
+	std::vector<std::string>	newI;
+	std::vector<std::vector<std::string> > newIt;
+	unsigned long	u = 0;
+	
+	if (i->size() >= 3)
+	{
+		std::vector<std::string> vParam = splitStr(i->at(2).c_str(), ",");		// vParam->at(0) = ok
+																				// vParam->at(1) = lol
+	
+		unsigned long 	v = 0;
+		while (u < vChan.size())
+		{
+			newI.push_back(i->at(0));
+			newI.push_back(vChan.at(u));
+			if (v >= vParam.size() && vParam.size() > 0)
+				v = vParam.size() - 1;
+			newI.push_back(vParam.at(v));
+			newIt.push_back(newI);
+			fctJOIN(newIt.begin(), server, client);
+			newI.clear();
+			newIt.clear();
+			u++;
+			v++;
+		}
+	}
+	else
+	{
+		while (u < vChan.size())
+		{
+			newI.push_back(i->at(0));
+			newI.push_back(vChan.at(u));
+			newIt.push_back(newI);
+			fctJOIN(newIt.begin(), server, client);
+			newI.clear();
+			newIt.clear();
+			u++;
+		}
+	}
+}
+
 void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
@@ -51,6 +102,11 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 				printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
 				return ;
 			}
+		}
+		if (i->at(1).find(',') != std::string::npos)	// JOIN | #a,#b,#c | ok
+		{
+			MultipleJOIN(i, server, client);
+			return ;
 		}
 		Channel *curChannel =  new Channel(i->at(1), client);
 		server._mapChannel[curChannel->getName()] = curChannel;

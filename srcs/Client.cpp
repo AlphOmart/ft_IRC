@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 12:25:40 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/10 17:15:26 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 		_nickname = "";
 		_buffer = "";
 		_isRegistered = false;
+		_destroy = false;
 		_clientEvent.data.fd = this->_fd;
 		_clientEvent.events = EPOLLIN | EPOLLRDHUP;
 	}
@@ -54,6 +55,11 @@ void	Client::setPass(const bool& i)
 		this->_isPass = i;
 	}
 
+void	Client::setDestroy(const bool& i)
+	{
+		this->_destroy = i;
+	}
+
 
 //	--------------- GET ------------//
 
@@ -75,6 +81,11 @@ int	Client::getFd()
 const bool&	Client::getIspass(void) const
 	{
 		return (this->_isPass);
+	}
+
+const bool&	Client::getDestroy(void) const
+	{
+		return (this->_destroy);
 	}
 
 const bool&	Client::getIsRegistered(void) const
@@ -151,6 +162,7 @@ void	Client::receiveAll(int epoll_fd)
 		while (!_mailbox.empty())
 		{
 			std::string toSend = this->_mailbox.front();
+			std::cout << "[debug] ->" <<  toSend << std::endl;
 			if (send(_fd, toSend.c_str(), toSend.size(), 0) == -1)
 				throw std::runtime_error("Error while sending.");
 			_mailbox.pop();

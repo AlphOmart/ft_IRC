@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:26:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:27:22 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/10 17:20:45 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		c++;
 	}
 	tmp = tmp.substr(0, tmp.size() - 1);
-	str = "PONG IRCServ : " + tmp + "\r\n";
+	str = ":"+ client.getNick() + "!" + client.getUser() + "@IRCServ PONG " + tmp + "\r\n"; 
 	client.setMailbox(str, server.getEpollfd());
-	// send(client_fd, str.c_str(), str.size(), 0);
 }

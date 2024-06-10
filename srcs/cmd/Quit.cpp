@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:26:23 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:57:11 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/10 17:10:11 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		if (it2 != curClient)
 			it2->second->setMailbox(str.str(), server.getEpollfd());
 	}
+	client.setDestroy(true);
 }
 //i->at(0) "QUIT"
 //i->at(1) ":leaving"
