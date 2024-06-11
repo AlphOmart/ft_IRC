@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:39 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:04:33 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 12:42:00 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		printRPL(ERR_NOTONCHANNEL, str.str(), client, server);
 		return ;
 	}
-	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
-	{
-		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
-		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
-		return ;
-	}
 	if (i->size() == 2)
 	{
 		if (server._mapChannel[i->at(1)]->getTopic().empty())
@@ -49,6 +43,12 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		}
 		str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
 		printRPL(RPL_TOPIC, str.str(), client, server);
+		return ;
+	}
+	if (server._mapChannel[i->at(1)]->getTopicRestriction() == true && server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
+	{
+		str << client.getNick() << " " << i->at(1) << " :You're not channel operator";
+		printRPL(ERR_CHANOPRIVSNEEDED, str.str(), client, server);
 		return ;
 	}
 	std::string newtopic;
