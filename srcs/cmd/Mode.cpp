@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:24:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 10:35:19 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	flagCheck(std::string	str)
 void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
-	if (i->size() < 2 /*&& i->size() != 3 && i->size() != 4*/)
+	if (i->size() < 2)
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
@@ -48,7 +48,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
 		printRPL(RPL_CHANNELMODEIS, str.str(), client, server);
-		return ; // :ircserver MODE #channel +m
+		return ;
 	}
 	if (server._mapChannel[i->at(1)]->isModerator(client.getNick()) == false)
 	{
@@ -126,7 +126,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
 							{
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
-							}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
+							}
 
 			return ;
 		}
@@ -204,7 +204,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
 							{
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
-							}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
+							}
 			return ;
 		}
 		case 5:
@@ -217,5 +217,5 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ;
 		}
 	}
-}		//	"MODE #l\r\nWHO #l\r\n"
+}
 

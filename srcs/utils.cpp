@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 15:44:26 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:10:59 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,3 @@ std::vector< std::vector<std::string> > splitVector(std::vector<std::string> &li
 
     return result;
 }
-
-
-
-
-
-
-
-
-// void	printNotif
-
-
-// void	printNR(int nr, )

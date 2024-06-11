@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/10 17:18:44 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:10:25 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,20 +137,11 @@ void	Server::epollinEvent(int n)
 			throw std::runtime_error("Error while calling accept().");
 		}
 		Client *acceptedClient = new Client(connFd);
-
 		_mapClient[acceptedClient->getFd()] = acceptedClient;
 		// Ajout du nouveau descripteur Client de fichier à l'instance epoll
 		_mapClient[acceptedClient->getFd()]->updateStatus(_epoll_fd);
-		// std::stringstream buff;
-		// buff << "Nouvelle connexion de " << inet_ntoa(_server_addr.sin_addr) << _mapClient[connFd]->getNick() << "\r\n";
-		// std::map<int, Client *>::iterator curClient = _mapClient.find(connFd);
-		// for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-		// {
-		// 	if (it != curClient)
-		// 		it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
-		// }
 	}
-	else /*if (_mapClient.find(_events[n].data.fd)->second->getIsRegistered() == false)	// PRE-CONNEXION : PASS USER NICK only*/
+	else
 	{
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
@@ -179,7 +170,7 @@ void	Server::epollinEvent(int n)
 					str << curClient->second->getNick() << " " << i->at(0) << " :Not enough parameters";
 					printRPL(ERR_NEEDMOREPARAMS, str.str(), *curClient->second, *this);
 				}	
-				return ;		//A VERIFIER : on veut minimum 2 arg : la commande (PASS,NICK,USER,...) et la valeur (mdp, tdutel, mwubneh,...)
+				return ;
 			}
 			if (_commandList.find(i->at(0)) != _commandList.end() && (curClient->second->getIspass() == true || i->at(0) == "PASS"))
 			{
@@ -193,7 +184,6 @@ void	Server::epollinEvent(int n)
 							throw std::runtime_error("Error while sending.");
 					}
 			}
-			
 			else if (_commandList.find(i->at(0)) != _commandList.end())
 			{
 				std::string response;
@@ -208,14 +198,6 @@ void	Server::epollinEvent(int n)
 void	Server::epollrdhupEvent(int n)
 {
 	std::stringstream buff;
-	// buff << "Le client " << _mapClient[_events[n].data.fd]->getNick() << " s'est déconnecté.\r\n";
-
-	// std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
-	// for (std::map<int, Client *>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
-	// {
-	// 	if (it != curClient)
-	// 		it->second->setMailbox(buff.str(), _epoll_fd);	//ajout de l'input dans la mailbox
-	// }
 
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
@@ -241,17 +223,6 @@ void	Server::closeFd()
 	close(_epoll_fd);
 }
 
-// void	Server::kickClient(int fd)
-// {
-// 	std::map<int, Client*>::iterator it = _mapClient.find(fd);
-// 	_mapClient.erase(it);
-// 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, fd, &_event) == -1) {
-// 		throw std::runtime_error("Error while calling epoll_ctl().");
-// 	}
-// 	close(fd);
-// 	std::cout << "c'est ciao le client " << fd << std::endl;
-// }
-
 
 //############################# UTILS ##########################################################//
 
@@ -272,21 +243,6 @@ int	Server::getUserSize()
 		c++;
 	return (c);
 }
-// std::string	Server::getUlist() const
-// {
-// 	std::stringstream str;
-// 	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); ++it)
-// 		str  << it->second->getNick() << " ";
-// 	return (str.str());
-// }
-
-// std::string	Server::getClist() const
-// {
-// 	std::stringstream str;
-// 	for (std::map<std::string, Channel*>::const_iterator it = _mapChannel.begin(); it!= _mapChannel.end(); ++it)
-// 		str << it->second->getName() << " ";
-// 	return (str.str());
-// }
 
 void	Server::initCommand()
 {
@@ -305,10 +261,6 @@ void	Server::initCommand()
 }
 
 
-
-
-
-
 bool	Server::nickAlreadyUsed(const std::string& str)
 {
 	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); ++it)
@@ -320,6 +272,7 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 }
 
 
+//----- Clear Functions -----//
 
 void	Server::clearMapClient()
 {
@@ -337,69 +290,4 @@ void	Server::clearMapChannel()
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---------------------------------------------------------------------//
-//  Examples:	TOPIC
-
-//    :Wiz TOPIC #test :New topic     ;User Wiz setting the topic.
-
-//    TOPIC #test :another topic      ;set the topic on #test to "another topic".
-
-//    TOPIC #test                     ; check the topic for #test.
-
-//  Numeric Replies:
-
-//            ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL
-//            RPL_NOTOPIC                     RPL_TOPIC
-//            ERR_CHANOPRIVSNEEDED
-// ---------------------------------------------------------------------//
-
-
-// ---------------------------------------------------------------------//
-//    Examples:	MODE
-
-//            Use of Channel Modes:
-
-// MODE #Finnish +i               ; Makes #Finnish channel 'invite-only'.
-
-// MODE #Finnish +o Kilroy         ; Gives 'chanop' privileges to Kilroy on #Fins.
-
-// MODE #42 +k oulu                ; Set the channel key to "oulu".
-
-// MODE #eu-opers +l 10            ; Set the limit for the number of users on channel to 10.
-
-
-//         Use of user Modes:
-
-// :Angel MODE Angel +i            ; Message from Angel to make themselves invisible.
-
-// MODE WiZ -o                     ; WiZ 'deopping' (removing operator
-//                                 status).  The plain reverse of this
-//                                 command ("MODE WiZ +o") must not be
-//                                 allowed from users since would bypass
-//                                 the OPER command.
-
-// Numeric Replies:
-//            ERR_NEEDMOREPARAMS              RPL_CHANNELMODEIS
-//            ERR_CHANOPRIVSNEEDED            ERR_NOSUCHNICK
-//            ERR_NOTONCHANNEL                ERR_KEYSET
-//            RPL_BANLIST                     RPL_ENDOFBANLIST
-//            ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
-
-//            ERR_USERSDONTMATCH              RPL_UMODEIS
-//            ERR_UMODEUNKNOWNFLAG
-// ---------------------------------------------------------------------//
+// 	std::cout << "c'est ciao le client " << fd << std::endl;

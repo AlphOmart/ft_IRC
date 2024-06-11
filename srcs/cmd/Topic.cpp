@@ -6,12 +6,11 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:39 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:22:53 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:04:33 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incs/Server.hpp"
-
 
 void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {

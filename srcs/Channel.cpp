@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 16:25:25 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:08:49 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ Channel::~Channel()
 	}
 
 
-// ----- setter ----- //
+// ----- SET ----- //
 
 void	Channel::setName(std::string name)
 	{
@@ -70,7 +70,7 @@ void	Channel::setTopicRestriction(bool i)
 	}
 
 
-// ----- getter ----- //
+// ----- GET ----- //
 
 const std::string&	Channel::getName(void) const
 	{
@@ -215,6 +215,5 @@ std::string	Channel::getList() const
 		if (_moderators.find(it->first) == _moderators.end())
 				str << it->second->getNick() << " ";
 	}
-	// str.str().pop_back();
 	return (str.str());
 }

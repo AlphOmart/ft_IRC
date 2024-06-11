@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 14:42:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:00:13 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,19 @@
 
 # include "Irc.hpp"
 
-class Client;
-class Server;
-class Channel;
-		void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
-		void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctPASS(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 
-		void	printRPL(int nr, std::string str, Client &client, Server& server);
-		void	printMSG(std::string str, Client &client, Client &target, Server& server);
-		void	printChannel(std::string str, Client &client, Channel &chan, Server& server);
-		std::vector<std::string> splitStr(const char *str, std::string sep);
-		std::vector< std::vector<std::string> > splitVector(std::vector<std::string> &line, std::string sep);
 
 class Server
 {
@@ -60,7 +52,6 @@ class Server
 
 	//----	MAP	----//
 		std::map<std::string, void(*) (std::vector<std::vector<std::string> >::iterator, Server&, Client&)>	_commandList;
-		// std::map<std::string, Channel*>									_mapChannel;
 
 
 //----------------------------- FUNCTIONS ----------------------------------------------------------//
@@ -97,10 +88,9 @@ class Server
 		int											getEpollfd();
 		std::string									getPass();
 		int											getUserSize();
-		// std::string									getUlist() const;
-		// std::string									getClist() const;
 		bool										nickAlreadyUsed(const std::string& str);
 
+		//----- Clear Functions -----//
 		void										clearMapClient();
 		void										clearMapChannel();
 };

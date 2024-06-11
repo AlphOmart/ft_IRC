@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/10 15:10:24 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:03:51 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, C
 		if (it->second->isMember(client.getNick()))
 		{
 			fctPART(j.begin(), server, client);
-			// it->second->rmMember(&client);
 		}
 	}
 }
@@ -161,7 +160,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
 	{
 		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
-	}		//todo nécessaire de l'envoyer a tous aussi je suppose ?
+	}
 
 
 }

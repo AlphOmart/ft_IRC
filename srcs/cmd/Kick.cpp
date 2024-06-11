@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:21:10 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:21:22 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 10:38:56 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
-	if (i->size() < 3)	// HexChat ('kick' '#general' 'tim' ':reason')
+	if (i->size() < 3)
 	{
 		str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 		printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);

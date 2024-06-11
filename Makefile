@@ -6,7 +6,7 @@
 #    By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:52:16 by tdutel            #+#    #+#              #
-#    Updated: 2024/06/10 17:19:09 by tdutel           ###   ########.fr        #
+#    Updated: 2024/06/11 10:51:51 by tdutel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,8 +32,7 @@ SRC			=	main.cpp \
 				srcs/cmd/Topic.cpp \
 				srcs/cmd/User.cpp \
 				srcs/cmd/utils.cpp \
-				# srcs/utils.cpp \
-				# srcs/Command.cpp
+
 
 OBJS_DIR	=	.OBJS/
 OBJS		=	$(addprefix $(OBJS_DIR), $(SRC:.cpp=.o))
@@ -42,6 +41,7 @@ HEADER		=	incs/Irc.hpp \
 				incs/Client.hpp \
 				incs/Channel.hpp \
 				incs/Numeric_replies.hpp \
+				incs/utils.hpp \
 				incs/Color.hpp
 DEP			=	$(addprefix $(OBJS_DIR), $(SRCS:.c=.d))
 #---RULES----------------------------------------

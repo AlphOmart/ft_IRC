@@ -6,11 +6,11 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/10 17:22:10 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:07:13 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../incs/Irc.hpp"
+#include "../../incs/utils.hpp"
 
 void	printRPL(int nr, std::string str, Client &client, Server &server)	//affiche la numeric reply de l'erreur au client
 {
@@ -38,7 +38,6 @@ void	printChannel(std::string str, Client &client, Channel &chan, Server &server
 	}
 }
 
-
 std::vector<std::string> splitStr(const char *str, std::string sep)
 {
 	std::vector<std::string> result;
@@ -57,7 +56,6 @@ std::vector<std::string> splitStr(const char *str, std::string sep)
 		else
 			word += str[i];
 	}
-
 	// Ajoute le dernier mot si la chaîne ne se termine pas par un séparateur
 	if (!word.empty()) {
 	    result.push_back(word);
@@ -76,6 +74,5 @@ std::vector< std::vector<std::string> > splitVector(std::vector<std::string> &li
 		std::vector<std::string> split = splitStr(cstr, sep);
 		result.push_back(split);
 	}
-
 	return result;
 }

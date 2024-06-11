@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/10 17:15:26 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:08:53 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ Client::~Client()
 	}
 
 
-// ----- Setter ----- //
+// ----- SET ----- //
 
 void	Client::setNickname(const std::string& str)
 	{

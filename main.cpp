@@ -6,12 +6,11 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:58 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/06 13:08:46 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/11 11:11:31 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "incs/Irc.hpp"
-#include <csignal> 
 
 void signal_handler(int signal_num) 
 {
