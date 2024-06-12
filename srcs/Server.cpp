@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 11:38:15 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 14:23:27 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	Server::epollWait()
 		if (_nfds == -1) {
 			throw std::runtime_error("Error while calling epoll_wait().");
 		}
-	for (int n = 0; n < _nfds; ++n)
+	for (int n = 0; n < _nfds; n++)
 		eventLoop(n);
 }
 
@@ -117,11 +117,21 @@ void	Server::eventLoop(int	n)
 	_n = n;
 	{
 		if (_events[n].events & EPOLLRDHUP)
+		{
+			std::cout << BLUE << "rdhup" <<RESET<<std::endl; 
 			epollrdhupEvent(n);
+		}
 		else if (_events[n].events & EPOLLIN)
+		{
+			std::cout << BLUE << "in" <<RESET<<std::endl; 
 			epollinEvent(n);
+		}
 		else if (_events[n].events & EPOLLOUT)
+		{
+			std::cout << BLUE << "out" <<RESET<<std::endl; 
 			epolloutEvent(n);
+		}
+		std::cout << "----------------------------------------------" << std::endl;
 	}
 }
 
@@ -149,7 +159,7 @@ void	Server::epollinEvent(int n)
 	else
 	{
 		char buff[1024] = {0};
-		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);
+		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);	//peut être 1024 - 1 plutôt//
 		buff[br] = '\0';
 		std::cout << "[debug] <-" <<  buff << std::endl;
 		std::string tmp = buff;
@@ -164,7 +174,7 @@ void	Server::epollinEvent(int n)
 		line = splitStr(tmp2.c_str(), "\r\n");
 		std::vector< std::vector<std::string> >	input;
 		input = splitVector(line, " ");
-		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); ++i)
+		for (std::vector<std::vector<std::string> >::iterator i = input.begin(); i < input.end(); i++)
 		{
 			std::map<int, Client *>::iterator curClient = _mapClient.find(_events[n].data.fd);
 			if (i->size() < 2 || curClient == _mapClient.end())
@@ -205,6 +215,7 @@ void	Server::epollrdhupEvent(int n)
 	// std::stringstream buff;
 
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
+	std::cout << RED << "Debug -> in rdhup event" << RESET<< std::endl;
 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
 	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
 	delete(_mapClient[_events[n].data.fd]);
@@ -244,7 +255,7 @@ std::string	Server::getPass()
 int	Server::getUserSize()
 {
 	int	c = 0;
-	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); ++it)
+	for (std::map<int, Client*>::const_iterator it = _mapClient.begin(); it!= _mapClient.end(); it++)
 		c++;
 	return (c);
 }
@@ -268,7 +279,7 @@ void	Server::initCommand()
 
 bool	Server::nickAlreadyUsed(const std::string& str)
 {
-	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); ++it)
+	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
 	{
 		if (it->second->getNick() == str)
 			return (true);
@@ -281,7 +292,7 @@ bool	Server::nickAlreadyUsed(const std::string& str)
 
 void	Server::clearMapClient()
 {
-	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); ++it)
+	for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
 	{
 		delete(it->second);
 	}
@@ -289,7 +300,7 @@ void	Server::clearMapClient()
 
 void	Server::clearMapChannel()
 {
-	for (std::map<std::string, Channel*>::iterator it = _mapChannel.begin(); it != _mapChannel.end(); ++it)
+	for (std::map<std::string, Channel*>::iterator it = _mapChannel.begin(); it != _mapChannel.end(); it++)
 	{
 		delete(it->second);
 	}
