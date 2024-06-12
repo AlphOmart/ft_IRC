@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 11:26:02 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 13:37:35 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							str.clear();
 							str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
 							std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
-							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); it++)
 							{
 								printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
 							}
@@ -123,7 +123,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							str.clear();
 							str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
 							std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
-							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); it2++)
 							{
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 							}
@@ -192,7 +192,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							str.clear();
 							str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
 							std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
-							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+							for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); it++)
 							{
 								printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
 							}
@@ -201,7 +201,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							str.clear();
 							str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
 							std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
-							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+							for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); it2++)
 							{
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 							}

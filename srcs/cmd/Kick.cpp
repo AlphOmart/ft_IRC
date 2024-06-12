@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:21:10 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 11:26:46 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 13:37:13 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,16 @@ void	fctKICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	it->second->rmChannel(server._mapChannel[i->at(1)]);
 	server._mapChannel[i->at(1)]->rmMember(*(it->second));
-	if (server._mapChannel[i->at(1)]->isModerator(it->second->getNick()) == true)
-		server._mapChannel[i->at(1)]->rmModerator(*(it->second));
-	if (server._mapChannel[i->at(1)]->isInvited(it->second->getNick()) == true)
-		server._mapChannel[i->at(1)]->rmInvitMember(*(it->second));
+	if (server._mapChannel[i->at(1)]->getMemberSize() == 0)
+	{
+		delete(server._mapChannel[i->at(1)]);
+		server._mapChannel.erase(i->at(1));
+	}
 	
 	str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " KICK " << i->at(1) << " " << i->at(2) << " " << com << "\r\n";
 	
 	std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
-	for (std::map<std::string, Client *>::iterator it2 = ptr.begin(); it2 != ptr.end(); ++it2)
+	for (std::map<std::string, Client *>::iterator it2 = ptr.begin(); it2 != ptr.end(); it2++)
 	{
 			it2->second->setMailbox(str.str(), server.getEpollfd());
 	}

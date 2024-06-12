@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:07:13 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 13:37:53 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	printChannel(std::string str, Client &client, Channel &chan, Server &server
 	std::string result = ":" + client.getNick() + " PRIVMSG " + chan.getName() + " :" + str + "\r\n";
 	std::map<std::string, Client *> members = chan.getMembers();
 
-	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); ++it)
+	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); it++)
 	{
 		if (it->first != client.getNick())
 			it->second->setMailbox(result, server.getEpollfd());
@@ -43,7 +43,7 @@ std::vector<std::string> splitStr(const char *str, std::string sep)
 	std::vector<std::string> result;
 	std::string word = "";
 
-	for (size_t i = 0; str[i] != '\0'; ++i) // Utilise '\0' pour la fin de la chaîne
+	for (size_t i = 0; str[i] != '\0'; i++) // Utilise '\0' pour la fin de la chaîne
 	{
 		if (sep.find(str[i]) != std::string::npos) // Vérifie si le caractère est un séparateur
 		{
@@ -67,7 +67,7 @@ std::vector< std::vector<std::string> > splitVector(std::vector<std::string> &li
 {
 	std::vector< std::vector<std::string> > result;
 
-	for (size_t i = 0; i < line.size(); ++i)
+	for (size_t i = 0; i < line.size(); i++)
 	{
 		// Convertit chaque std::string en char* pour utiliser avec splitStr
 		char *cstr = &line[i][0];

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:03:51 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 13:37:07 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, C
 	std::vector<std::vector<std::string> > j;
 
 	(void)i;
-	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); ++it)
+	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); it++)
 	{
 		str.clear();
 		tmp = "PART " + it->second->getName() + " leaving";
@@ -148,7 +148,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	str.clear();
 	str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
 	std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
-	for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); ++it)
+	for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); it++)
 	{
 		printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
 	}
@@ -157,7 +157,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	str.clear();
 	str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
 	std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
-	for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); ++it2)
+	for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); it2++)
 	{
 		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 	}

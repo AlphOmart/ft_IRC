@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 11:53:00 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 13:36:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ void	Channel::rmMember(Client &client)
 			_members.erase(client.getNick());
 		rmModerator(client);		//si rm des membres alors aussi du moderator et invtmember
 		rmInvitMember(client);
+		// if (_members.size() == 0)
 	}
 
 void	Channel::rmModerator(Client &client)
@@ -208,7 +209,7 @@ std::string	Channel::getModes() const
 std::string	Channel::getList() const
 {
 	std::stringstream str;
-	for (std::map<std::string, Client*>::const_iterator it = _moderators.begin(); it!= _moderators.end(); ++it)
+	for (std::map<std::string, Client*>::const_iterator it = _moderators.begin(); it!= _moderators.end(); it++)
 		str << "@" << it->second->getNick() << " ";
 	for (std::map<std::string, Client*>::const_iterator it = _members.begin(); it!= _members.end(); it++)
 	{
