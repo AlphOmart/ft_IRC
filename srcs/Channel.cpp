@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:08:49 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 11:53:00 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,24 +147,24 @@ void	Channel::addInvitMember(Client *newClient)
 	}
 
 
-void	Channel::rmMember(Client *client)
+void	Channel::rmMember(Client &client)
 	{
-		if (_members.find(client->getNick()) != _members.end())	//ne le remove pas si est déjà remove
-			_members.erase(client->getNick());
+		if (_members.find(client.getNick()) != _members.end())	//ne le remove pas si est déjà remove
+			_members.erase(client.getNick());
 		rmModerator(client);		//si rm des membres alors aussi du moderator et invtmember
 		rmInvitMember(client);
 	}
 
-void	Channel::rmModerator(Client *client)
+void	Channel::rmModerator(Client &client)
 	{
-		if (_moderators.find(client->getNick()) != _moderators.end())	//ne le remove pas si est déjà remove
-			_moderators.erase(client->getNick());
+		if (_moderators.find(client.getNick()) != _moderators.end())	//ne le remove pas si est déjà remove
+			_moderators.erase(client.getNick());
 	}
 
-void	Channel::rmInvitMember(Client *client)
+void	Channel::rmInvitMember(Client &client)
 	{
-		if (_invitedMembers.find(client->getNick()) != _invitedMembers.end())	//ne le remove pas si est déjà remove
-			_invitedMembers.erase(client->getNick());
+		if (_invitedMembers.find(client.getNick()) != _invitedMembers.end())	//ne le remove pas si est déjà remove
+			_invitedMembers.erase(client.getNick());
 	}
 
 
@@ -210,10 +210,12 @@ std::string	Channel::getList() const
 	std::stringstream str;
 	for (std::map<std::string, Client*>::const_iterator it = _moderators.begin(); it!= _moderators.end(); ++it)
 		str << "@" << it->second->getNick() << " ";
-	for (std::map<std::string, Client*>::const_iterator it = _members.begin(); it!= _members.end(); ++it)
+	for (std::map<std::string, Client*>::const_iterator it = _members.begin(); it!= _members.end(); it++)
 	{
 		if (_moderators.find(it->first) == _moderators.end())
 				str << it->second->getNick() << " ";
 	}
 	return (str.str());
 }
+
+//PEUT ETRE PARCE QUE PERD SES DROIT OP QUAND QUIT DONC N'EST PLUS MOD ET SE COMPARE

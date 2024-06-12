@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/03 14:10:49 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 11:24:49 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ class Channel
 		void							addModerator(Client *newClient);
 		void							addInvitMember(Client *newClient);
 
-		void							rmMember(Client *client);
-		void							rmModerator(Client *client);
-		void							rmInvitMember(Client *client);
+		void							rmMember(Client &client);
+		void							rmModerator(Client &client);
+		void							rmInvitMember(Client &client);
 
 		bool							isMember(std::string client);
 		bool							isModerator(std::string client);

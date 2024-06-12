@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:10:25 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 11:38:15 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,11 @@ void	Server::epollinEvent(int n)
 		_mapClient[acceptedClient->getFd()] = acceptedClient;
 		// Ajout du nouveau descripteur Client de fichier à l'instance epoll
 		_mapClient[acceptedClient->getFd()]->updateStatus(_epoll_fd);
+		for (std::map<int, Client*>::iterator it = _mapClient.begin(); it != _mapClient.end(); it++)
+		{
+			std::cout << RED << "client : " << it->second->getNick() << "\n" << RESET ;
+		}
+		
 	}
 	else
 	{
@@ -197,7 +202,7 @@ void	Server::epollinEvent(int n)
 
 void	Server::epollrdhupEvent(int n)
 {
-	std::stringstream buff;
+	// std::stringstream buff;
 
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);

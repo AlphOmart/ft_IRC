@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 10:35:19 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 11:26:02 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 				printRPL(ERR_NOSUCHNICK, str.str(), client, server);
 				return ;
 			}
-			server._mapChannel[i->at(1)]->rmModerator(it->second);
+			server._mapChannel[i->at(1)]->rmModerator(*(it->second));
 			server._mapChannel[i->at(1)]->addMode("o", false);
 							str.str("");
 							str.clear();

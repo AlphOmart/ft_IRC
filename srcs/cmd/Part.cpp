@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:25:17 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:25:48 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/12 11:25:34 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 
 	client.rmChannel(server._mapChannel[i->at(1)]);
-	server._mapChannel[i->at(1)]->rmMember(&client);
+	server._mapChannel[i->at(1)]->rmMember(client);
 	
 	str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " PART " << i->at(1) << " " << i->at(2) << "\r\n";
 	
