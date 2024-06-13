@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/10 17:14:57 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 13:32:03 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ class Client
 		const bool&			isRegistered(void);
 		void				updateStatus(int epoll_fd);
 		void				receiveAll(int epoll_fd);
+		bool				getMailboxEmpty();
 
 };
 

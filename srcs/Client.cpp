@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:08:53 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 13:31:36 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 
 Client::~Client()
 	{
+		std::cout << "destroy user " << this->_fd << std::endl;
 	}
 
 
@@ -169,3 +170,8 @@ void	Client::receiveAll(int epoll_fd)
 		}
 		updateStatus(epoll_fd);
 	}
+
+bool	Client::getMailboxEmpty()
+{
+	return (_mailbox.empty());
+}

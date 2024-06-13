@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:25:17 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 13:37:40 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 15:53:39 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,17 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		delete(server._mapChannel[i->at(1)]);
 		server._mapChannel.erase(i->at(1));
+		str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " PART " << i->at(1) << " " << i->at(2) << "\r\n";
 	}
 	else
 	{
 		str << ":" << client.getNick() << "!" + client.getUser() + "@" << "IRCserv" << " PART " << i->at(1) << " " << i->at(2) << "\r\n";
-		
 		std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
 		for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); it++)
 		{
 				it->second->setMailbox(str.str(), server.getEpollfd());
 		}
-		client.setMailbox(str.str(), server.getEpollfd());
 	}
+	client.setMailbox(str.str(), server.getEpollfd());
+
 }

@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 14:23:27 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 16:25:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,21 +116,30 @@ void	Server::eventLoop(int	n)
 {
 	_n = n;
 	{
+		if (_events[n].events & EPOLLOUT)
+		{
+			std::cout << BLUE << "out" <<RESET<<std::endl; 
+			epolloutEvent(n);
+		}
+		if (_events[n].events & EPOLLIN)
+		{
+			std::cout << BLUE << "in" <<RESET<<std::endl; 
+			epollinEvent(n);
+		}
 		if (_events[n].events & EPOLLRDHUP)
 		{
 			std::cout << BLUE << "rdhup" <<RESET<<std::endl; 
 			epollrdhupEvent(n);
 		}
-		else if (_events[n].events & EPOLLIN)
-		{
-			std::cout << BLUE << "in" <<RESET<<std::endl; 
-			epollinEvent(n);
-		}
-		else if (_events[n].events & EPOLLOUT)
-		{
-			std::cout << BLUE << "out" <<RESET<<std::endl; 
-			epolloutEvent(n);
-		}
+
+		// if (_mapClient.find(_events[n].data.fd) != _mapClient.end() && _mapClient[_events[n].data.fd]->getDestroy() == true)
+		// {
+		// 	epolloutEvent(n);
+		// 	delete(_mapClient[_events[n].data.fd]);
+		// 	_mapClient.erase(_events[n].data.fd);
+		// 	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
+		// 	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
+		// }
 		std::cout << "----------------------------------------------" << std::endl;
 	}
 }
@@ -160,6 +169,8 @@ void	Server::epollinEvent(int n)
 	{
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);	//peut être 1024 - 1 plutôt//
+		if (!br)
+			return ;
 		buff[br] = '\0';
 		std::cout << "[debug] <-" <<  buff << std::endl;
 		std::string tmp = buff;
@@ -212,25 +223,19 @@ void	Server::epollinEvent(int n)
 
 void	Server::epollrdhupEvent(int n)
 {
-	// std::stringstream buff;
 
-	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
 	std::cout << RED << "Debug -> in rdhup event" << RESET<< std::endl;
-	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
-	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
 	delete(_mapClient[_events[n].data.fd]);
 	_mapClient.erase(_events[n].data.fd);
-	// _mapClient[_events[n].data.fd]->updateStatus(_epoll_fd);
+
+	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
+	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
+	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
 }
 
 void	Server::epolloutEvent(int n)
 {
 	_mapClient[_events[n].data.fd]->receiveAll(_epoll_fd);
-	if (_mapClient[_events[n].data.fd]->getDestroy() == true)
-	{
-		delete(_mapClient[_events[n].data.fd]);
-		_mapClient.erase(_events[n].data.fd);
-	}
 }
 
 void	Server::closeFd()

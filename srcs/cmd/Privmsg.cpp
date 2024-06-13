@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:24:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:25:45 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 15:49:30 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,19 @@ void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& serv
 	}
 	else		// channel
 	{
+		if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())
+		{
+			str << client.getNick() << " " << i->at(1) << " :No such nick/channel";
+			printRPL(ERR_NOSUCHNICK, str.str(), client, server);
+			return ;
+		}
+		if (server._mapChannel[i->at(1)]->isMember(client.getNick()) == false)
+		{
+			str << client.getNick() << " " << i->at(1) << " :Cannot send to channel";
+			printRPL(ERR_CANNOTSENDTOCHAN, str.str(), client, server);
+			return ;
+		}
+
 		printChannel(msg, client, *server._mapChannel[i->at(1)], server);
 	}
 }

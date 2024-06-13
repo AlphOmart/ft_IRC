@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:26:23 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 14:07:51 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/13 17:45:55 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		if (it2 != curClient)
 			it2->second->setMailbox(str.str(), server.getEpollfd());
 	}
-	client.setDestroy(true);
 	str.str("");
 	str.clear();
 	str << "Error :" << i->at(1) << "\r\n";
 	curClient->second->setMailbox(str.str(), server.getEpollfd());	// peut pas car si join # puis reconnect aborting
+	close(client.getFd());		//necessaire pour provoquer le rdhup mais fais leaks
 }
+	// client.setDestroy(true);
 //i->at(0) "QUIT"
 //i->at(1) ":leaving"
