@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/13 16:25:04 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:03:11 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,11 @@ void	Server::eventLoop(int	n)
 			std::cout << BLUE << "in" <<RESET<<std::endl; 
 			epollinEvent(n);
 		}
-		if (_events[n].events & EPOLLRDHUP)
-		{
-			std::cout << BLUE << "rdhup" <<RESET<<std::endl; 
-			epollrdhupEvent(n);
-		}
+		// if (_events[n].events & EPOLLRDHUP)
+		// {
+		// 	std::cout << BLUE << "rdhup" <<RESET<<std::endl; 
+		// 	epollrdhupEvent(n);
+		// }
 
 		// if (_mapClient.find(_events[n].data.fd) != _mapClient.end() && _mapClient[_events[n].data.fd]->getDestroy() == true)
 		// {
@@ -144,6 +144,8 @@ void	Server::eventLoop(int	n)
 	}
 }
 
+// EN GROS : CA MARCHE MAIS IL FAUT BIEN ATTENDRE QUE TOUS LE DEBUG SE FASSE. SI RECONNECT TROP RAPIDEMENT ALORS CLIENT2 ET LOOP (dans epollin car return)
+// CE QUI FAIT QUE : DEBUG MARCHE CAR LENT MAIS PAS EN NORMAL.
 
 void	Server::epollinEvent(int n)
 {
@@ -163,14 +165,24 @@ void	Server::epollinEvent(int n)
 		{
 			std::cout << RED << "client : " << it->second->getNick() << "\n" << RESET ;
 		}
-		
 	}
 	else
 	{
 		char buff[1024] = {0};
 		size_t br = recv(_events[n].data.fd, buff, sizeof(buff) - 1, 0);	//peut être 1024 - 1 plutôt//
-		if (!br)
+		if (br < 1 || br > 1023)
+		{
+			// delete(_mapClient[_events[n].data.fd]);
+			std::map<int, Client *>::iterator it = _mapClient.find(_events[n].data.fd);
+			if (it == _mapClient.end())
+				return;
+			Disco(*this, *_mapClient[_events[n].data.fd]);
+			epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
+			delete(it->second);
+			_mapClient.erase(it->first);
+			close(_events[n].data.fd);
 			return ;
+		}
 		buff[br] = '\0';
 		std::cout << "[debug] <-" <<  buff << std::endl;
 		std::string tmp = buff;
@@ -223,19 +235,29 @@ void	Server::epollinEvent(int n)
 
 void	Server::epollrdhupEvent(int n)
 {
-
+	(void)n;
 	std::cout << RED << "Debug -> in rdhup event" << RESET<< std::endl;
-	delete(_mapClient[_events[n].data.fd]);
-	_mapClient.erase(_events[n].data.fd);
+	// delete(_mapClient[_events[n].data.fd]);
+	// _mapClient.erase(_events[n].data.fd);
 
 	// Supprimer le descripteur de fichier de l'instance epoll si nécessaire
-	epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
-	close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
+	// epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
+	// close(_events[n].data.fd); // Fermer le descripteur de fichier du client déconnecté
 }
 
 void	Server::epolloutEvent(int n)
 {
 	_mapClient[_events[n].data.fd]->receiveAll(_epoll_fd);
+	if (_mapClient[_events[n].data.fd]->getDestroy() == true)
+	{
+		std::map<int, Client *>::iterator it = _mapClient.find(_events[n].data.fd);
+		if (it == _mapClient.end())
+			return;
+		delete(it->second);
+		epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, _events[n].data.fd, &_event);
+		_mapClient.erase(it->first);
+		close(_events[n].data.fd);
+	}
 }
 
 void	Server::closeFd()

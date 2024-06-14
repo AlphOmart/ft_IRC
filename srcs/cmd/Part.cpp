@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:25:17 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/13 15:53:39 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:32:00 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 				it->second->setMailbox(str.str(), server.getEpollfd());
 		}
+		if (server._mapChannel[i->at(1)]->getModSize() == 0)
+			server._mapChannel[i->at(1)]->addModerator(ptr.at(0));		//pourquoi already exist tim so tim2 a ce moment la ????
 	}
 	client.setMailbox(str.str(), server.getEpollfd());
-
 }

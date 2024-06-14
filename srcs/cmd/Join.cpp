@@ -6,19 +6,18 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 13:37:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 11:58:39 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../incs/Server.hpp"
 
-void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
+void	JOIN0(Server& server, Client& client)
 {
 	std::vector<std::string> str;
 	std::string tmp;
 	std::vector<std::vector<std::string> > j;
 
-	(void)i;
 	for (std::map<std::string,Channel*>::iterator	it = server._mapChannel.begin(); it != server._mapChannel.end(); it++)
 	{
 		str.clear();
@@ -30,6 +29,7 @@ void	JOIN0(std::vector<std::vector<std::string> >::iterator i, Server& server, C
 			fctPART(j.begin(), server, client);
 		}
 	}
+	client.clearChannel();
 }
 
 void	MultipleJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
@@ -92,7 +92,7 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		{
 			if (i->at(1).find('0') == 0 && i->at(1).size() == 1)
 			{
-				JOIN0(i, server, client);
+				JOIN0(server, client);
 				return;
 			}
 			else

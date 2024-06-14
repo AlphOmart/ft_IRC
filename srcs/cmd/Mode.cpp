@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 13:37:35 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 14:05:19 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,26 +69,26 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ;
+			break ;
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			server._mapChannel[i->at(1)]->addMode("i", true);
-			return ;
+			break ;
 		case 2:
 			server._mapChannel[i->at(1)]->setTopicRestriction(true);
 			server._mapChannel[i->at(1)]->addMode("t", true);
-			return ;
+			break ;
 		case 3:
 		{
 			if (i->size() < 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
-				return ;
+				break ;
 			}
 			server._mapChannel[i->at(1)]->setMdp(i->at(3));
 			server._mapChannel[i->at(1)]->addMode("k", true);
-			return ;
+			break ;
 		}
 		case 4:
 		{
@@ -96,7 +96,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
-				return ;
+				break ;
 			}
 			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
 			std::map<std::string, Client*>::iterator it = members.begin();
@@ -106,7 +106,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
 				printRPL(ERR_NOSUCHNICK, str.str(), client, server);
-				return ;
+				break ;
 			}
 			server._mapChannel[i->at(1)]->addModerator(it->second);
 			server._mapChannel[i->at(1)]->addMode("o", true);
@@ -128,22 +128,22 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 							}
 
-			return ;
+			break ;
 		}
 		case 5:
 			if (i->size() != 4)
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
-				return ;
+				break ;
 			}
 			server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
 			server._mapChannel[i->at(1)]->addMode("l", true);
-			return ;
+			break ;
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ;
+			break ;
 		}
 	}
 	else
@@ -153,19 +153,19 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		case 0:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ;
+			break ;
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(false);
 			server._mapChannel[i->at(1)]->addMode("i", false);
-			return ;
+			break ;
 		case 2:
 			server._mapChannel[i->at(1)]->setTopicRestriction(false);
 			server._mapChannel[i->at(1)]->addMode("t", false);
-			return ;
+			break ;
 		case 3:
 			server._mapChannel[i->at(1)]->setMdp("");
 			server._mapChannel[i->at(1)]->addMode("k", false);
-			return ;
+			break ;
 		case 4:
 		{
 
@@ -173,7 +173,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			{
 				str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
 				printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
-				return ;
+				break ;
 			}
 			std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
 			std::map<std::string, Client*>::iterator it = members.begin();
@@ -184,7 +184,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 
 				str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
 				printRPL(ERR_NOSUCHNICK, str.str(), client, server);
-				return ;
+				break ;
 			}
 			server._mapChannel[i->at(1)]->rmModerator(*(it->second));
 			server._mapChannel[i->at(1)]->addMode("o", false);
@@ -205,17 +205,22 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 							{
 								printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 							}
-			return ;
+			break ;
 		}
 		case 5:
 			server._mapChannel[i->at(1)]->setUserLimit(0);
 			server._mapChannel[i->at(1)]->addMode("l", false);
-			return ;
+			break ;
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			return ;
+			break ;
 		}
 	}
+	str.str("");
+	str.clear();
+	str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
+	printRPL(RPL_CHANNELMODEIS, str.str(), client, server);
+	return ;
 }
 

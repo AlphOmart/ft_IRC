@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 11:00:13 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 11:40:43 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 	void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 	void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
 	void	fctPONG(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client);
+	void	Disco(Server& server, Client& client);
 
 
 class Server

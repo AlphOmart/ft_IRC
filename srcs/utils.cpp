@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 13:36:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 14:33:54 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,20 @@ void	printChannel(std::string str, Client &client, Channel &chan, Server &server
 	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); it++)
 	{
 		if (it->first != client.getNick())
+			it->second->setMailbox(result, server.getEpollfd());
+	}
+}
+
+void	printChanRPL(int nr, std::string str, Channel &chan, Server &server)	//affiche la numeric reply de l'erreur au client
+{
+	std::stringstream rpl;
+	rpl << ":IRCserv " << nr << " " << str;
+	std::string result = rpl.str() + "\r\n";
+
+	std::map<std::string, Client *> members = chan.getMembers();
+
+	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); it++)
+	{
 			it->second->setMailbox(result, server.getEpollfd());
 	}
 }

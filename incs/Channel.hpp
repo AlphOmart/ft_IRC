@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 11:24:49 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/14 15:10:53 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ class Channel
 
 		std::map<std::string, Client *>	getMembers() const;
 		int								getMemberSize();
+		int								getModSize();
 
 
 	// Client List //
