@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/12 13:37:53 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/24 14:22:10 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,23 @@ void	printChannel(std::string str, Client &client, Channel &chan, Server &server
 	{
 		if (it->first != client.getNick())
 			it->second->setMailbox(result, server.getEpollfd());
+	}
+}
+
+//TODO: Transformer en member funciton de la classe channel
+void	printChanRPL(int nr, std::string str, Channel &chan, Server &server)
+{
+	std::stringstream rpl;
+	std::string result;
+	std::map<std::string, Client *> members = chan.getMembers();
+
+	for (std::map<std::string, Client *>::iterator	it = members.begin(); it != members.end(); it++)
+	{
+		rpl  << ":" << it->second->getNick() << "!" << it->second->getUser() << "@IRCServ " << nr << " " << str;
+		result = rpl.str() + "\r\n";
+		it->second->setMailbox(result, server.getEpollfd());
+		rpl.str("");
+		rpl.clear();
 	}
 }
 

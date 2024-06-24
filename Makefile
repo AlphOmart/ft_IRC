@@ -6,7 +6,7 @@
 #    By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:52:16 by tdutel            #+#    #+#              #
-#    Updated: 2024/06/14 15:01:22 by tdutel           ###   ########.fr        #
+#    Updated: 2024/06/24 14:43:31 by tdutel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ $(NAME):		$(OBJS) $(HEADER)
 -include $(DEP)
 
 $(OBJS_DIR)%.o:	%.cpp | dir
-				@$(CXX) $(FLAGS) -c $< -o $@
+				@$(CXX) $(FLAGS) -c $< -o $@ -Iincs
 
 dir:			$(OBJS_DIR)
 

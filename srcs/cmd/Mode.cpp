@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 14:05:19 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/24 14:39:08 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		default:
 			str << client.getNick() << " :Unknown MODE flag";
 			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			break ;
+			break;
 		}
 	}
 	else
@@ -220,7 +220,7 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	str.str("");
 	str.clear();
 	str << client.getNick() << " " << server._mapChannel[i->at(1)]->getName() << " " << server._mapChannel[i->at(1)]->getModes();
-	printRPL(RPL_CHANNELMODEIS, str.str(), client, server);
+	printChanRPL(RPL_CHANNELMODEIS, str.str(), *server._mapChannel[i->at(1)], server);
 	return ;
 }
 
