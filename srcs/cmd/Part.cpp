@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:25:17 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 15:32:00 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/06/24 18:26:56 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,19 @@ void	fctPART(std::vector<std::vector<std::string> >::iterator i, Server& server,
 				it->second->setMailbox(str.str(), server.getEpollfd());
 		}
 		if (server._mapChannel[i->at(1)]->getModSize() == 0)
-			server._mapChannel[i->at(1)]->addModerator(ptr.at(0));		//pourquoi already exist tim so tim2 a ce moment la ????
+		{
+
+			server._mapChannel[i->at(1)]->addModerator(ptr.begin()->second);
+							std::stringstream str2;
+							str2 << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+							printChanRPL(RPL_NAMREPLY, str2.str(), *server._mapChannel[i->at(1)], server);
+
+							str2.str("");
+							str2.clear();
+							str2 << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+							printChanRPL(RPL_NAMREPLY, str2.str(), *server._mapChannel[i->at(1)], server);
+
+		}
 	}
 	client.setMailbox(str.str(), server.getEpollfd());
 }

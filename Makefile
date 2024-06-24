@@ -6,14 +6,14 @@
 #    By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/26 13:52:16 by tdutel            #+#    #+#              #
-#    Updated: 2024/06/24 14:43:31 by tdutel           ###   ########.fr        #
+#    Updated: 2024/06/24 18:32:38 by tdutel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #---COMMON_VAR-----------------------------------
 NAME		=	ircserv
 CXX			=	c++
-FLAGS		=	-std=c++98 -Wall -Werror -Wextra -g3 -glldb -fsanitize=address
+FLAGS		=	-std=c++98 -Wall -Werror -Wextra -g3 -glldb #-fsanitize=address
 #---PROJECT+VAR----------------------------------
 SRC			=	main.cpp \
 				srcs/Server.cpp \
