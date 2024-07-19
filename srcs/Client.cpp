@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 12:39:50 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 18:49:57 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,14 +111,10 @@ void	Client::clearBuffer()
 
 // ----- Channel List ----- //
 
-int	Client::addChannel(Channel *ch)
+void	Client::addChannel(Channel *ch)
 	{
 		if (_channels.find(ch->getName()) == _channels.end())	//ne l'ajoute pas si est déjà dedans
-		{
 			_channels[ch->getName()] = ch;
-			return (0);
-		}
-		return (1);
 	}
 
 void	Client::rmChannel(Channel *ch)
