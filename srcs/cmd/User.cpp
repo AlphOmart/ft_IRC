@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:19:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:20:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 14:01:23 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	std::stringstream str;
 	if (client.getIsRegistered() == false)	//permet de ignorer la fonction quand connecté
 	{
+		if (i->size() != 5)	// <username> 0 * <realname>
+		{
+			str << client.getNick() << i->at(1) << " :Not enough parameters";
+			printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
+			return ;
+		}
 		client.setUser(i->at(1));
 		if (client.isRegistered() == true)
 		{
@@ -25,7 +31,7 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 		
 					str.str("");
 					str.clear();
-					str << client.getNick() << " :Your host is IRCServ, running version 1.0"; 
+					str << client.getNick() << " :Your host is IRCServ, running version 1.0";
 					printRPL(RPL_YOURHOST, str.str(), client, server);
 
 					str.str("");
@@ -41,7 +47,7 @@ void	fctUSER(std::vector<std::vector<std::string> >::iterator i, Server& server,
 					str.str("");
 					str.clear();
 					str << client.getNick() << " CHANMODES=,,tkl,i :are supported by this server";
-					printRPL(RPL_MYINFO, str.str(), client, server);
+					printRPL(RPL_ISUPPORT, str.str(), client, server);
 
 					str.str("");
 					str.clear();

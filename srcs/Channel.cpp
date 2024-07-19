@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 15:10:37 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 13:34:01 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +134,14 @@ int	Channel::getModSize()
 
 // ----- Client List ----- //
 
-void	Channel::addMember(Client *newClient)
+bool	Channel::addMember(Client *newClient)
 	{
 		if (_members.find(newClient->getNick()) == _members.end())	//ne l'ajoute pas si est déjà dedans
+		{
 			_members[newClient->getNick()] = newClient;
+			return (false);
+		}
+		return (true);
 	}
 
 void	Channel::addModerator(Client *newClient)

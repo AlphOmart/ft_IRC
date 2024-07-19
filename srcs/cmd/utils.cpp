@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:40:00 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/24 14:22:10 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 13:50:26 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	printChannel(std::string str, Client &client, Channel &chan, Server &server
 	}
 }
 
-//TODO: Transformer en member funciton de la classe channel
 void	printChanRPL(int nr, std::string str, Channel &chan, Server &server)
 {
 	std::stringstream rpl;

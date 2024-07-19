@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:49:48 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 15:10:53 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 13:34:21 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ class Channel
 
 
 	// Client List //
-		void							addMember(Client *newClient);
+		bool							addMember(Client *newClient);
 		void							addModerator(Client *newClient);
 		void							addInvitMember(Client *newClient);
 

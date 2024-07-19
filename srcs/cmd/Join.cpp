@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 11:58:39 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 13:49:23 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,12 @@ void	MultipleJOIN(std::vector<std::vector<std::string> >::iterator i, Server& se
 void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
 	std::stringstream str;
+	bool aJ = false;
+	if (i->at(1).find(',') != std::string::npos)	// JOIN | #a,#b,#c | ok
+	{
+		MultipleJOIN(i, server, client);
+		return ;
+	}
 	if (server._mapChannel.find(i->at(1)) == server._mapChannel.end())	//si le channel n'existe pas
 	{
 		if (i->at(1).find('#') != 0)
@@ -102,9 +108,10 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 				return ;
 			}
 		}
-		if (i->at(1).find(',') != std::string::npos)	// JOIN | #a,#b,#c | ok
+		if (i->at(1).find_first_of(" ,:") != std::string::npos || i->at(1).size() == 1)
 		{
-			MultipleJOIN(i, server, client);
+			str << i->at(1) << " :Bad Channel Mask";
+			printRPL(ERR_NOSUCHCHANNEL, str.str(), client, server);
 			return ;
 		}
 		Channel *curChannel =  new Channel(i->at(1), client);
@@ -136,7 +143,13 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 			return ;
 		}
 		client.addChannel(server._mapChannel[i->at(1)]);
-		server._mapChannel[i->at(1)]->addMember(&client);
+		aJ = server._mapChannel[i->at(1)]->addMember(&client);
+		if (aJ == true)
+		{
+			str << client.getNick() << " " << client.getNick() << " " << i->at(1) << "  :is already on channel";
+			printRPL(ERR_USERONCHANNEL, str.str(), client, server);
+			return ;
+		}
 	}
 	std::string	server_msg = ":" + client.getNick() + "!" + client.getUser() + "@ircserv JOIN :" +  i->at(1) + "\r\n";
 	client.setMailbox(server_msg, server.getEpollfd());

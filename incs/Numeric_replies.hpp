@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/13 15:44:59 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 14:01:18 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # define RPL_YOURHOST 002
 # define RPL_CREATED 003
 # define RPL_MYINFO 004
-
+# define RPL_ISUPPORT 005
 # define RPL_LUSERCLIENT 251
 # define RPL_LUSEROP 252
 # define RPL_LUSERME 255
@@ -52,6 +52,7 @@
 # define ERR_INVITEONLYCHAN 473
 # define ERR_BANNEDFROMCHAN 474
 # define ERR_BADCHANNELKEY 475
+# define ERR_BADCHANMASK 476
 # define ERR_CHANOPRIVSNEEDED 482
 # define ERR_UMODEUNKNOWNFLAG 501
 
