@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/24 14:39:08 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 14:30:42 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	flagCheck(std::string	str)
 {
-	if (str.size() > 2)
-		return (0);
+	// if (str.size() > 2)
+	// 	return (0);
 	if (str.find("i",0) == 1)
 		return (1);
 	if (str.find("t",0) == 1)
@@ -28,6 +28,21 @@ static int	flagCheck(std::string	str)
 		return (5);
 	return (-1);
 }
+
+// static int	flagCheck2(char	c)
+// {
+// 	if (c == "i")
+// 		return (1);
+// 	if (c == "t")
+// 		return (2);
+// 	if (c == "k")
+// 		return (3);
+// 	if (c == "o")
+// 		return (4);
+// 	if (c == "l")
+// 		return (5);
+// 	return (-1);
+// }
 
 void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
@@ -64,12 +79,88 @@ void	fctMODE(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	}
 	if (i->at(2).at(0) == '+')
 	{
+		// for (size_t j = 0; j < j->at(2).size(); j++)
+		// {
+		// 	switch (flagCheck2(i->at(2).at(j)))
+		// 	{
+		// 			case 1:
+		// 				server._mapChannel[i->at(1)]->setInvitOnly(true);
+		// 				server._mapChannel[i->at(1)]->addMode("i", true);
+		// 				break ;
+		// 			case 2:
+		// 				server._mapChannel[i->at(1)]->setTopicRestriction(true);
+		// 				server._mapChannel[i->at(1)]->addMode("t", true);
+		// 				break ;
+		// 			case 3:
+		// 				if (i->size() < 4)
+		// 				{
+		// 					str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		// 					printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
+		// 					break ;
+		// 				}
+		// 				server._mapChannel[i->at(1)]->setMdp(i->at(3));
+		// 				server._mapChannel[i->at(1)]->addMode("k", true);
+		// 				break ;
+		// 			case 4:
+		// 				if (i->size() != 4)
+		// 				{
+		// 					str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		// 					printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
+		// 					break ;
+		// 				}
+		// 				std::map<std::string, Client *> members = server._mapChannel[i->at(1)]->getMembers();
+		// 				std::map<std::string, Client*>::iterator it = members.begin();
+		// 				while (it != members.end() && it->second->getNick() != i->at(3))
+		// 					it++;
+		// 				if (it == members.end())
+		// 				{
+		// 					str << client.getNick() << " " << i->at(3) << " :No such nick/channel";
+		// 					printRPL(ERR_NOSUCHNICK, str.str(), client, server);
+		// 					break ;
+		// 				}
+		// 				server._mapChannel[i->at(1)]->addModerator(it->second);
+		// 				server._mapChannel[i->at(1)]->addMode("o", true);
+		// 				str.str("");
+		// 				str.clear();
+		// 				str << client.getNick() << " = " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getList();
+		// 				std::map<std::string, Client *> ptr = server._mapChannel[i->at(1)]->getMembers();
+		// 				for (std::map<std::string, Client *>::iterator it = ptr.begin(); it != ptr.end(); it++)
+		// 				{
+		// 					printRPL(RPL_NAMREPLY, str.str(), *it->second, server);
+		// 				}
+		// 				str.str("");
+		// 				str.clear();
+		// 				str << client.getNick() << " " << i->at(1) << " :End of /NAMES list";
+		// 				std::map<std::string, Client *> ptr2 = server._mapChannel[i->at(1)]->getMembers();
+		// 				for (std::map<std::string, Client *>::iterator it2 = ptr2.begin(); it2 != ptr2.end(); it2++)
+		// 				{
+		// 					printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
+		// 				}
+		// 				break ;
+		// 			case 5:
+		// 				if (i->size() != 4)
+		// 				{
+		// 					str << client.getNick() << " " << i->at(0) << " :Not enough parameters";
+		// 					printRPL(ERR_NEEDMOREPARAMS, str.str(), client, server);
+		// 					break ;
+		// 				}
+		// 				server._mapChannel[i->at(1)]->setUserLimit(std::atoi(i->at(3).c_str()));
+		// 				server._mapChannel[i->at(1)]->addMode("l", true);
+		// 				break ;
+		// 			default:
+		// 				str << client.getNick() << " :Unknown MODE flag";
+		// 				printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
+		// 				break;
+		// 	}
+		// 	j++;
+		// }
+		
 		switch (flagCheck(i->at(2)))
 		{
-		case 0:
-			str << client.getNick() << " :Unknown MODE flag";
-			printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-			break ;
+		// case 0:
+		// 	str << client.getNick() << " :Unknown MODE flag";
+		// 	printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
+		// 	break ;
 		case 1:
 			server._mapChannel[i->at(1)]->setInvitOnly(true);
 			server._mapChannel[i->at(1)]->addMode("i", true);
