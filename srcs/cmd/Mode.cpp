@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 18:30:44 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/19 18:44:17 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ static void	FlagMode(std::vector<std::vector<std::string> >::iterator i, Server&
 				default:
 					str << client.getNick() << " :Unknown MODE flag";
 					printRPL(ERR_UMODEUNKNOWNFLAG, str.str(), client, server);
-					break;
+					return ;
 			}
 			j++;
 			k++;
