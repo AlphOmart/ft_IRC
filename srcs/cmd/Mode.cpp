@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:23:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 18:51:07 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 11:08:09 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,6 @@ static void	FlagMode(std::vector<std::vector<std::string> >::iterator i, Server&
 	std::stringstream str;
 	char	f;
 	size_t	k = 0;
-
-	// if (i->at(2).at(0) == '+')
-	// 	f = true;
-	// else if (i->at(2).at(0) == '-')
-	// 	f = false;
 
 	std::string	tmp;//		bl+i
 	while (k + 1 < i->at(2).size())
