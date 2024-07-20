@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:39:21 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/20 12:54:24 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 14:36:42 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define ERR_TOOMANYCHANNELS 405
 # define ERR_NOTEXTTOSEND 412 
 # define ERR_ERRONEUSNICKNAME 432
-# define	ERR_NICKNAMEINUSE 433
+# define ERR_NICKNAMEINUSE 433
 
 # define ERR_USERNOTINCHANNEL 441
 # define ERR_NOTONCHANNEL 442
