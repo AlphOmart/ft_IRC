@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:10:07 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/20 12:53:09 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 13:52:44 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	Server::listenConnectIn()
 		// Ajout du socket d'écoute à l'instance epoll
 void	Server::addSocketToEpoll()
 {
-	_event.events = EPOLLIN | EPOLLRDHUP | EPOLLOUT; // Surveillage des événements de lecture
+	_event.events = EPOLLIN | EPOLLOUT; // Surveillage des événements de lecture
 	_event.data.fd = _server_fd;
 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _server_fd, &_event) == -1) {
 		throw std::runtime_error("Error while calling epoll_ctl().");

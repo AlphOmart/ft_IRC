@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:27:16 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 18:49:57 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 13:52:40 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Client::Client(int	fd) : _fd(fd), _isInEpoll(false)
 		_isRegistered = false;
 		_destroy = false;
 		_clientEvent.data.fd = this->_fd;
-		_clientEvent.events = EPOLLIN | EPOLLRDHUP;
+		_clientEvent.events = EPOLLIN;
 	}
 
 Client::~Client()
@@ -149,9 +149,9 @@ void	Client::updateStatus(int epoll_fd)
 			return;
 		}
 		if (_mailbox.empty())
-			_clientEvent.events = EPOLLIN | EPOLLRDHUP;
+			_clientEvent.events = EPOLLIN;
 		else
-			_clientEvent.events = EPOLLIN | EPOLLOUT | EPOLLRDHUP;
+			_clientEvent.events = EPOLLIN | EPOLLOUT;
 		if (epoll_ctl(epoll_fd, EPOLL_CTL_MOD, _fd, &_clientEvent) == -1)
 		{
 			throw std::runtime_error("error in epoll_ctl");
