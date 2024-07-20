@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:18 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/11 10:39:18 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:55:21 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void	fctINVITE(std::vector<std::vector<std::string> >::iterator i, Server& serve
 	printRPL(RPL_INVITING, str.str(), client, server);
 }
 
-// i->at(1) = user
-// i->at(2) = channel
 
 // ---------------------------------------------------------------------//
 // Examples:	INVITE

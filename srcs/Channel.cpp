@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:08 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 13:34:01 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:54:00 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ void	Channel::rmMember(Client &client)
 			_members.erase(client.getNick());
 		rmModerator(client);		//si rm des membres alors aussi du moderator et invtmember
 		rmInvitMember(client);
-		// if (_members.size() == 0)
 	}
 
 void	Channel::rmModerator(Client &client)
@@ -228,5 +227,3 @@ std::string	Channel::getList() const
 	}
 	return (str.str());
 }
-
-//PEUT ETRE PARCE QUE PERD SES DROIT OP QUAND QUIT DONC N'EST PLUS MOD ET SE COMPARE

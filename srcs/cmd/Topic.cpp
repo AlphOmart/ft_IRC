@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:39 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/24 14:40:57 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 13:01:04 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,11 @@ void	fctTOPIC(std::vector<std::vector<std::string> >::iterator i, Server& server
 		newtopic += i->at(n) + " ";
 		n++;
 	}
-	// std::string newtopic = i->at(2).substr(1);
 	server._mapChannel[i->at(1)]->setTopic(newtopic);
 	str.str("");
 	str.clear();
 	str << client.getNick() << " " << i->at(1) << " :" << server._mapChannel[i->at(1)]->getTopic();
 	printChanRPL(RPL_TOPIC, str.str(), *server._mapChannel[i->at(1)], server);
-	// printRPL(RPL_TOPIC, str.str(), client, server);
 	return ;
 }
 

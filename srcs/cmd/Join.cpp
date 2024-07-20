@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:16:33 by tdutel            #+#    #+#             */
-/*   Updated: 2024/07/19 13:49:23 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:56:01 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,12 @@ void	JOIN0(Server& server, Client& client)
 	client.clearChannel();
 }
 
-void	MultipleJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 	// 	i->at(0)	i->at(1) 	i->at(2)					//		vCmd(0) | vChan(i)	| vParam(i)
 	// 	JOIN 	| #a,#b,#c 	| ok,lol			--> objectif : //	JOIN | #a | ok
 																//	JOIN | #b | lol
 																//	JOIN | #c | lol
+void	MultipleJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server, Client& client)
 {
-	// std::vector<std::string> vCmd = splitStr(i->at(0).c_str(), "");
-
 	std::vector<std::string> vChan = splitStr(i->at(1).c_str(), ",");	// vChan->at(0) = #a
 																		// vChan->at(1) = #b
 																		// vChan->at(2) = #c
@@ -174,6 +172,4 @@ void	fctJOIN(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	{
 		printRPL(RPL_ENDOFNAMES, str.str(), *it2->second, server);
 	}
-
-
 }

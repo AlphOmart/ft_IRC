@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:26:23 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 14:55:23 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:59:16 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	std::cout << RED << "quit function called" << RESET << std::endl;
 
 	JOIN0(server, client);
-	// client.clearChannel();	//maybe leaks for later
 
 	str << client.getNick() << " is exiting the network with the message: Quit: " << i->at(1) << "\r\n";
 
@@ -35,11 +34,7 @@ void	fctQUIT(std::vector<std::vector<std::string> >::iterator i, Server& server,
 	str << "Error :" << i->at(1) << "\r\n";
 	client.setMailbox(str.str(), server.getEpollfd());	// peut pas car si join # puis reconnect aborting
 	client.setDestroy(true);
-	// close(client.getFd());		//necessaire pour provoquer le rdhup mais fais leaks
 }
-	// client.setDestroy(true);
-//i->at(0) "QUIT"
-//i->at(1) ":leaving"
 
 void	Disco(Server& server, Client& client)
 {
@@ -58,6 +53,4 @@ void	Disco(Server& server, Client& client)
 		if (it2 != curClient)
 			it2->second->setMailbox(str.str(), server.getEpollfd());
 	}
-
-	// close(client.getFd());		//necessaire pour provoquer le rdhup mais fais leaks
 }

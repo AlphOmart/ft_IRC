@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:24:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/13 15:49:30 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:57:16 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,3 @@ void	fctPRIVMSG(std::vector<std::vector<std::string> >::iterator i, Server& serv
 		printChannel(msg, client, *server._mapChannel[i->at(1)], server);
 	}
 }
-
-// i->at(1) : target
-// i->at(2+) : msg
-
-// "PRIVMSG #ok :hola ?\r\n"
-
-
-// ERR_NOSUCHNICK (401)
-// ERR_CANNOTSENDTOCHAN (404)
-// ERR_NOTEXTTOSEND (412)

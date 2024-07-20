@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 14:09:37 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/14 11:40:43 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 12:53:14 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ class Server
 		void										eventLoop(int n);
 
 		void										epollinEvent(int n);
-		void										epollrdhupEvent(int n);
 		void										epolloutEvent(int n);
 		void										closeFd();
 
