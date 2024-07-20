@@ -6,7 +6,7 @@
 /*   By: tdutel <tdutel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:19:05 by tdutel            #+#    #+#             */
-/*   Updated: 2024/06/07 15:20:05 by tdutel           ###   ########.fr       */
+/*   Updated: 2024/07/20 11:16:51 by tdutel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	fctNICK(std::vector<std::vector<std::string> >::iterator i, Server& server,
 					str.str("");
 					str.clear();
 					str << client.getNick() << " CHANMODES=,,tkl,i :are supported by this server";
-					printRPL(RPL_MYINFO, str.str(), client, server);
+					printRPL(RPL_ISUPPORT, str.str(), client, server);
 
 					str.str("");
 					str.clear();
